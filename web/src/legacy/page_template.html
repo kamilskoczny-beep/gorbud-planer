@@ -71,6 +71,7 @@ tr.room{cursor:pointer} tr.room:hover td,tr.room.active td{background:color-mix(
 #hint3d{bottom:auto;top:10px;left:10px;right:auto}
 #svg{width:100%;height:100%;display:block;cursor:grab}
 #svg.tool{cursor:crosshair}
+#svg.tool-draw [data-layer=project],#svg.tool-draw [data-layer=furn],#svg.tool-draw [data-layer=rhit],#svg.tool-draw [data-layer=sketch],#svg.tool-draw [data-layer=roomlbl],#svg.tool-draw [data-layer=zones]{pointer-events:none}
 #svg.grabbing{cursor:grabbing}
 .ovl{position:absolute;left:10px;bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,transparent);padding:3px 7px;border-radius:5px;pointer-events:none}
 .ovl2{position:absolute;right:10px;top:10px;display:flex;gap:4px}
@@ -722,7 +723,7 @@ function finishDraftInner(){
 let lastClient={x:0,y:0};
 
 // ---------- pointer handling ----------
-let panning=null, dragging=null, wallDrag=null, doorDrag=null, suppressClick=false, inkDraft=null, anchorMove=null, endDrag=null;
+let noSnapOnce=false; let panning=null, dragging=null, wallDrag=null, doorDrag=null, suppressClick=false, inkDraft=null, anchorMove=null, endDrag=null;
 // ---- geometry helpers for wall dragging ----
 function obstacleSegs(excludeId){
   const F=MODEL.floors[floor]; const out=[];
@@ -803,7 +804,7 @@ function isPax(it){ return it.kind==='wardrobe'||String(it.kind||'').startsWith(
 function fitFurn(it){ // po upuszczeniu: wypchnij ze ścian, dosuń do lica; zwraca true gdy OK, false gdy nierozwiązana kolizja
   const segs=wallSegsAll(); let r=rectOf(it);
   const res=resolveRect(r,segs); if(!res) return false;
-  r=snapFlush(res,segs,250); applyRect(it,r); return true;
+  r=noSnapOnce?res:snapFlush(res,segs,80); applyRect(it,r); return true;
 }
 function shrinkFurn(it){ // pomniejsz do wolnego pola między ścianami (dla PAX – do modułu)
   const segs=wallSegsAll(); const r=rectOf(it); const cx=(r.x0+r.x1)/2, cy=(r.y0+r.y1)/2;
@@ -913,7 +914,7 @@ function onPointerUp(e){
   if (doorDrag){ const D=doorDrag; doorDrag=null; if(D.moved){ suppressClick=true; commit(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(D.it,e); } return; }
   if (endDrag){ const E=endDrag; endDrag=null; gl.draft.innerHTML=''; if(E.moved){ suppressClick=true; try{ snapWallEnds(E.it, 200); }catch(err){ diag('snapWallEnds',err); } obstStamp++; commit(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(E.it,e); } return; }
   if (wallDrag){ const W=wallDrag; wallDrag=null; gl.draft.innerHTML=''; if(W.moved){ suppressClick=true; try{ snapWallEnds(W.it, 200); }catch(err){ diag('snapWallEnds',err); } obstStamp++; commit(); const col=collidingFurn(); if(col.length) showConflict(col,'wall'); else hideConflict(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(W.it,e); } return; }
-  if (dragging){ const d=dragging; dragging=null; const moved=JSON.stringify(d.it.pts)!==JSON.stringify(d.orig); if(moved){ suppressClick=true; if(d.it.type==='furn') afterFurnChange(d.it); else commit(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(d.it,e); } return; }
+  if (dragging){ const d=dragging; dragging=null; const moved=JSON.stringify(d.it.pts)!==JSON.stringify(d.orig); if(moved){ suppressClick=true; noSnapOnce=!!e.altKey; if(d.it.type==='furn') afterFurnChange(d.it); else commit(); noSnapOnce=false; } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(d.it,e); } return; }
   if (panning){ const moved=Math.hypot(e.clientX-panning.x,e.clientY-panning.y)>4; panning=null; svg.classList.remove('grabbing'); if(!moved && tool==='select'){ selectedId=null; hideInlineEdit(); drawProject(); renderItems(); document.querySelectorAll('.roompoly.active').forEach(p=>p.classList.remove('active')); } return; }
   if (anchorMove){ const q=svgPoint(e); const it=anchorMove; anchorMove=null; pushHistory(); it.anchor=[Math.round(q.x),Math.round(q.y)]; recomputeRooms(true); commit(); return; }
   if (tool==='select') return;
@@ -970,7 +971,7 @@ const toolDefs=[
   ['arrow','Strzałka','<svg viewBox="0 0 24 24"><path d="M4 20L20 4M12 4h8v8"/></svg>'],
   ['mark','Uwaga nr','<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M10 9l2-1v8"/></svg>']
 ];
-const hints={cut:'Wytnij: kliknij ścianę – usunę jej odcinek między najbliższymi ścianami poprzecznymi (ściana projektowana → podział na dwie; ściana istniejąca → wyburzenie odcinka). Drzwi w wyciętym odcinku znikają. Ctrl+Z cofa.',select:'Kliknij ścianę, drzwi lub mebel, aby zaznaczyć (Del usuwa). Koniec ściany (kółko) przeciągasz wzdłuż osi – skraca lub wydłuża ją, maks. do najbliższej ściany. Przeciągnij nową ścianę – przesuwa się równolegle i sama docina do sąsiednich ścian; ścianki, drzwi i obrysy przyłączone do niej idą razem. Meble przeciągasz, R obraca. Puste pole: przesuwanie widoku.',wall:'Klikaj kolejne punkty nowej ściany – tylko poziomo/pionowo. Grubość wybierasz z listy albo wpisujesz (inna…); „Grubość od linii” mówi, po której stronie rysowanej linii leży mur (Tab przełącza w trakcie). Po zakończeniu końce same wpinają się w oś sąsiedniej ściany projektowej albo w lico ściany istniejącej (do 30 cm) – ściany tworzą całość, nic nie wystaje. Podwójne kliknięcie lub Enter kończy.',demo:'Narysuj linię po ścianie do wyburzenia (żółta, przerywana). Podwójne kliknięcie kończy.',room:'Obrysuj nowe pomieszczenie klikając narożniki; kliknij punkt startowy lub Enter, aby zamknąć. Powierzchnia liczy się na bieżąco.',door:'Najedź na ścianę – pokaże się podgląd drzwi (domyślnie 80 cm, otwierane w stronę kursora) – i kliknij, żeby upuścić. Potem w trybie Wskaż: przeciągnij po ścianie, R – kierunek otwierania, L – zawias lewy/prawy, szerokość w okienku.',dim:'Kliknij dwa punkty — odległość w metrach.',note:'Kliknij, aby postawić notatkę z tekstem.',furn:'Wybierz mebel z listy i kliknij, gdzie ma stanąć (środek). R obraca przed postawieniem. Narzędziem „Wskaż” przeciągasz meble; Del usuwa.',ink:'Rysuj odręcznie po planie (przeciągnij). Szkic zapisuje się i Claude go odczyta.',arrow:'Kliknij początek i koniec strzałki, potem wpisz, co zmienić.',mark:'Kliknij miejsce – pojawi się numer uwagi; wpisz treść. W rozmowie wystarczy podać numer.'};
+const hints={cut:'Wytnij: kliknij ścianę – usunę jej odcinek między najbliższymi ścianami poprzecznymi (ściana projektowana → podział na dwie; ściana istniejąca → wyburzenie odcinka). Drzwi w wyciętym odcinku znikają. Ctrl+Z cofa.',select:'Kliknij ścianę, drzwi lub mebel, aby zaznaczyć (Del usuwa). Koniec ściany (kółko) przeciągasz wzdłuż osi – skraca lub wydłuża ją, maks. do najbliższej ściany. Przeciągnij nową ścianę – przesuwa się równolegle i sama docina do sąsiednich ścian; ścianki, drzwi i obrysy przyłączone do niej idą razem. Meble przeciągasz (dosuwają się do lica tylko z odległości do 8 cm; z wciśniętym Alt – bez dosuwania), R obraca',wall:'Klikaj kolejne punkty nowej ściany – tylko poziomo/pionowo. Grubość wybierasz z listy albo wpisujesz (inna…); „Grubość od linii” mówi, po której stronie rysowanej linii leży mur (Tab przełącza w trakcie). Po zakończeniu końce same wpinają się w oś sąsiedniej ściany projektowej albo w lico ściany istniejącej (do 30 cm) – ściany tworzą całość, nic nie wystaje. Podwójne kliknięcie lub Enter kończy.',demo:'Narysuj linię po ścianie do wyburzenia (żółta, przerywana). Podwójne kliknięcie kończy.',room:'Obrysuj nowe pomieszczenie klikając narożniki; kliknij punkt startowy lub Enter, aby zamknąć. Powierzchnia liczy się na bieżąco.',door:'Najedź na ścianę – pokaże się podgląd drzwi (domyślnie 80 cm, otwierane w stronę kursora) – i kliknij, żeby upuścić. Potem w trybie Wskaż: przeciągnij po ścianie, R – kierunek otwierania, L – zawias lewy/prawy, szerokość w okienku.',dim:'Kliknij dwa punkty — odległość w metrach.',note:'Kliknij, aby postawić notatkę z tekstem.',furn:'Wybierz mebel z listy i kliknij, gdzie ma stanąć (środek). R obraca przed postawieniem. Narzędziem „Wskaż” przeciągasz meble; Del usuwa.',ink:'Rysuj odręcznie po planie (przeciągnij). Szkic zapisuje się i Claude go odczyta.',arrow:'Kliknij początek i koniec strzałki, potem wpisz, co zmienić.',mark:'Kliknij miejsce – pojawi się numer uwagi; wpisz treść. W rozmowie wystarczy podać numer.'};
 const tb=document.getElementById('tools');
 tb.innerHTML=toolDefs.map(t=>`<button data-tool="${t[0]}" aria-pressed="${t[0]==='select'}" title="${t[1]}">${t[2]}<span>${t[1]}</span></button>`).join('');
 tb.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.tool===tool && draft && draft.pts.length){ finishDraft(); return; } setTool(b.dataset.tool); }));
@@ -983,7 +984,7 @@ document.getElementById('dbBack').addEventListener('click',()=>{ if(draft&&draft
 document.getElementById('dbCancel').addEventListener('click',()=>{ draft=null; drawDraft(); });
 // blur focused controls when drawing starts so keyboard shortcuts reach the canvas
 svg.addEventListener('pointerdown',()=>{ if(document.activeElement&&document.activeElement!==document.body) document.activeElement.blur(); },true);
-function setTool(t){ tool=t; draft=null; hoverPt=null; drawDraft(); hideInlineEdit(); tb.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t)); svg.classList.toggle('tool',t!=='select'); document.getElementById('toolHint').textContent=hints[t]; }
+function setTool(t){ tool=t; draft=null; hoverPt=null; drawDraft(); hideInlineEdit(); tb.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tool===t)); svg.classList.toggle('tool',t!=='select'); svg.classList.toggle('tool-draw',['ink','mark','arrow','note','dim','room','wall','demo','furn'].includes(t)); suppressClick=false; anchorMove=null; document.getElementById('toolHint').textContent=hints[t]; }
 document.getElementById('furnSel').innerHTML=Object.keys(FURN).map(k=>`<option value="${k}">${FURN[k].n}</option>`).join('');
 let furnRot=false;
 document.getElementById('unitSel').innerHTML='<option value="">— lokal —</option>'+Object.keys(UNITS).map(u=>`<option value="${u}">${UNITS[u].name}</option>`).join('');

@@ -67,6 +67,7 @@ tr.room{cursor:pointer} tr.room:hover td,tr.room.active td{background:color-mix(
 #hint3d{bottom:auto;top:10px;left:10px;right:auto}
 #svg{width:100%;height:100%;display:block;cursor:grab}
 #svg.tool{cursor:crosshair}
+#svg.tool-draw [data-layer=project],#svg.tool-draw [data-layer=furn],#svg.tool-draw [data-layer=rhit],#svg.tool-draw [data-layer=sketch],#svg.tool-draw [data-layer=roomlbl],#svg.tool-draw [data-layer=zones]{pointer-events:none}
 #svg.grabbing{cursor:grabbing}
 .ovl{position:absolute;left:10px;bottom:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted);background:color-mix(in srgb,var(--panel) 85%,transparent);padding:3px 7px;border-radius:5px;pointer-events:none}
 .ovl2{position:absolute;right:10px;top:10px;display:flex;gap:4px}
