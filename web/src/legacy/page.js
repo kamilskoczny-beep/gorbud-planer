@@ -100,9 +100,10 @@ function drawRooms(){
   gl.zones.innerHTML=''; gl.roomlbl.innerHTML='';
   const hide=new Set((curVariant(floor)||{}).hide||[]);
   for (const r of F.rooms){
-    const u = unitOf(r.nr); const col = u ? UNITS[u].color : 'transparent';
+    if (!r.poly && !r._noPoly){ try{ const R=getRaster(); const res=floodRoom(R, (r.lx||0)+300, (r.ly||0)+60); if (res && res.area>1e6 && res.area<400e6){ r.poly=res.outer; r._auto=true; } else r._noPoly=true; }catch(e){ r._noPoly=true; } } // obrys z inwentaryzacji brakujący → flood fill w przeglądarce
+    const u = unitOf(r.nr); const idx=F.rooms.indexOf(r); const col = u ? UNITS[u].color : ROOM_PALETTE[idx % ROOM_PALETTE.length]; // bez przypisania do lokalu: własny kolor, żeby odróżnić pomieszczenia
     if (r.poly){
-      const pg = el('polygon',{points:r.poly.map(q=>q.join(',')).join(' '), class:'roompoly', fill:u?col:'var(--accent)', 'fill-opacity': u?0.28:0.001}, gl.zones);
+      const pg = el('polygon',{points:r.poly.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones);
       pg.dataset.nr=r.nr;
       pg.addEventListener('pointerenter',()=>{ if(tool==='select'){ pg.classList.add('hover'); hiRow(r.nr,true);} });
       pg.addEventListener('pointerleave',()=>{ pg.classList.remove('hover'); hiRow(r.nr,false); });
@@ -171,7 +172,7 @@ function drawFurn(it){
   const [a,b]=it.pts; const x0=Math.min(a[0],b[0]),y0=Math.min(a[1],b[1]),x1=Math.max(a[0],b[0]),y1=Math.max(a[1],b[1]); const w=x1-x0,h=y1-y0; const k=it.kind||'box';
   const e=el('g',{},gl.furn);
   const kitchen=['counter','sink','hob','fridge'].includes(k), wet=['shower','bath','wc','basin','washer'].includes(k);
-  const lowRoof = tooLowFor(it); const collide = !rectFree(rectOf(it), wallSegsAll()) || !!lowRoof;
+  const lowRoof = tooLowFor(it); const collide = !rectFree(rectOf(it), wallSegsAll()) || !!lowRoof || !!blocksDoor(it);
   el('rect',{x:x0,y:y0,width:w,height:h,fill:wet?'var(--win)':kitchen?'var(--demo)':'var(--fix)','fill-opacity':0.22,stroke:'var(--muted)','stroke-width':18,rx:k==='basin'||k==='wc'?Math.min(w,h)/3:40,class:collide?'furn-collide':''},e);
   const cx=(x0+x1)/2, cy=(y0+y1)/2;
   if(k==='bed'||k==='bed1'){ const hb=it.rot?w:h; el('line',{x1:x0+80,y1:y1-350,x2:x1-80,y2:y1-350,stroke:'var(--muted)','stroke-width':14},e); el('rect',{x:x0+120,y:y1-320,width:w-240,height:240,fill:'none',stroke:'var(--muted)','stroke-width':12,rx:60},e); }
@@ -217,6 +218,16 @@ function buildRaster(){
   for (const lay of ['walls','windows','doors']) for (const sg of (F.geo[lay]||[])){ if(sg.k==='l'){ if(lay!=='doors') for(let i=1;i<sg.p.length;i++) line(sg.p[i-1][0],sg.p[i-1][1],sg.p[i][0],sg.p[i][1],1,0); } else if(sg.k==='a'){ let a0=sg.a0,a1=sg.a1; if(a1<a0) a1+=2*Math.PI; if(lay==='doors'){ /* łuk skrzydła nie jest przeszkodą – tylko domknięcie otworu w licach ściany */ const D=[[Math.cos(a0),Math.sin(a0)],[Math.cos(a1),Math.sin(a1)]]; for (let i=0;i<2;i++){ const di=D[i], dj=D[1-i]; line(sg.c[0],sg.c[1],sg.c[0]+sg.r*di[0],sg.c[1]+sg.r*di[1],1,0); let tt=null; for (const w of dwgSegs){ for (const [e0,e1] of [[w.a,w.b],[w.b,w.a]]){ if (Math.hypot(e0[0]-sg.c[0],e0[1]-sg.c[1])>150) continue; const vx=e1[0]-e0[0], vy=e1[1]-e0[1]; const Lw=Math.hypot(vx,vy)||1; if (Math.abs((vx*di[0]+vy*di[1])/Lw)>0.3) continue; const depth=-(vx*dj[0]+vy*dj[1]); if (depth>60 && depth<800 && (tt===null||depth<tt)) tt=depth; } }
             if (tt===null){ const rh=rayHit([sg.c[0]-dj[0]*5,sg.c[1]-dj[1]*5],[-dj[0],-dj[1]],dwgSegs,1); if(rh!==null && rh<700) tt=rh+5; }
             if (tt!==null){ const o=[sg.c[0]-dj[0]*tt,sg.c[1]-dj[1]*tt]; line(o[0]-di[0]*80,o[1]-di[1]*80,o[0]+(sg.r+80)*di[0],o[1]+(sg.r+80)*di[1],1,0); } } } if(lay==='doors') continue; const n=16; let prev=null; for(let k=0;k<=n;k++){ const t=a0+(a1-a0)*k/n; const q=[sg.c[0]+sg.r*Math.cos(t),sg.c[1]+sg.r*Math.sin(t)]; if(prev) line(prev[0],prev[1],q[0],q[1],1,0); prev=q; } } }
+  // otwory bez symbolu drzwi: dwa współliniowe odcinki ścian z przerwą 0,5–1,4 m → domknięcie (żeby pomieszczenia nie zlewały się)
+  try{ const segs=dwgSegs; for (let i=0;i<segs.length;i++){ const A=segs[i]; const ax=A.b[0]-A.a[0], ay=A.b[1]-A.a[1]; const AL=Math.hypot(ax,ay); if(AL<200) continue; const ux=ax/AL, uy=ay/AL;
+      for (let j=i+1;j<segs.length;j++){ const B=segs[j]; const bx=B.b[0]-B.a[0], by=B.b[1]-B.a[1]; const BL=Math.hypot(bx,by); if(BL<200) continue; if (Math.abs((bx*ux+by*uy)/BL)<0.995) continue; // równoległe
+        const off=Math.abs((B.a[0]-A.a[0])*uy-(B.a[1]-A.a[1])*ux); if (off>40) continue; // współliniowe
+        let best=null; for (const p of [A.a,A.b]) for (const q of [B.a,B.b]){ const d=Math.hypot(p[0]-q[0],p[1]-q[1]); if(best===null||d<best.d) best={d,p,q}; }
+        if (best.d<500||best.d>1400) continue;
+        // przerwa musi być wolna: żaden inny odcinek nie może mieć końca w środku przerwy (wtedy to nie otwór, lecz załamanie ścian)
+        const mx=(best.p[0]+best.q[0])/2, my=(best.p[1]+best.q[1])/2; const gx=(best.q[0]-best.p[0])/best.d, gy=(best.q[1]-best.p[1])/best.d; let blocked=false;
+        for (let k=0;k<segs.length&&!blocked;k++){ if(k===i||k===j) continue; const C=segs[k]; for (const e of [C.a,C.b]){ const t=(e[0]-best.p[0])*gx+(e[1]-best.p[1])*gy; const dn=Math.abs((e[0]-best.p[0])*gy-(e[1]-best.p[1])*gx); if (t>60&&t<best.d-60&&dn<=300){ blocked=true; break; } } }
+        if (blocked) continue; line(best.p[0],best.p[1],best.q[0],best.q[1],1,0); } } }catch(e){}
   const items=visibleItems(floor);
   for (const it of items) if(it.type==='demo'){ const r=Math.max(1,Math.round(((it.w||160)/2+60)/RES)); for(let i=1;i<it.pts.length;i++) line(it.pts[i-1][0],it.pts[i-1][1],it.pts[i][0],it.pts[i][1],0,r); }
   for (const it of items) if(it.type==='wall'){ const r=Math.max(1,Math.round((it.w||120)/2/RES)); for(let i=1;i<it.pts.length;i++) line(it.pts[i-1][0],it.pts[i-1][1],it.pts[i][0],it.pts[i][1],1,r); }
@@ -571,7 +582,7 @@ function wallSegsAll(){
   const nearWall=(p)=>wsegs.some(([a,b])=>distPtSeg(p,a,b)<=120);
   // wyburzenia: fragmenty linii inwentaryzacji leżące w pasie wyburzenia nie są przeszkodą (docinamy odcinek)
   const demos=[]; for (const it of visibleItems(floor)) if(it.type==='demo') for(let i=1;i<it.pts.length;i++) demos.push({a:it.pts[i-1],b:it.pts[i],r:(it.w||160)/2+60});
-  const clipDemo=(p,q)=>{ let parts=[[p,q]]; for (const d of demos){ const out=[]; for (const [a,b] of parts){ const vx=b[0]-a[0], vy=b[1]-a[1]; const L=Math.hypot(vx,vy)||1; const ux=vx/L, uy=vy/L; const dvx=d.b[0]-d.a[0], dvy=d.b[1]-d.a[1]; const dL=Math.hypot(dvx,dvy)||1; if (Math.abs(ux*dvx/dL+uy*dvy/dL)<0.9){ out.push([a,b]); continue; } const dist=Math.abs((d.a[0]-a[0])*uy-(d.a[1]-a[1])*ux); if (dist>d.r){ out.push([a,b]); continue; } let t0=((d.a[0]-a[0])*ux+(d.a[1]-a[1])*uy), t1=((d.b[0]-a[0])*ux+(d.b[1]-a[1])*uy); if(t0>t1){ const tt=t0; t0=t1; t1=tt; } t0=Math.max(0,t0-d.r); t1=Math.min(L,t1+d.r); if (t1<=0||t0>=L){ out.push([a,b]); continue; } if (t0>30) out.push([a,[a[0]+ux*t0,a[1]+uy*t0]]); if (L-t1>30) out.push([[a[0]+ux*t1,a[1]+uy*t1],b]); } parts=out; } return parts; };
+  const clipDemo=(p,q)=>{ let parts=[[p,q]]; for (const d of demos){ const out=[]; for (const [a,b] of parts){ const vx=b[0]-a[0], vy=b[1]-a[1]; const L=Math.hypot(vx,vy)||1; const ux=vx/L, uy=vy/L; const dvx=d.b[0]-d.a[0], dvy=d.b[1]-d.a[1]; const dL=Math.hypot(dvx,dvy)||1; if (L<450 && distPtSeg([(a[0]+b[0])/2,(a[1]+b[1])/2],d.a,d.b)<=d.r) continue; /* krótki element (naświetle, ościeże) w pasie wyburzenia */ if (Math.abs(ux*dvx/dL+uy*dvy/dL)<0.9){ out.push([a,b]); continue; } const dist=Math.abs((d.a[0]-a[0])*uy-(d.a[1]-a[1])*ux); if (dist>d.r){ out.push([a,b]); continue; } let t0=((d.a[0]-a[0])*ux+(d.a[1]-a[1])*uy), t1=((d.b[0]-a[0])*ux+(d.b[1]-a[1])*uy); if(t0>t1){ const tt=t0; t0=t1; t1=tt; } t0=Math.max(0,t0-d.r); t1=Math.min(L,t1+d.r); if (t1<=0||t0>=L){ out.push([a,b]); continue; } if (t0>30) out.push([a,[a[0]+ux*t0,a[1]+uy*t0]]); if (L-t1>30) out.push([[a[0]+ux*t1,a[1]+uy*t1],b]); } parts=out; } return parts; };
   for (const lay of ['walls','windows','sills']) for (const s of (F.geo[lay]||[])) if(s.k==='l') for(let i=1;i<s.p.length;i++){ if (lay!=='walls' && ATTIC && floor===ATTIC.floor && !(nearWall(s.p[i-1]) && nearWall(s.p[i]))) continue; /* okna połaciowe narysowane w rzucie nie są przeszkodą */ for (const sg of (demos.length?clipDemo(s.p[i-1],s.p[i]):[[s.p[i-1],s.p[i]]])) segs.push(sg); }
   for (const it of visibleItems(floor)) if(it.type==='wall'){ const hw=(it.w||120)/2; for(let i=1;i<it.pts.length;i++){ const a=it.pts[i-1],b=it.pts[i]; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const nx=-(b[1]-a[1])/L*hw, ny=(b[0]-a[0])/L*hw; const ex=(b[0]-a[0])/L*hw, ey=(b[1]-a[1])/L*hw; const a1=[a[0]-ex,a[1]-ey], b1=[b[0]+ex,b[1]+ey]; segs.push([[a1[0]+nx,a1[1]+ny],[b1[0]+nx,b1[1]+ny]]); segs.push([[a1[0]-nx,a1[1]-ny],[b1[0]-nx,b1[1]-ny]]); segs.push([[a1[0]+nx,a1[1]+ny],[a1[0]-nx,a1[1]-ny]]); segs.push([[b1[0]+nx,b1[1]+ny],[b1[0]-nx,b1[1]-ny]]); } }
   obstCache={floor,n:project[floor].items.length,v:sel[floor],stamp:obstStamp,segs}; return segs;
@@ -638,13 +649,13 @@ function shrinkFurn(it){ // pomniejsz do wolnego pola między ścianami (dla PAX
   const nr={x0:cx-L+10,y0:cy-D+10,x1:cx-L+10+w,y1:cy-D+10+h}; // zakotwicz przy lewej/dolnej ścianie
   applyRect(it,nr); const r2=rectOf(it); const fixed=resolveRect(r2,segs); if(!fixed) return false; applyRect(it,snapFlush(fixed,segs,250)); return true;
 }
-function collidingFurn(){ const segs=wallSegsAll(); return visibleItems(floor).filter(it=>it.type==='furn' && (!rectFree(rectOf(it),segs) || tooLowFor(it))); }
+function collidingFurn(){ const segs=wallSegsAll(); return visibleItems(floor).filter(it=>it.type==='furn' && (!rectFree(rectOf(it),segs) || tooLowFor(it) || blocksDoor(it))); }
 const cbox=document.getElementById('conflictBox');
 function hideConflict(){ cbox.hidden=true; cbox.innerHTML=''; }
 function showConflict(items, context){
   if (!items.length){ hideConflict(); return; }
-  const names=items.map(it=>{ const l=tooLowFor(it); return (it.label||(FURN[it.kind]?FURN[it.kind].n:it.kind))+(l?` (za nisko pod skosem: sufit ${(l.hmin/1000).toFixed(2).replace('.',',')} m, mebel ${(l.need/1000).toFixed(2).replace('.',',')} m)`:''); }).join(', ');
-  cbox.innerHTML=`<div><b>Kolizja ze ścianą lub skosem:</b> ${names}. Co robimy?</div><div class="row"><button class="btn" id="cfMove">Przesuń mebel</button><button class="btn" id="cfShrink">Pomniejsz mebel${items.some(isPax)?' (do modułu PAX)':''}</button><button class="btn" id="cfUndo">Cofnij ${context==='wall'?'ścianę':'zmianę'}</button><button class="btn" id="cfKeep">Zostaw (zaznacz)</button></div><p class="hint" id="cfMsg"></p>`;
+  const names=items.map(it=>{ const l=tooLowFor(it); const bd=blocksDoor(it); return (it.label||(FURN[it.kind]?FURN[it.kind].n:it.kind))+(l?` (za nisko pod skosem: sufit ${(l.hmin/1000).toFixed(2).replace('.',',')} m, mebel ${(l.need/1000).toFixed(2).replace('.',',')} m)`:'')+(bd?` (${bd} – strefa 0,9 m przed drzwiami)`:''); }).join(', ');
+  cbox.innerHTML=`<div><b>Kolizja (ściana / skos / strefa drzwi):</b> ${names}. Co robimy?</div><div class="row"><button class="btn" id="cfMove">Przesuń mebel</button><button class="btn" id="cfShrink">Pomniejsz mebel${items.some(isPax)?' (do modułu PAX)':''}</button><button class="btn" id="cfUndo">Cofnij ${context==='wall'?'ścianę':'zmianę'}</button><button class="btn" id="cfKeep">Zostaw (zaznacz)</button></div><p class="hint" id="cfMsg"></p>`;
   cbox.hidden=false;
   document.getElementById('cfMove').addEventListener('click',()=>{ pushHistory(); const left=[]; for(const it of items){ if(!fitFurn(it)) left.push(it); } commit(); if(left.length){ document.getElementById('cfMsg').textContent='Nie da się przesunąć bez kolizji: '+left.map(i=>i.label||i.kind).join(', ')+' – pomniejsz albo przesuń ścianę.'; } else hideConflict(); });
   document.getElementById('cfShrink').addEventListener('click',()=>{ pushHistory(); const left=[]; for(const it of items){ if(!shrinkFurn(it)) left.push(it); } commit(); if(left.length){ document.getElementById('cfMsg').textContent='Za mało miejsca nawet na najmniejszy moduł (PAX 150) lub mebel: '+left.map(i=>i.label||i.kind).join(', ')+' – zmień lokalizację lub przesuń ścianę.'; } else hideConflict(); });
@@ -653,7 +664,7 @@ function showConflict(items, context){
 }
 function afterFurnChange(it){ // wywołać po upuszczeniu / postawieniu / zmianie wymiaru
   if (!fitFurn(it)){ commit(); showConflict([it],'furn'); return; }
-  commit(); hideConflict();
+  commit(); if (blocksDoor(it)||tooLowFor(it)) showConflict([it],'furn'); else hideConflict();
 }
 function startEndDrag(it,e){ // złap koniec ściany: skracanie/wydłużanie wzdłuż osi, wydłużenie maks. do najbliższej ściany
   const q=svgPoint(e); const r=Math.max(14*mmPerPx(), (it.w||120)); let idx=-1; for (const k of [0,1]){ if (Math.hypot(q.x-it.pts[k][0],q.y-it.pts[k][1])<=r) idx=k; } if (idx<0) return false;
@@ -871,8 +882,17 @@ const FLOOR_H={piwnica:2290,parter:3330,pietro1:3440,poddasze:2780};
 const SILL=850, WIN_TOP=2750, DOOR_H=2100;
 const FURN_H={bed:500,bed1:500,night:500,wardrobe:2360,pax150:2360,pax175:2360,pax250:2360,pax275:2360,pax300:2360,pax150s:2360,pax200s:2360,sofa:850,armchair:850,coffee:450,tv:500,table:750,table4:750,chair:450,desk:750,counter:900,sink:900,hob:900,fridge:1800,shower:2000,bath:600,wc:400,basin:850,washer:850,shoe:900,box:900};
 function mm(v){ return v/1000; }
+function doorZones(){ // strefy wolne przy drzwiach: szerokość otworu × 0,9 m po obu stronach + pole wymachu skrzydła
+  const key=floor+'|'+sel[floor]+'|'+obstStamp+'|'+project[floor].items.length; if (doorZones._k===key) return doorZones._z; const Z=[];
+  const addRect=(x0,y0,x1,y1,why)=>Z.push({x0:Math.min(x0,x1),y0:Math.min(y0,y1),x1:Math.max(x0,x1),y1:Math.max(y0,y1),why});
+  for (const it of visibleItems(floor)) if(it.type==='door'){ const [a,b]=it.pts; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const u=[(b[0]-a[0])/L,(b[1]-a[1])/L]; const n=[-u[1],u[0]]; const th=((it.w||300)-40)/2+20;
+    for (const sd of [1,-1]){ const dep=sd*(it.flip?-1:1)>0?Math.max(900,L):900; const c=[(a[0]+b[0])/2,(a[1]+b[1])/2]; addRect(c[0]-u[0]*L/2+n[0]*sd*th, c[1]-u[1]*L/2+n[1]*sd*th, c[0]+u[0]*L/2+n[0]*sd*(th+dep), c[1]+u[1]*L/2+n[1]*sd*(th+dep), it.open?'blokuje otwór':'blokuje drzwi'); } }
+  const F=MODEL.floors[floor]; const covered=(c)=>{ for (const it of visibleItems(floor)){ if(it.type==='wall'||it.type==='demo'){ for(let i=1;i<it.pts.length;i++) if (distPtSeg(c,it.pts[i-1],it.pts[i])<=(it.w||120)/2+110) return true; } } return false; }; // drzwi zamurowane lub w wyburzonej ścianie nie mają strefy
+  for (const sg of (F.geo.doors||[])) if(sg.k==='a' && sg.r>=500 && sg.r<=1300 && !covered(sg.c)){ const D=[[Math.cos(sg.a0),Math.sin(sg.a0)],[Math.cos(sg.a1),Math.sin(sg.a1)]]; const x0=sg.c[0], y0=sg.c[1]; const x1=sg.c[0]+(D[0][0]+D[1][0])*sg.r, y1=sg.c[1]+(D[0][1]+D[1][1])*sg.r; addRect(x0,y0,x1,y1,'blokuje drzwi istniejące'); }
+  doorZones._k=key; doorZones._z=Z; return Z; }
+function blocksDoor(it){ if(it.type!=='furn') return null; const r=rectOf(it); for (const z of doorZones()){ const ox=Math.min(r.x1,z.x1)-Math.max(r.x0,z.x0), oy=Math.min(r.y1,z.y1)-Math.max(r.y0,z.y0); if (ox>40 && oy>40) return z.why; } return null; }
 function tooLowFor(it){ // poddasze: czy mebel mieści się pod skosem (najniższy punkt sufitu nad obrysem mebla)
-  if(!ATTIC||floor!==ATTIC.floor||it.type!=='furn') return null; const r=rectOf(it); const hF=FURN_H[it.kind]||900; let hmin=1e9; for (const x of [r.x0+30,(r.x0+r.x1)/2,r.x1-30]) for (const y of [r.y0+30,(r.y0+r.y1)/2,r.y1-30]){ const h=heightAt(x,y); if(h!==null&&h<hmin) hmin=h; } if (hmin<1e9 && hmin<hF) return {hmin,need:hF}; return null; }
+  if(!ATTIC||floor!==ATTIC.floor||it.type!=='furn') return null; const r=rectOf(it); const hF=it.hgt||FURN_H[it.kind]||900; let hmin=1e9; for (const x of [r.x0+30,(r.x0+r.x1)/2,r.x1-30]) for (const y of [r.y0+30,(r.y0+r.y1)/2,r.y1-30]){ const h=heightAt(x,y); if(h!==null&&h<hmin) hmin=h; } if (hmin<1e9 && hmin<hF) return {hmin,need:hF}; return null; }
 function init3D(){
   if (R3 || !window.THREE) return;
   const canvas=document.getElementById('gl3d');
@@ -945,7 +965,7 @@ function build3D(){
     else if (it.type==='door' && !it.open){ const [a,bb]=it.pts; const L=Math.hypot(bb[0]-a[0],bb[1]-a[1])||1; const ang=Math.atan2(bb[1]-a[1],bb[0]-a[0]); const sgn=it.flip?-1:1; const nx=-Math.sin(ang)*sgn, ny=Math.cos(ang)*sgn; const open=0.75; // skrzydło otwarte ~75%
         const ex=[a[0]+((bb[0]-a[0])/L)*Math.cos(open*Math.PI/2)*L+nx*Math.sin(open*Math.PI/2)*L, a[1]+((bb[1]-a[1])/L)*Math.cos(open*Math.PI/2)*L+ny*Math.sin(open*Math.PI/2)*L];
         door3D(it,G,matDoor,matFrame,matMetal); }
-    else if (it.type==='furn'){ const r=rectOf(it); const k=it.kind||'box'; const h=FURN_H[k]||900; const wet=['shower','bath','wc','basin','washer'].includes(k), kit=['counter','sink','hob','fridge'].includes(k);
+    else if (it.type==='furn'){ const r=rectOf(it); const k=it.kind||'box'; const h=it.hgt||FURN_H[k]||900; const wet=['shower','bath','wc','basin','washer'].includes(k), kit=['counter','sink','hob','fridge'].includes(k);
         const mat=new THREE.MeshLambertMaterial({color:k==='shower'?0x7fb3e0:wet?0xb9d7ea:kit?0xe9c46a:(k.startsWith('pax')||k==='wardrobe')?0xb08968:0xc9bfb2,transparent:k==='shower',opacity:k==='shower'?0.4:1});
         const g=new THREE.BoxGeometry(mm(r.x1-r.x0),mm(h),mm(r.y1-r.y0)); const m=new THREE.Mesh(g,mat); m.position.set(mm((r.x0+r.x1)/2),mm(h/2),-mm((r.y0+r.y1)/2)); m.userData={id:it.id,type:'furn'}; if(it.id===selectedId){ m.material.emissive=new THREE.Color(0x664400); } G.add(m); R3.pick.push(m); }
     else if (it.type==='room' && it.pts.length>=3){ const c=roomAnchor(it); labelPlane((it.label||'')+' '+(roomArea(it)/1e6).toFixed(1).replace('.',',')+' m²', c[0], c[1], 2600, G); }
@@ -984,7 +1004,7 @@ function toggle3D(on){ try{ document.getElementById('hRead').hidden=true; }catch
   if (on){ if(!window.THREE){ diag('3d','biblioteka 3D nie wczytała się (brak połączenia z CDN)'); toggle3D(false); return; } init3D(); focus3D(); build3D(); }
 }
 document.getElementById('btn3d').addEventListener('click',()=>toggle3D(!is3D));
-window.__p11dbg={ get R3(){ return R3; }, get items(){ return project[floor].items; }, get sel(){ return selectedId; }, addWall(pts,w,side){ draft={type:'wall',pts:pts.map(q=>q.slice())}; if(w==='custom'){ document.getElementById('wallW').value='custom'; } else document.getElementById('wallW').value=String(w||120); document.getElementById('wallSide').value=String(side||0); finishDraft(); return project[floor].items[project[floor].items.length-1]; }, layer(k,on){ layerOn[k]=on; updateLayerVisibility(); drawProject(); }, raster(){ return getRaster(); }, snapEnds(it,tol){ return snapWallEnds(it,tol); }, hits(it){ return rectCollisions(rectOf(it),wallSegsAll()); }, low(it){ return tooLowFor(it); }, get wallDrag(){ return wallDrag; } };
+window.__p11dbg={ get R3(){ return R3; }, get items(){ return project[floor].items; }, get sel(){ return selectedId; }, addWall(pts,w,side){ draft={type:'wall',pts:pts.map(q=>q.slice())}; if(w==='custom'){ document.getElementById('wallW').value='custom'; } else document.getElementById('wallW').value=String(w||120); document.getElementById('wallSide').value=String(side||0); finishDraft(); return project[floor].items[project[floor].items.length-1]; }, layer(k,on){ layerOn[k]=on; updateLayerVisibility(); drawProject(); }, raster(){ return getRaster(); }, snapEnds(it,tol){ return snapWallEnds(it,tol); }, hits(it){ return rectCollisions(rectOf(it),wallSegsAll()); }, low(it){ return tooLowFor(it); }, blocks(it){ return blocksDoor(it); }, zones(){ return doorZones(); }, get wallDrag(){ return wallDrag; } };
 window.addEventListener('resize',()=>{ if(is3D&&R3){ size3D(); render3D(); } });
 // ---------- boot ----------
 setFloor(floor);

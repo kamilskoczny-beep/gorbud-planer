@@ -10,4 +10,5 @@
 8. **Poddasze**: wysokości pod skosem – analizować linie załamania i h<1,90 z inwentaryzacji, liczyć powierzchnię użytkową wg PN-ISO 9836 (100 % h ≥ 2,2; 50 % 1,4–2,2; 0 poniżej), pokazywać h pod kursorem.
 9. Bez kominków w mieszkaniach, chyba że użytkownik poprosi.
 10. Uwagi użytkownika rysowane na rzucie (ołówek, strzałki, numerowane) są poleceniami – nanosić punkt po punkcie i potwierdzać listą zmian.
-11. **Ewolucja**: każda nowa zasada trafia do tego pliku, do pamięci projektu i do umiejętności `gorbud-meblowanie-rzutow`.
+11. **Meblowanie przemyślane użytkowo** – pełny zestaw zasad w `ZASADY_MEBLOWANIA.md` (strefy drzwi wolne, RTV naprzeciw sofy, ława przed sofą, wezgłowie przy pełnej ścianie, PAX z 0,9 m przed frontem, kuchnia projektowana od razu z trójkątem roboczym i kolejnością lodówka–zlew–płyta). Model podświetla mebel w strefie 0,9 m przed drzwiami.
+12. **Ewolucja**: każda nowa zasada trafia do tego pliku, do pamięci projektu i do umiejętności `gorbud-meblowanie-rzutow`.

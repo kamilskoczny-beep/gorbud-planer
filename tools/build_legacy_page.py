@@ -2,7 +2,7 @@ import json, os
 m=json.load(open('model_final.json'))
 units={
  'W':{'name':'Część wspólna','color':'#b7bec7'},
- 'O':{'name':'Orange 109–111 (bez zmian)','color':'#f0c36a'},
+ 'O':{'name':'Orange — 109–111 i piwnica 007 (bez zmian)','color':'#f0c36a'},
  'M1':{'name':'M1 — 108 jako 1 mieszkanie','color':'#e0a04a'},
  'M1a':{'name':'M1a — 108 część płd.','color':'#e07b3a'},
  'M1b':{'name':'M1b — 108 część płn.','color':'#d9b23a'},
@@ -13,6 +13,8 @@ units={
  'M4':{'name':'M4 — poddasze, skrzydło płd.','color':'#79b76a'},
  'M5':{'name':'M5 — poddasze, pokoje 209–211 i 214','color':'#c97bb0'},
  'M6':{'name':'M6 — poddasze, skrzydło zach. 212–219','color':'#8f8fd6'},
+ 'M7':{'name':'M7 — poddasze, 209 + 210 + 205','color':'#e0a04a'},
+ 'M8':{'name':'M8 — poddasze, 206 + 207 + 208','color':'#5bbfae'},
 }
 p1={'101':'W','102':'W','102a':'W','109':'O','110':'O','111':'O','106':'M2','107':'M2','103':'M3','104':'M3','105':'M3'}
 pod_common={'201':'W','202':'W','203':'W'}
@@ -24,9 +26,10 @@ variants={'units':units,'floors':{
   {'id':'P9','name':'Mieszkanie 108 — wariant roboczy (dawny R3-1)','desc':'Wejście wprost do salonu w środkowym paśmie (2 okna), szafa wnękowa PAX 150 przy wejściu. Na północy sypialnia 1 i łazienka z pralką dostępna z salonu. Na południu sypialnie 2 i 3, garderoba PAX, pomieszczenie gospodarcze i przejście. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':p1,'hide':['108','103','104','105','106','107']}
  ],
  'poddasze':[
-  {'id':'W4','name':'Poddasze — wariant roboczy M6 (dawny W4 loft)','desc':'Mieszkanie M6 = skrzydło 212–219 z korytarzem. Ścianka 215|korytarz usunięta – kuchnia z jadalnią przy wejściu otwarta na hol (zweryfikować konstrukcję więźby). Salon 219 (okno szczytowe), sypialnie 213 i 216 pod skosem zach., łazienka z pralnią w 217 przy kominie, gabinet/pokój gościnny w 218. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':{**pod_common,**pod_M4,'209':'M5','210':'M5','211':'M5','214':'M5',**{n:'M6' for n in ['212','213','215','216','217','218','219']}},'hide':['212','213','215','216','217','218','219']},
+  {'id':'W4','name':'Poddasze — wariant roboczy M6 (dawny W4 loft)','desc':'M6 = skrzydło 212–219 z korytarzem; M7 = 209+210+205 z holem w przedsionku; M8 = 206+207+208; hol 211, 214 i 204 wspólne. Ścianka 215|korytarz usunięta – kuchnia z jadalnią przy wejściu otwarta na hol (zweryfikować konstrukcję więźby). Salon 219 (okno szczytowe), sypialnie 213 i 216 pod skosem zach., łazienka z pralnią w 217 przy kominie, gabinet/pokój gościnny w 218. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':{**pod_common,'204':'W','211':'W','214':'W','205':'M7','209':'M7','210':'M7','206':'M8','207':'M8','208':'M8',**{n:'M6' for n in ['212','213','215','216','217','218','219']}},'hide':['212','213','215','216','217','218','219','205','206','207','208','209','210']},
  ],
- 'parter':[], 'piwnica':[]}}
+ 'parter':[ {'id':'S','name':'Parter — stan istniejący (Poczta Polska, najem)','desc':'Bez zmian funkcjonalnych. Kolory tylko dla odróżnienia pomieszczeń.','assign':{}} ],
+ 'piwnica':[ {'id':'S','name':'Piwnica — stan istniejący','desc':'Kotłownia gazowa zostaje. 007 (kablownia) należy do Orange – bez zmian. Pozostałe pomieszczenia: kolory tylko dla odróżnienia.','assign':{'007':'O'}} ]}}
 # ---- poddasze: płaszczyzny skosów (z inwentaryzacji: linie 'sufit' = załamanie sufitu, linie h<1,90, h_min przy ścianach ~0,9 m)
 # line: linia załamania (x0,y0)-(x1,y1); dir: kierunek opadania; h0: wysokość przy linii [mm]; tan: nachylenie (spadek/odległość)
 variants['attic']={'floor':'poddasze','hmin':900,'planes':[
