@@ -1,0 +1,67 @@
+<header>
+  <h1>Pocztowa 11<small>Drawsko Pomorskie · model roboczy zmiany sposobu użytkowania</small></h1>
+  <div class="tabs" role="tablist" id="floorTabs"></div>
+  <button class="btn" id="btn3d" aria-pressed="false" title="Przełącz widok 2D / 3D">3D</button>
+  <div class="status"><span class="dot" id="saveDot"></span><span id="saveTxt">łączenie…</span></div>
+</header>
+<main>
+  <aside>
+    <section>
+      <h2>Wariant koncepcji (dla tej kondygnacji)</h2>
+      <div class="row">
+        <select id="variantSel" aria-label="Wariant koncepcji"></select>
+      </div>
+      <p class="hint" id="variantDesc"></p>
+      <div class="legend" id="legend"></div>
+    </section>
+    <section>
+      <h2>Warstwy</h2>
+      <div class="chk" id="layers"></div>
+    </section>
+    <section>
+      <h2>Narzędzia projektowe</h2>
+      <div class="tools" id="tools"></div>
+      <div class="row" style="margin-top:6px">
+        <label for="wallW" class="hint">Grubość</label>
+        <select id="wallW"><option value="80">8 cm (GK)</option><option value="100">10 cm</option><option value="120" selected>12 cm</option><option value="150">15 cm</option><option value="180">18 cm</option><option value="250">25 cm</option><option value="custom">inna…</option></select>
+        <input id="wallWin" type="number" min="3" max="100" step="0.5" placeholder="cm" title="Grubość ściany w cm" style="width:58px" hidden>
+        <label for="wallSide" class="hint">Grubość od linii</label>
+        <select id="wallSide" title="Po której stronie rysowanej linii ma leżeć grubość ściany (patrząc w kierunku rysowania). Tab przełącza w trakcie rysowania."><option value="0" selected>na osi (pół na pół)</option><option value="1">w lewo od linii</option><option value="-1">w prawo od linii</option></select>
+        <label for="furnSel" class="hint">Mebel</label>
+        <select id="furnSel"></select>
+        <label for="unitSel" class="hint">Lokal</label>
+        <select id="unitSel"></select>
+        <label for="doorW" class="hint">Drzwi</label>
+        <select id="doorW"><option value="700">70 cm</option><option value="800" selected>80 cm</option><option value="900">90 cm</option><option value="1000">100 cm</option></select>
+        <button class="btn" id="btnJoin" title="Wyprostuj prawie poziome/pionowe ściany i wepnij końce ścian w sąsiednie ściany (narożniki i T)">⌐ Połącz ściany</button>
+      </div>
+      <p class="hint" id="toolHint">Pomieszczenie zaznaczasz klikając w jego nazwę (nie w obrys) – ściany łapiesz wszędzie indziej. Wybierz narzędzie. Kółko = zoom, przeciąganie = przesuwanie. <span class="kbd">Esc</span> kończy, <span class="kbd">Enter</span> zamyka obrys, <span class="kbd">Del</span> usuwa zaznaczenie, <span class="kbd">Ctrl+Z</span> cofa.</p>
+      <div class="row">
+        <button class="btn" id="undoBtn">Cofnij</button>
+        <button class="btn danger" id="delBtn">Usuń zaznaczone</button>
+        <button class="btn" id="clearBtn">Wyczyść kondygnację</button>
+      </div>
+      <div class="items" id="items"></div>
+      <details><summary>Eksport / import projektu (JSON)</summary>
+        <textarea id="jsonBox" spellcheck="false"></textarea>
+        <div class="row" style="margin-top:4px"><button class="btn" id="copyBtn">Kopiuj</button><button class="btn" id="loadBtn">Wczytaj z pola</button></div>
+      </details>
+    </section>
+    <section>
+      <h2>Pomieszczenia — stan istniejący</h2>
+      <div style="overflow-x:auto"><table id="roomTable"></table></div>
+    </section>
+  </aside>
+  <div id="canvasWrap">
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg" aria-label="Rzut kondygnacji"></svg>
+    <canvas id="gl3d" hidden></canvas>
+    <div class="ovl" id="hint3d" hidden>3D: przeciągnij tło = obrót · kółko = zoom · Shift+przeciągnij = przesuń widok · złap mebel lub drzwi = przesuń (R/L dla drzwi, Del usuwa)</div>
+    <div class="ovl" id="coord">—</div>
+    <div class="draftbar" id="draftBar" hidden><button class="btn primary" id="dbFinish">✓ Zakończ</button><button class="btn" id="dbBack">↶ Cofnij punkt</button><button class="btn" id="dbCancel">✕ Anuluj</button><span class="hint" id="dbInfo"></span></div>
+    <div class="ovl2"><button id="zoomIn" title="Powiększ" aria-label="Powiększ">+</button><button id="zoomOut" title="Pomniejsz" aria-label="Pomniejsz">−</button><button id="zoomFit" title="Dopasuj" aria-label="Dopasuj">⤢</button></div>
+    <div id="inlineEdit"></div>
+    <div id="conflictBox" hidden></div>
+    <div id="hRead" class="ovl" style="position:absolute;pointer-events:none;padding:2px 7px;font-weight:600" hidden></div>
+    <div id="errToast" class="ovl" style="bottom:auto;top:52px;left:10px;right:10px;color:var(--new);border:1px solid var(--new);pointer-events:auto" hidden></div>
+  </div>
+</main>

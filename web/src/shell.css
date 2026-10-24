@@ -1,0 +1,10 @@
+/* Pasek projektów powłoki Planera – nad nagłówkiem edytora */
+.pbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 16px;background:var(--accent,#0f6e7a);color:#fff;font:500 12px/1.3 "IBM Plex Sans",system-ui,sans-serif}
+.pbar-brand{font-family:"IBM Plex Sans Condensed","Arial Narrow",sans-serif;font-size:14px;letter-spacing:.04em;text-transform:uppercase;margin-right:8px}
+.pbar-lbl{opacity:.85}
+.pbar select{max-width:min(46vw,420px);padding:3px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff}
+.pbar .btn{padding:3px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.pbar .btn:hover{background:rgba(255,255,255,.22)}
+.pbar .btn.danger{border-color:rgba(255,160,160,.6);color:#ffd9d9}
+.pbar-info{margin-left:auto;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;opacity:.9}
+[hidden]{display:none!important}

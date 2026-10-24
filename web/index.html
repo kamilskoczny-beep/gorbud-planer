@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planer GORBUD</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <nav id="projectBar" class="pbar">
+    <strong class="pbar-brand">Planer GORBUD</strong>
+    <label class="pbar-lbl" for="projSel">Projekt</label>
+    <select id="projSel"></select>
+    <button class="btn" id="projOpen">Otwórz</button>
+    <button class="btn" id="projNew" title="Nowy projekt z pliku model.json (wynik narzędzia tools/dwg)">+ Nowy z model.json</button>
+    <button class="btn" id="projImport" title="Wczytaj cały projekt zapisany wcześniej jako .planer.json">Import .planer.json</button>
+    <button class="btn" id="projExport" title="Zapisz bieżący projekt do pliku .planer.json (kopia zapasowa / przeniesienie)">Eksport</button>
+    <button class="btn danger" id="projDelete" title="Usuń bieżący projekt z tej przeglądarki">Usuń</button>
+    <span class="pbar-info" id="projInfo"></span>
+    <input type="file" id="fileModel" accept="application/json,.json" hidden>
+    <input type="file" id="fileProject" accept="application/json,.json" hidden>
+  </nav>
+  <div id="app" style="display:contents"></div>
+  <script id="modelData" type="application/json">{}</script>
+  <script id="variantData" type="application/json">{}</script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
