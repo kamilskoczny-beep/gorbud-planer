@@ -21,7 +21,7 @@ A={**pod_M4, **{n:'M5' for n in ['209','210','211','212','213','214','215','216'
 B={**pod_M4, '209':'M5','210':'M5','214':'M5','211':'W', **{n:'M6' for n in ['212','213','215','216','217','218','219']}}
 variants={'units':units,'floors':{
  'pietro1':[
-  {'id':'P9','name':'Mieszkanie 108 — wariant roboczy (dawny R3-1)','desc':'Wejście wprost do salonu w środkowym paśmie (2 okna), szafa wnękowa PAX 150 przy wejściu. Na północy sypialnia 1 i łazienka z pralką dostępna z salonu. Na południu sypialnie 2 i 3, garderoba PAX, pomieszczenie gospodarcze i przejście. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':p1,'hide':['108']}
+  {'id':'P9','name':'Mieszkanie 108 — wariant roboczy (dawny R3-1)','desc':'Wejście wprost do salonu w środkowym paśmie (2 okna), szafa wnękowa PAX 150 przy wejściu. Na północy sypialnia 1 i łazienka z pralką dostępna z salonu. Na południu sypialnie 2 i 3, garderoba PAX, pomieszczenie gospodarcze i przejście. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':p1,'hide':['108','103','104','105','106','107']}
  ],
  'poddasze':[
   {'id':'W4','name':'Poddasze — wariant roboczy M6 (dawny W4 loft)','desc':'Mieszkanie M6 = skrzydło 212–219 z korytarzem. Ścianka 215|korytarz usunięta – kuchnia z jadalnią przy wejściu otwarta na hol (zweryfikować konstrukcję więźby). Salon 219 (okno szczytowe), sypialnie 213 i 216 pod skosem zach., łazienka z pralnią w 217 przy kominie, gabinet/pokój gościnny w 218. Układ rozwijany na bieżąco – rysuj uwagi, Claude nanosi.','assign':{**pod_common,**pod_M4,'209':'M5','210':'M5','211':'M5','214':'M5',**{n:'M6' for n in ['212','213','215','216','217','218','219']}},'hide':['212','213','215','216','217','218','219']},
