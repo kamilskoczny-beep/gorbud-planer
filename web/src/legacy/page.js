@@ -16,7 +16,7 @@ const layerDefs = [
   ['walls','Ściany istniejące (pełne)','var(--ink)',true],['demo','Ściany istniejące do wyburzenia','var(--demo)',true],['windows','Okna','var(--win)',true],['doors','Drzwi','var(--door)',true],
   ['stairs','Schody','var(--stair)',true],['fixtures','Wyposażenie','var(--fix)',false],['sills','Parapety','var(--fix)',false],
   ['rooms','Pomieszczenia (etykiety + strefy)','var(--accent)',true],['dwgtext','Opisy z inwentaryzacji','var(--dim)',false],
-  ['dims','Linie wymiarowe','var(--dim)',false],['skosy','Skosy poddasza (załamanie sufitu, h = 1,90 / 2,20)','var(--demo)',true],['evac','Dojścia ewakuacyjne do klatki (limit 20 m)','#d62828',true],['project','Projekt (nowe elementy: ściany, drzwi)','var(--new)',true],['rfill','Pomieszczenia projektowane – kolor (podkład)','var(--new)',true],['rline','Pomieszczenia projektowane – obrys przerywany','var(--new)',false],['rlbl','Pomieszczenia projektowane – nazwa i powierzchnia','var(--new)',true],['furn','Meble (projekt)','var(--muted)',true],['sketch','Szkic i uwagi (dla Claude)','var(--mark)',true],['autodim','Wymiary automatyczne (pomieszczenia, przejścia)','var(--accent)',true],['piony','Piony instalacyjne (z wszystkich kondygnacji)','#1b7f5e',true],['legenda','Arkusz PAB: ramka, tabelka rysunkowa, zestawienie pomieszczeń, uwagi','var(--ink)',true],['under','Podrys innej kondygnacji (wybór poniżej)','#7b5cff',true]
+  ['dims','Linie wymiarowe','var(--dim)',false],['skosy','Skosy poddasza (załamanie sufitu, h = 1,90 / 2,20)','var(--demo)',true],['evac','Dojścia ewakuacyjne do klatki (limit 20 m)','#d62828',true],['project','Projekt (nowe elementy: ściany, drzwi)','var(--new)',true],['rfill','Pomieszczenia projektowane – kolor (podkład)','var(--new)',true],['rline','Obrys pomieszczeń (co liczy się do powierzchni) – punkty załamania do przeciągania','var(--new)',true],['rlbl','Pomieszczenia projektowane – nazwa i powierzchnia','var(--new)',true],['furn','Meble (projekt)','var(--muted)',true],['sketch','Szkic i uwagi (dla Claude)','var(--mark)',true],['autodim','Wymiary automatyczne (pomieszczenia, przejścia)','var(--accent)',true],['piony','Piony instalacyjne (z wszystkich kondygnacji)','#1b7f5e',true],['legenda','Arkusz PAB: ramka, tabelka rysunkowa, zestawienie pomieszczeń, uwagi','var(--ink)',true],['under','Podrys innej kondygnacji (wybór poniżej)','#7b5cff',true]
 ];
 const layerOn = {}; layerDefs.forEach(l=>layerOn[l[0]]=l[3]);
 try{ const s=JSON.parse(localStorage.getItem(KEYP+'.layers')||'{}'); Object.keys(s).forEach(k=>{ if(k in layerOn) layerOn[k]=s[k]; }); }catch(e){}
@@ -101,24 +101,28 @@ function unitOf(nr){ const v=curVariant(floor); const m=v?(v.assign||{}):{}; ret
 let partCache=null;
 function roomPartition(rk){ // podział wolnej przestrzeni rastra między pomieszczenia inwentaryzacji (wielo-źródłowy BFS od etykiet + punktów 'zone') → pełne pokrycie stref
   if(partCache&&partCache.key===floor+'|'+rk) return partCache.map; const R=getRaster(); const {g,W,H,ox,oy}=R; const F=MODEL.floors[floor]; const hide=new Set((curVariant(floor)||{}).hide||[]);
-  const labs=[]; for (const r of F.rooms){ if(hide.has(r.nr)) continue; labs.push({nr:r.nr,x:(r.lx||0)+300,y:(r.ly||0)+60}); } for (const z of visibleItems(floor)) if(z.type==='zone') labs.push({nr:z.nr,x:z.pts[0][0],y:z.pts[0][1]});
+  const manualNr=new Set(visibleItems(floor).filter(z=>z.type==='rpoly').map(z=>z.nr)); const labs=[]; for (const r of F.rooms){ if(hide.has(r.nr)||manualNr.has(r.nr)) continue; labs.push({nr:r.nr,x:(r.lx||0)+300,y:(r.ly||0)+60}); } for (const z of visibleItems(floor)) if(z.type==='zone') labs.push({nr:z.nr,x:z.pts[0][0],y:z.pts[0][1]});
   const owner=new Int32Array(W*H).fill(-1); const nrs=[]; const idxOf=(nr)=>{ let k=nrs.indexOf(nr); if(k<0){ nrs.push(nr); k=nrs.length-1; } return k; };
   // komórki „na zewnątrz” (komponent brzegowy) – etykiety tam leżące ignorujemy
   const outside=new Uint8Array(W*H); { const st=[]; for(let x=0;x<W;x++){ st.push(x, (H-1)*W+x); } for(let y=0;y<H;y++){ st.push(y*W, y*W+W-1); } for (const i of st){ if(!g[i]&&!outside[i]){ outside[i]=1; const q=[i]; while(q.length){ const k=q.pop(); for (const j of [k-1,k+1,k-W,k+W]){ if(j>=0&&j<g.length&&!g[j]&&!outside[j]){ outside[j]=1; q.push(j); } } } } } }
   // źródła 1: obrysy z inwentaryzacji (DWG) – komórki wewnątrz obrysu należą do pomieszczenia (scanline), BFS rozdziela tylko resztę
   let q=[]; const scan=(poly,cb)=>{ const ys=poly.map(p=>p[1]); const y0=Math.max(0,Math.floor((Math.min(...ys)-oy)/RES)), y1=Math.min(H-1,Math.ceil((Math.max(...ys)-oy)/RES)); for (let yy=y0;yy<=y1;yy++){ const Y=oy+yy*RES+RES/2; const xs=[]; for (let i=0,j=poly.length-1;i<poly.length;j=i++){ const a=poly[i],b=poly[j]; if((a[1]>Y)!==(b[1]>Y)) xs.push(a[0]+(Y-a[1])*(b[0]-a[0])/(b[1]-a[1])); } xs.sort((p,r)=>p-r); for (let k=0;k+1<xs.length;k+=2){ const xa=Math.max(0,Math.ceil((xs[k]-ox-RES/2)/RES)), xb=Math.min(W-1,Math.floor((xs[k+1]-ox-RES/2)/RES)); for (let xx=xa;xx<=xb;xx++) cb(yy*W+xx); } } };
   for (const r of F.rooms){ if(hide.has(r.nr)) continue; if(r._poly0===undefined) r._poly0=r.poly||null; const p0=r._poly0; if(!p0) continue; if(labs.some(L=>L.nr!==r.nr&&pointInPoly([L.x,L.y],p0))) continue; /* obrys z DWG obejmuje cudzą etykietę (np. 004 zawiera 005) – nie używamy go jako źródła, podział zrobi BFS */ const k=idxOf(r.nr); const inHole=new Uint8Array(0); const holes=r._holes0||[]; const hmask=new Set(); for (const h of holes) scan(h,(c)=>hmask.add(c)); scan(p0,(c)=>{ if(!g[c]&&owner[c]<0&&!outside[c]&&!hmask.has(c)){ owner[c]=k; q.push(c); } }); }
+  for (const z of visibleItems(floor)) if(z.type==='rpoly'){ const k=idxOf(z.nr); scan(z.pts,(c)=>{ if(!g[c]&&owner[c]<0) owner[c]=k; }); } // ręczne obrysy: komórki zajęte, ale bez rozrostu
   for (const L of labs){ let sx=Math.round((L.x-ox)/RES), sy=Math.round((L.y-oy)/RES); if(sx<1||sy<1||sx>=W-1||sy>=H-1) continue; let cell=-1; if(!g[sy*W+sx]) cell=sy*W+sx; else { for(let r=1;r<=12&&cell<0;r++){ for(let a=-r;a<=r&&cell<0;a++) for(let c=-r;c<=r;c++){ if(Math.max(Math.abs(a),Math.abs(c))!==r) continue; const X=sx+a,Y=sy+c; if(X>0&&Y>0&&X<W-1&&Y<H-1&&!g[Y*W+X]){ cell=Y*W+X; break; } } } } if(cell<0||outside[cell]||owner[cell]>=0) continue; owner[cell]=idxOf(L.nr); q.push(cell); }
   let head=0; while(head<q.length){ const k=q[head++]; const o=owner[k]; for (const j of [k-1,k+1,k-W,k+W]){ if(j<0||j>=g.length||g[j]||owner[j]>=0) continue; owner[j]=o; q.push(j); } }
   const map={}; for (let k=0;k<nrs.length;k++){ const m=new Uint8Array(W*H); let n=0; for (let i=0;i<owner.length;i++) if(owner[i]===k){ m[i]=1; n++; } if(!n) continue; try{ const t=traceMask(m,W,H,ox,oy); if(t) map[nrs[k]]=t; }catch(e){} }
   partCache={key:floor+'|'+rk,map}; return map; }
 function drawRooms(){
   const F = MODEL.floors[floor];
-  gl.zones.innerHTML=''; gl.roomlbl.innerHTML=''; try{ projNoCache=projectNumbers(floor); }catch(e){} let rk=''; try{ rk=sel[floor]+'|'+wallsHash()+'|'+visibleItems(floor).filter(i=>i.type==='zone').map(i=>i.nr+':'+i.pts[0].join(',')).join(';'); }catch(e){}
+  gl.zones.innerHTML=''; gl.roomlbl.innerHTML=''; gl.rline.querySelectorAll('.rl-inv').forEach(e=>e.remove()); try{ projNoCache=projectNumbers(floor); }catch(e){} let rk=''; try{ rk=sel[floor]+'|'+wallsHash()+'|'+visibleItems(floor).filter(i=>i.type==='zone'||i.type==='rpoly').map(i=>i.type+i.nr+':'+JSON.stringify(i.pts)).join(';'); }catch(e){}
   const hide=new Set((curVariant(floor)||{}).hide||[]);
   for (const r of F.rooms){
-    if (r._fl!==rk){ r._fl=rk; try{ const P=roomPartition(rk)[r.nr]; if(P){ if(r._poly0===undefined) r._poly0=r.poly||null; if(r._holes0===undefined) r._holes0=r.holes||[]; r.poly=P.outer; r._parts=P.outers.slice(1); r.holes=P.holes; r._auto=true; } else if(!r.poly) r._noPoly=true; }catch(e){ if(!r.poly) r._noPoly=true; } } // strefa = część wolnej przestrzeni przydzielona pomieszczeniu (pełne pokrycie)
+    const manual=visibleItems(floor).find(z=>z.type==='rpoly'&&z.nr===r.nr);
+    if (manual){ r.poly=manual.pts; r._parts=[]; r.holes=[]; r._fl=rk; r._manual=true; } else { r._manual=false; }
+    if (!manual && r._fl!==rk){ r._fl=rk; try{ const P=roomPartition(rk)[r.nr]; if(P){ if(r._poly0===undefined) r._poly0=r.poly||null; if(r._holes0===undefined) r._holes0=r.holes||[]; r.poly=P.outer; r._parts=P.outers.slice(1); r.holes=P.holes; r._auto=true; } else if(!r.poly) r._noPoly=true; }catch(e){ if(!r.poly) r._noPoly=true; } } // strefa = część wolnej przestrzeni przydzielona pomieszczeniu (pełne pokrycie)
     const u = unitOf(r.nr); const idx=F.rooms.indexOf(r); const col = u ? UNITS[u].color : ROOM_PALETTE[idx % ROOM_PALETTE.length]; // bez przypisania do lokalu: własny kolor, żeby odróżnić pomieszczenia
+    if (r.poly && !hide.has(r.nr)){ const dcol=u?UNITS[u].color:col; el('path',{d:'M'+r.poly.map(q=>q.join(' ')).join('L')+'Z'+(r._parts||[]).map(pp=>'M'+pp.map(q=>q.join(' ')).join('L')+'Z').join(''),fill:'none',stroke:dcol,'stroke-width':36,'stroke-dasharray':'220 130','pointer-events':'none',class:'rl-inv'},gl.rline); }
     r._extra=r._parts||[]; for (const pp of r._extra){ const pg=el('polygon',{points:pp.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones); pg.dataset.nr=r.nr; pg.addEventListener('click',(e)=>{ if(tool==='select'){ selectRoom(r.nr); e.stopPropagation(); } }); } // dodatkowe części strefy (np. obszar dołączony elementem 'zone')
     if (r.poly){
       const pg = (r.holes&&r.holes.length)? el('path',{d:'M'+r.poly.map(q=>q.join(' ')).join('L')+'Z'+r.holes.map(h=>'M'+h.map(q=>q.join(' ')).join('L')+'Z').join(''), 'fill-rule':'evenodd', class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones) : el('polygon',{points:r.poly.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones);
@@ -186,8 +190,10 @@ function drawRiser(it,f,parent,ghost){ const k=RISER_KINDS[it.kind||'K']||RISER_
   if(it.id===selectedId&&!ghost) el('circle',{cx:a[0],cy:a[1],r:200,fill:'none',stroke:'var(--sel)','stroke-width':24},e);
   const g=el('g',{transform:`translate(${a[0]+150} ${a[1]-60}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'font-size':190,fill:k.c,'font-weight':'700',stroke:'var(--canvas)','stroke-width':50,'paint-order':'stroke'},g); t.textContent=riserLabel(it,f); return e; }
 function drawRisers(){ gl.piony.innerHTML=''; for (const f of FLOORS){ for (const it of visibleItems(f)) if(it.type==='riser') drawRiser(it,f,gl.piony,f!==floor); } }
+function drawVertexHandles(){ gl.ui.querySelectorAll('.vtx').forEach(e=>e.remove()); let pts=null, owner=null; const it=selectedId&&project[floor].items.find(i=>i.id===selectedId); if(it&&it.type==='room'){ pts=it.pts; owner='item:'+it.id; } else if(selRoomNr){ const r=MODEL.floors[floor].rooms.find(x=>x.nr===selRoomNr); if(r&&r.poly){ pts=r.poly; owner='inv:'+r.nr; } } if(!pts) return; const rr=Math.max(110,6*mmPerPx());
+  pts.forEach((p,i)=>{ const c=el('circle',{cx:p[0],cy:p[1],r:rr,fill:'#fff',stroke:'var(--sel)','stroke-width':Math.max(24,1.5*mmPerPx()),class:'vtx','pointer-events':'all'},gl.ui); c.dataset.vtx=i; c.dataset.vowner=owner; c.style.cursor='crosshair'; }); }
 function hiRow(nr,on){ const tr=document.querySelector(`#roomTable tr[data-nr="${nr}"]`); if(tr) tr.classList.toggle('active',on); }
-function selectRoom(nr){ const F=MODEL.floors[floor]; const r=F.rooms.find(x=>x.nr===nr); if(!r||!r.poly) return; document.querySelectorAll('.roompoly.active').forEach(p=>p.classList.remove('active')); const pg=gl.zones.querySelector(`[data-nr="${nr}"]`); if(pg) pg.classList.add('active'); const xs=r.poly.map(q=>q[0]), ys=r.poly.map(q=>q[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys); const pad=2500; const W=svg.clientWidth,H=svg.clientHeight; let w=x1-x0+2*pad,h=y1-y0+2*pad; if(w/h<W/H) w=h*W/H; else h=w*H/W; view={x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h}; applyView(); }
+function selectRoom(nr){ const F=MODEL.floors[floor]; const r=F.rooms.find(x=>x.nr===nr); if(!r||!r.poly) return; selRoomNr=nr; selectedId=null; try{ drawVertexHandles(); const m=visibleItems(floor).find(z=>z.type==='rpoly'&&z.nr===nr); hintToast('Pomieszczenie '+nr+(m?' – obrys ręczny (Del przywraca automatyczny).':' – przeciągnij punkt załamania obrysu, żeby go skorygować.')); }catch(e){} document.querySelectorAll('.roompoly.active').forEach(p=>p.classList.remove('active')); const pg=gl.zones.querySelector(`[data-nr="${nr}"]`); if(pg) pg.classList.add('active'); const xs=r.poly.map(q=>q[0]), ys=r.poly.map(q=>q[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys); const pad=2500; const W=svg.clientWidth,H=svg.clientHeight; let w=x1-x0+2*pad,h=y1-y0+2*pad; if(w/h<W/H) w=h*W/H; else h=w*H/W; view={x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h}; applyView(); }
 
 function renderRoomTable(){
   const F = MODEL.floors[floor]; const tb=document.getElementById('roomTable');
@@ -281,18 +287,23 @@ function buildRaster(evac){ // evac=true: drzwi i otwory przejezdne (do dróg ew
   const px=(x)=>Math.round((x-ox)/RES), py=(y)=>Math.round((y-oy)/RES);
   function line(x0,y0,x1,y1,val,rad){ x0=px(x0); y0=py(y0); x1=px(x1); y1=py(y1); const dx=Math.abs(x1-x0), dy=Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx-dy; for(;;){ for(let a=-rad;a<=rad;a++) for(let c=-rad;c<=rad;c++){ const X=x0+a,Y=y0+c; if(X>=0&&Y>=0&&X<W&&Y<H) g[Y*W+X]=val; } if(x0===x1&&y0===y1) break; const e2=2*err; if(e2>-dy){ err-=dy; x0+=sx; } if(e2<dx){ err+=dx; y0+=sy; } } }
   const dwgSegs=[]; for (const sg of (F.geo.walls||[])) if(sg.k==='l') for(let i=1;i<sg.p.length;i++) dwgSegs.push({a:sg.p[i-1],b:sg.p[i],t:0});
-  for (const lay of ['walls','windows','doors']) for (const sg of (F.geo[lay]||[])){ if(sg.k==='l'){ if(lay!=='doors') for(let i=1;i<sg.p.length;i++) line(sg.p[i-1][0],sg.p[i-1][1],sg.p[i][0],sg.p[i][1],1,0); } else if(sg.k==='a'){ let a0=sg.a0,a1=sg.a1; if(a1<a0) a1+=2*Math.PI; if(lay==='doors'){ if(evac) continue; /* łuk skrzydła nie jest przeszkodą – domykamy tylko promień leżący w linii ściany (ościeże), nie skrzydło */ const D=[[Math.cos(a0),Math.sin(a0)],[Math.cos(a1),Math.sin(a1)]]; const alongWall=(di)=>{ const e=[sg.c[0]+sg.r*di[0],sg.c[1]+sg.r*di[1]]; const m=[(sg.c[0]+e[0])/2,(sg.c[1]+e[1])/2]; for (const w of dwgSegs){ const vx=w.b[0]-w.a[0], vy=w.b[1]-w.a[1]; const L=Math.hypot(vx,vy)||1; if (Math.abs((vx*di[0]+vy*di[1])/L)<0.98) continue; const dl=Math.abs((m[0]-w.a[0])*vy-(m[1]-w.a[1])*vx)/L; if (dl<=90) return true; } return false; }; const jamb=[alongWall(D[0]),alongWall(D[1])]; for (let i=0;i<2;i++){ const di=D[i], dj=D[1-i]; if ((jamb[0]||jamb[1]) && !jamb[i]) continue; line(sg.c[0],sg.c[1],sg.c[0]+sg.r*di[0],sg.c[1]+sg.r*di[1],1,0); let tt=null; for (const w of dwgSegs){ for (const [e0,e1] of [[w.a,w.b],[w.b,w.a]]){ if (Math.hypot(e0[0]-sg.c[0],e0[1]-sg.c[1])>150) continue; const vx=e1[0]-e0[0], vy=e1[1]-e0[1]; const Lw=Math.hypot(vx,vy)||1; if (Math.abs((vx*di[0]+vy*di[1])/Lw)>0.3) continue; const depth=-(vx*dj[0]+vy*dj[1]); if (depth>60 && depth<800 && (tt===null||depth<tt)) tt=depth; } }
+  for (const lay of ['walls','sills','windows','doors']) for (const sg of (F.geo[lay]||[])){ if(sg.k==='l'){ if(lay!=='doors') for(let i=1;i<sg.p.length;i++) line(sg.p[i-1][0],sg.p[i-1][1],sg.p[i][0],sg.p[i][1],1,0); } else if(sg.k==='a'){ let a0=sg.a0,a1=sg.a1; if(a1<a0) a1+=2*Math.PI; if(lay==='doors'){ if(evac) continue; /* łuk skrzydła nie jest przeszkodą – domykamy tylko promień leżący w linii ściany (ościeże), nie skrzydło */ const D=[[Math.cos(a0),Math.sin(a0)],[Math.cos(a1),Math.sin(a1)]]; const alongWall=(di)=>{ const e=[sg.c[0]+sg.r*di[0],sg.c[1]+sg.r*di[1]]; const m=[(sg.c[0]+e[0])/2,(sg.c[1]+e[1])/2]; for (const w of dwgSegs){ const vx=w.b[0]-w.a[0], vy=w.b[1]-w.a[1]; const L=Math.hypot(vx,vy)||1; if (Math.abs((vx*di[0]+vy*di[1])/L)<0.98) continue; const dl=Math.abs((m[0]-w.a[0])*vy-(m[1]-w.a[1])*vx)/L; if (dl<=90) return true; } return false; }; const jamb=[alongWall(D[0]),alongWall(D[1])]; for (let i=0;i<2;i++){ const di=D[i], dj=D[1-i]; if ((jamb[0]||jamb[1]) && !jamb[i]) continue; line(sg.c[0],sg.c[1],sg.c[0]+sg.r*di[0],sg.c[1]+sg.r*di[1],1,0); let tt=null; for (const w of dwgSegs){ for (const [e0,e1] of [[w.a,w.b],[w.b,w.a]]){ if (Math.hypot(e0[0]-sg.c[0],e0[1]-sg.c[1])>150) continue; const vx=e1[0]-e0[0], vy=e1[1]-e0[1]; const Lw=Math.hypot(vx,vy)||1; if (Math.abs((vx*di[0]+vy*di[1])/Lw)>0.3) continue; const depth=-(vx*dj[0]+vy*dj[1]); if (depth>60 && depth<800 && (tt===null||depth<tt)) tt=depth; } }
             if (tt===null){ const rh=rayHit([sg.c[0]-dj[0]*5,sg.c[1]-dj[1]*5],[-dj[0],-dj[1]],dwgSegs,1); if(rh!==null && rh<700) tt=rh+5; }
             if (tt!==null){ const o=[sg.c[0]-dj[0]*tt,sg.c[1]-dj[1]*tt]; line(o[0]-di[0]*80,o[1]-di[1]*80,o[0]+(sg.r+80)*di[0],o[1]+(sg.r+80)*di[1],1,0); } } } if(lay==='doors') continue; const n=16; let prev=null; for(let k=0;k<=n;k++){ const t=a0+(a1-a0)*k/n; const q=[sg.c[0]+sg.r*Math.cos(t),sg.c[1]+sg.r*Math.sin(t)]; if(prev) line(prev[0],prev[1],q[0],q[1],1,0); prev=q; } } }
   // otwory bez symbolu drzwi: dwa współliniowe odcinki ścian z przerwą 0,5–1,4 m → domknięcie (żeby pomieszczenia nie zlewały się)
+  const winSegs=[]; for (const sg of (F.geo.windows||[])) if(sg.k==='l') for(let i=1;i<sg.p.length;i++) winSegs.push({a:sg.p[i-1],b:sg.p[i]});
   try{ const segs=evac?[]:dwgSegs; for (let i=0;i<segs.length;i++){ const A=segs[i]; const ax=A.b[0]-A.a[0], ay=A.b[1]-A.a[1]; const AL=Math.hypot(ax,ay); if(AL<200) continue; const ux=ax/AL, uy=ay/AL;
       for (let j=i+1;j<segs.length;j++){ const B=segs[j]; const bx=B.b[0]-B.a[0], by=B.b[1]-B.a[1]; const BL=Math.hypot(bx,by); if(BL<200) continue; if (Math.abs((bx*ux+by*uy)/BL)<0.995) continue; // równoległe
         const off=Math.abs((B.a[0]-A.a[0])*uy-(B.a[1]-A.a[1])*ux); if (off>40) continue; // współliniowe
         let best=null; for (const p of [A.a,A.b]) for (const q of [B.a,B.b]){ const d=Math.hypot(p[0]-q[0],p[1]-q[1]); if(best===null||d<best.d) best={d,p,q}; }
-        if (best.d<500||best.d>1400) continue;
-        // przerwa musi być wolna: żaden inny odcinek nie może mieć końca w środku przerwy (wtedy to nie otwór, lecz załamanie ścian)
-        const mx=(best.p[0]+best.q[0])/2, my=(best.p[1]+best.q[1])/2; const gx=(best.q[0]-best.p[0])/best.d, gy=(best.q[1]-best.p[1])/best.d; let blocked=false;
-        for (let k=0;k<segs.length&&!blocked;k++){ if(k===i||k===j) continue; const C=segs[k]; for (const e of [C.a,C.b]){ const t=(e[0]-best.p[0])*gx+(e[1]-best.p[1])*gy; const dn=Math.abs((e[0]-best.p[0])*gy-(e[1]-best.p[1])*gx); if (t>60&&t<best.d-60&&dn<=300){ blocked=true; break; } } }
+        if (best.d<500||best.d>2600) continue;
+        const mx=(best.p[0]+best.q[0])/2, my=(best.p[1]+best.q[1])/2; const gx=(best.q[0]-best.p[0])/best.d, gy=(best.q[1]-best.p[1])/best.d;
+        // okno: w głębi przerwy (do 90 cm) leży równoległy odcinek z warstwy okien → to otwór okienny; pod oknem jest ściana, więc lico domykamy (obrys pomieszczenia nie wchodzi we wnękę)
+        let isWin=false; for (const ws of winSegs){ const wx=ws.b[0]-ws.a[0], wy=ws.b[1]-ws.a[1]; const WL=Math.hypot(wx,wy); if(WL<200||Math.abs((wx*gx+wy*gy)/WL)<0.95) continue; const dn=Math.abs((ws.a[0]-best.p[0])*gy-(ws.a[1]-best.p[1])*gx); if(dn>900) continue; const t0=(ws.a[0]-best.p[0])*gx+(ws.a[1]-best.p[1])*gy, t1=(ws.b[0]-best.p[0])*gx+(ws.b[1]-best.p[1])*gy; const ov=Math.min(best.d,Math.max(t0,t1))-Math.max(0,Math.min(t0,t1)); if(ov>=best.d*0.5){ isWin=true; break; } }
+        if (best.d>1400 && !isWin) continue;
+        // przerwa musi być wolna: żaden inny odcinek nie może mieć końca w środku przerwy (wtedy to nie otwór, lecz załamanie ścian); przy oknie odcinki równoległe (szkło, parapet) nie blokują
+        let blocked=false;
+        for (let k=0;k<segs.length&&!blocked;k++){ if(k===i||k===j) continue; const C=segs[k]; if(isWin){ const cx=C.b[0]-C.a[0], cy=C.b[1]-C.a[1]; const CL=Math.hypot(cx,cy)||1; if(Math.abs((cx*gx+cy*gy)/CL)>0.95) continue; } for (const e of [C.a,C.b]){ const t=(e[0]-best.p[0])*gx+(e[1]-best.p[1])*gy; const dn=Math.abs((e[0]-best.p[0])*gy-(e[1]-best.p[1])*gx); if (t>60&&t<best.d-60&&dn<=300){ blocked=true; break; } } }
         if (!blocked) for (const it of visibleItems(floor)) if(it.type==='demo'){ for(let q=1;q<it.pts.length&&!blocked;q++) if(distPtSeg([mx,my],it.pts[q-1],it.pts[q])<=(it.w||160)/2+200) blocked=true; } // otwór wyburzony – nie domykać
         if (blocked) continue; line(best.p[0],best.p[1],best.q[0],best.q[1],1,0); } } }catch(e){}
   const items=visibleItems(floor);
@@ -321,7 +332,7 @@ let fillCache=null;
 function fillRaster(withDemo){ const F=MODEL.floors[floor]; const b=F.bbox; const ox=b[0]-1000, oy=b[1]-1000; const W=Math.ceil((b[2]-b[0]+2000)/RES), H=Math.ceil((b[3]-b[1]+2000)/RES); const g=new Uint8Array(W*H);
   const px=(x)=>Math.round((x-ox)/RES), py=(y)=>Math.round((y-oy)/RES);
   const line=(x0,y0,x1,y1,val,rad)=>{ x0=px(x0); y0=py(y0); x1=px(x1); y1=py(y1); const dx=Math.abs(x1-x0), dy=Math.abs(y1-y0), sx=x0<x1?1:-1, sy=y0<y1?1:-1; let err=dx-dy; for(;;){ for(let a=-rad;a<=rad;a++) for(let c=-rad;c<=rad;c++){ const X=x0+a,Y=y0+c; if(X>=0&&Y>=0&&X<W&&Y<H) g[Y*W+X]=val; } if(x0===x1&&y0===y1) break; const e2=2*err; if(e2>-dy){ err-=dy; x0+=sx; } if(e2<dx){ err+=dx; y0+=sy; } } };
-  for (const sg of (F.geo.walls||[])) if(sg.k==='l') for(let i=1;i<sg.p.length;i++) line(sg.p[i-1][0],sg.p[i-1][1],sg.p[i][0],sg.p[i][1],1,0);
+  for (const lay of ['walls','sills','windows']) for (const sg of (F.geo[lay]||[])) if(sg.k==='l') for(let i=1;i<sg.p.length;i++) line(sg.p[i-1][0],sg.p[i-1][1],sg.p[i][0],sg.p[i][1],1,0); // parapety i okna: pod oknem jest ściana
   // domknięcie morfologiczne: masa ściany między licami (≤ 48 cm) staje się pełna
   const K=6; const t=new Uint8Array(W*H); const pass=(src,dst,fn)=>{ for(let y=0;y<H;y++){ for(let x=0;x<W;x++){ let v=fn===1?0:1; for(let a=-K;a<=K;a++){ const X=x+a; if(X<0||X>=W) continue; const q=src[y*W+X]; if(fn===1){ if(q){ v=1; break; } } else { if(!q){ v=0; break; } } } dst[y*W+x]=v; } } const tmp=new Uint8Array(W*H); for(let x=0;x<W;x++){ for(let y=0;y<H;y++){ let v=fn===1?0:1; for(let a=-K;a<=K;a++){ const Y=y+a; if(Y<0||Y>=H) continue; const q=dst[Y*W+x]; if(fn===1){ if(q){ v=1; break; } } else { if(!q){ v=0; break; } } } tmp[y*W+x]=v; } } dst.set(tmp); };
   pass(g,t,1); const g2=new Uint8Array(W*H); pass(t,g2,0); for(let i=0;i<g.length;i++) if(g[i]) g2[i]=1;
@@ -401,25 +412,31 @@ function roomSchedule(f){ // wiersze zestawienia pomieszczeń kondygnacji: {u, n
 function clsSums(rows){ const s={M:0,N:0,K:0,T:0,all:0}; for (const r of rows){ s[r.cls]+=r.a; s.all+=r.a; } s.use=s.all-s.K-s.T; return s; }
 function fmt2(x){ return x.toFixed(2).replace('.',','); }
 let sheetBox=null, sheetInfo=null;
+let sheetOpts={}; try{ sheetOpts=JSON.parse(localStorage.getItem('p11.sheet')||'{}'); }catch(e){}
+function sheetOpt(){ return sheetOpts[floor]||(sheetOpts[floor]={}); }
+function saveSheetOpt(){ try{ localStorage.setItem('p11.sheet',JSON.stringify(sheetOpts)); }catch(e){} }
+let blockDrag=null, vtxDrag=null, selRoomNr=null;
 function drawLegendOnPlan(){ gl.legenda.innerHTML=''; gl.sheet.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const META=VARIANTS.meta||{}; const rows=roomSchedule(floor);
   const notes=visibleItems(floor).filter(i=>i.type==='note'&&(i.label||'').trim()).sort((a,b)=>noteNoCache[a.id]-noteNoCache[b.id]);
   const groups=[]; for (const r of rows){ let G=groups.find(x=>x.u===r.u); if(!G){ G={u:r.u,rows:[],a:0}; groups.push(G); } G.rows.push(r); G.a+=r.a; }
   const fl=clsSums(rows); const all=FLOORS.flatMap(f=>roomSchedule(f)); const bs=clsSums(all); const ex=META.existing||null;
   const g=el('g',{'pointer-events':'none'},gl.legenda);
   // wymiary arkusza liczone w mm PAPIERU (P) i przeliczane skalą S na mm modelu – teksty mają zawsze 2,5 mm na wydruku
-  const FMT={A3:[420,297],A2:[594,420],A1:[841,594],A0:[1189,841]}; const PREF=[[100,'A2'],[100,'A1'],[50,'A1'],[100,'A0'],[50,'A0']]; // użytkownik: arkusz A2 (1:100)
-  const measure=(S)=>{ const P=(mm)=>mm*S; const FS=P(2.5), LH=P(3.7); const colW=P(104); const X0=b[2]+P(12); const nR=2+1.6+1.2+groups.reduce((n,G)=>n+G.rows.length*0.85+1.3,0)+1.6+4*0.85+1.6+6*0.85+(ex?3*0.85:0)+1.3+1.6+7*0.9+1; const legBottom=b[3]-nR*LH-P(6);
-    const cpl=Math.max(40,Math.floor(((b[2]-b[0])-P(6))/(FS*0.85*0.56))); let nl=0; for (const it of notes) nl+=Math.max(1,Math.ceil(String(it.label).length/cpl))+0.3; const notesBottom=notes.length?b[1]-P(8)-LH*1.1-nl*LH*0.8-P(3):b[1];
+  const FMT={A3:[420,297],A2:[594,420],A1:[841,594],A0:[1189,841]}; const OPT=sheetOpt(); const LO=OPT.leg||[0,0], NO=OPT.notes||[0,0], PO=OPT.plan||[0,0];
+  let PREF=[[100,'A2'],[100,'A1'],[50,'A1'],[100,'A0'],[50,'A0'],[200,'A3'],[200,'A2']]; if(OPT.S) PREF=PREF.filter(p=>p[0]===+OPT.S); if(OPT.fmt) PREF=PREF.filter(p=>p[1]===OPT.fmt); if(OPT.S&&OPT.fmt) PREF=[[+OPT.S,OPT.fmt]]; // użytkownik wybiera format/skalę; domyślnie A2 1:100
+  const measure=(S)=>{ const P=(mm)=>mm*S; const FS=P(2.5), LH=P(3.7); const colW=P(104); const X0=b[2]+P(12)+LO[0]; const nR=2+1.6+1.2+groups.reduce((n,G)=>n+G.rows.length*0.85+1.3,0)+1.6+4*0.85+1.6+6*0.85+(ex?3*0.85:0)+1.3+1.6+7*0.9+1; const legBottom=b[3]+LO[1]-nR*LH-P(6);
+    const cpl=Math.max(40,Math.floor(((b[2]-b[0])-P(6))/(FS*0.85*0.56))); let nl=0; for (const it of notes) nl+=Math.max(1,Math.ceil(String(it.label).length/cpl))+0.3; const notesBottom=notes.length?b[1]+NO[1]-P(8)-LH*1.1-nl*LH*0.8-P(3):b[1];
     const TBW=P(180), TBH=7*LH*1.15+P(2); return {S,P,FS,LH,colW,X0,legBottom,notesBottom,TBW,TBH}; };
   let L=null, fmtName='', sx0=0,sy0=0,sx1=0,sy1=0;
-  for (const [S,fm] of PREF){ const M=measure(S); const P=M.P; const [fw,fh]=FMT[fm]; const _sx0=b[0]-P(25), _sy1=b[3]+P(10), _sx1=_sx0+P(fw), _sy0=_sy1-P(fh);
+  for (const [S,fm] of PREF){ const M=measure(S); const P=M.P; const [fw,fh]=FMT[fm]; const _sx0=b[0]-P(25)-PO[0], _sy1=b[3]+P(10)-PO[1], _sx1=_sx0+P(fw), _sy0=_sy1-P(fh);
     const colRight=M.X0+M.colW; if(colRight+P(10)>_sx1) continue; const bottoms=Math.min(M.legBottom,M.notesBottom); if(bottoms-P(10)<_sy0) continue;
     const tbx0=_sx1-P(10)-M.TBW, tby1=_sy0+P(10)+M.TBH; // tabelka nie może nachodzić na rzut/uwagi ani na kolumnę zestawień
-    const planRect=[b[0]-P(3),Math.min(M.notesBottom,b[1]),b[2]+P(3),b[3]]; const colRect=[M.X0-P(2),M.legBottom,colRight,b[3]];
+    const planRect=[b[0]-P(3),Math.min(M.notesBottom,b[1]),b[2]+P(3),b[3]]; const colRect=[M.X0-P(2),M.legBottom,colRight,b[3]+LO[1]];
     const hit=(R)=>!(R[2]<tbx0||R[0]>_sx1||R[1]>tby1||R[3]<_sy0); if(hit(planRect)||hit(colRect)) continue;
     L=M; fmtName=fm; sx0=_sx0; sy0=_sy0; sx1=_sx1; sy1=_sy1; break; }
-  if(!L){ L=measure(100); fmtName='A0+'; const P=L.P; sx0=b[0]-P(25); sy1=b[3]+P(10); sx1=Math.max(L.X0+L.colW+P(10),sx0+P(1189)); sy0=Math.min(L.legBottom,L.notesBottom)-L.TBH-P(25); }
-  const {S,P,FS,LH,colW,X0,TBW,TBH}=L; const W=colW, XR=X0+W-P(2); let y=b[3];
+  if(!L){ // wymuszony format/skala albo nic nie pasuje: bierzemy pierwszą preferencję bez sprawdzania (użytkownik przesunie bloki sam)
+    const [S,fm]=PREF[0]||[100,'A2']; L=measure(S); fmtName=fm; const P=L.P; const [fw,fh]=FMT[fm]||[1189,841]; sx0=b[0]-P(25)-PO[0]; sy1=b[3]+P(10)-PO[1]; sx1=sx0+P(fw); sy0=sy1-P(fh); }
+  const {S,P,FS,LH,colW,X0,TBW,TBH}=L; const W=colW, XR=X0+W-P(2); let y=b[3]+LO[1];
   const txt=(x,yy,t,attrs,maxW)=>{ const tt=el('text',{x:0,y:0,'font-size':FS,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; if(maxW){ try{ let str=String(t); let n=str.length; while(n>3&&tt.getComputedTextLength()>maxW){ n=Math.floor(n*Math.min(0.92,maxW/tt.getComputedTextLength())); tt.textContent=str.slice(0,n).trimEnd()+'…'; } }catch(e){} } return tt; }; // maxW: przycinanie z wielokropkiem (tekst nie wychodzi z kolumny)
   const hr=(yy,w)=>el('line',{x1:X0-P(2),y1:yy,x2:X0+W,y2:yy,stroke:'var(--ink)','stroke-width':w||P(0.15)},g);
   // ARKUSZ: tło + ramka
@@ -454,24 +471,27 @@ function drawLegendOnPlan(){ gl.legenda.innerHTML=''; gl.sheet.innerHTML=''; con
   sym((x,yy)=>el('rect',{x,y:yy-P(1),width:SW,height:P(2),fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane – kolor lokalu, numer lokal.nr');
   frame.setAttribute('y',y-P(3)); frame.setAttribute('height',yTop-y+P(3));
   // UWAGI pod rzutem
-  const underCol=(y-P(6)-sy0)>P(60); let yN=underCol?y-P(6):b[1]-P(8); const NX=underCol?X0-P(3):b[0]; const NW=underCol?W+P(4):(b[2]-b[0]); const cpl=Math.max(40,Math.floor((NW-P(6))/(FS*0.85*0.56)));
+  const underCol=(y-P(6)-sy0)>P(60); let yN=(underCol?y-P(6):b[1]-P(8))+NO[1]; const NX=(underCol?X0-P(3):b[0])+NO[0]; const NW=underCol?W+P(4):(b[2]-b[0]); const cpl=Math.max(40,Math.floor((NW-P(6))/(FS*0.85*0.56)));
   const wrap=(t)=>{ const out=[]; let line=''; for (const w of String(t).split(/\s+/)){ if((line+' '+w).trim().length>cpl){ out.push(line.trim()); line=w; } else line+=' '+w; } if(line.trim()) out.push(line.trim()); return out; };
   if (notes.length){ const yNTop=yN; txt(NX+P(2),yN-LH*0.9,'UWAGI',{'font-weight':'800'}); yN-=LH*1.1;
     for (const it of notes){ const lines=wrap(it.label); el('circle',{cx:NX+P(3.6),cy:yN-LH*0.62,r:P(1.4),fill:'var(--note)'},g); const tn=el('text',{x:0,y:0,'text-anchor':'middle','font-size':FS*0.8,fill:'#fff','font-weight':'800',transform:`translate(${NX+P(3.6)} ${yN-LH*0.62+FS*0.3}) scale(1,-1)`},g); tn.textContent=noteNoCache[it.id]; lines.forEach((ln)=>{ txt(NX+P(6.5),yN-LH*0.9,ln,{'font-size':FS*0.85},NW-P(8)); yN-=LH*0.8; }); yN-=LH*0.25; }
-    el('rect',{x:NX,y:yN-P(2),width:NW,height:yNTop-yN+P(2),fill:'none',stroke:'var(--ink)','stroke-width':P(0.2),rx:P(0.5)},g); }
+    el('rect',{x:NX,y:yN-P(2),width:NW,height:yNTop-yN+P(2),fill:'none',stroke:'var(--ink)','stroke-width':P(0.2),rx:P(0.5)},g);
+    const hn=el('rect',{x:NX,y:yN-P(2),width:NW,height:yNTop-yN+P(2),fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hn.dataset.drag='notes'; hn.style.cursor='move'; }
+  { const hl=el('rect',{x:X0-P(3),y:+frame.getAttribute('y'),width:W+P(4),height:+frame.getAttribute('height'),fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hl.dataset.drag='leg'; hl.style.cursor='move'; }
+  { const hx=sx0+P(22), hy=sy1-P(10)-P(7); const hp=el('g',{class:'blockdrag'},gl.legenda); hp.dataset.drag='plan'; hp.style.cursor='move'; el('rect',{x:hx,y:hy,width:P(44),height:P(6),fill:'var(--canvas)',stroke:'var(--muted)','stroke-width':P(0.2),rx:P(0.8),'pointer-events':'all'},hp); const ht=el('text',{x:0,y:0,'font-size':FS*0.9,fill:'var(--muted)','pointer-events':'none',transform:`translate(${hx+P(2)} ${hy+P(1.8)}) scale(1,-1)`},hp); ht.textContent='⤧ rysunek – przeciągnij'; }
   // TABELKA RYSUNKOWA – prawy dolny róg
   const tx=sx1-P(10)-TBW, ty=sy0+P(10); el('rect',{x:tx,y:ty,width:TBW,height:TBH,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.5)},g);
   const rowsTB=[['Inwestor',META.investor||''],['Obiekt',META.object||''],['Stadium / branża',(META.stage||'').split(':')[0]+' · architektoniczna'],['Tytuł rysunku','Rzut – '+F.name+' – stan projektowany'],['Projektant',(META.designer||'')+(META.designerNo?' · upr. nr '+META.designerNo:'')],['Opracowanie',META.author||''],['Skala · format · nr rys. · data','1:'+S+' · '+fmtName+' · '+((META.drawings||{})[floor]||'')+' · '+new Date().toLocaleDateString('pl-PL',{month:'2-digit',year:'numeric'})]];
   let yy=ty+TBH-P(1); for (const [k,val] of rowsTB){ txt(tx+P(3),yy-LH*0.85,k,{'font-size':FS*0.7,fill:'var(--muted)'}); txt(tx+P(48),yy-LH*0.85,String(val),{'font-size':FS*0.85,'font-weight':k==='Tytuł rysunku'||k==='Projektant'?'700':'500'},TBW-P(51)); yy-=LH*1.15; el('line',{x1:tx,y1:yy+LH*0.12,x2:tx+TBW,y2:yy+LH*0.12,stroke:'var(--ink)','stroke-width':P(0.12)},g); }
   el('line',{x1:tx+P(45),y1:ty,x2:tx+P(45),y2:ty+TBH,stroke:'var(--ink)','stroke-width':P(0.12)},g);
-  sheetBox={x0:sx0,y0:sy0,x1:sx1,y1:sy1}; sheetInfo={S,fmt:fmtName};
+  sheetBox={x0:sx0,y0:sy0,x1:sx1,y1:sy1}; sheetInfo={S,fmt:fmtName}; try{ const fs=document.getElementById('shFmt'), ss=document.getElementById('shScale'); if(fs){ fs.value=OPT.fmt||''; ss.value=OPT.S?String(OPT.S):''; } }catch(e){}
 }
 let lastZoneKey=null;
 function drawProject(){
-  try{ const zk=floor+'|'+visibleItems(floor).filter(i=>i.type==='zone').map(i=>i.nr+':'+i.pts[0].join(',')).join(';'); if(zk!==lastZoneKey){ lastZoneKey=zk; drawRooms(); } }catch(err){ diag('zones',err); } // przypisania obszarów (zone) zmieniają podział stref
+  try{ const zk=floor+'|'+visibleItems(floor).filter(i=>i.type==='zone'||i.type==='rpoly').map(i=>i.type+i.nr+':'+JSON.stringify(i.pts)).join(';'); if(zk!==lastZoneKey){ lastZoneKey=zk; drawRooms(); } }catch(err){ diag('zones',err); } // przypisania obszarów (zone) zmieniają podział stref
   try{ if(!fillCache||fillCache.key!==floor+'|'+wallsHash()) drawWallFill(); }catch(err){ diag('wallfill',err); }
   try{ recomputeRooms(); }catch(err){ diag('rooms',err); }
-  gl.project.innerHTML=''; gl.demo.querySelectorAll(':scope > g').forEach(e=>e.remove()); gl.rfill.innerHTML=''; gl.rline.innerHTML=''; gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); noteNoCache=noteNumbers(floor); }catch(err){ diag('numery',err); projNoCache={}; }
+  gl.project.innerHTML=''; gl.demo.querySelectorAll(':scope > g').forEach(e=>e.remove()); gl.rfill.innerHTML=''; gl.rline.querySelectorAll(':not(.rl-inv)').forEach(e=>e.remove()); gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); noteNoCache=noteNumbers(floor); }catch(err){ diag('numery',err); projNoCache={}; }
   for (const it of visibleItems(floor)){
     try { drawOneItem(it, markN); if(it.type==='mark') markN++; } catch(err){ diag('render '+it.type, err); }
   }
@@ -480,6 +500,7 @@ function drawProject(){
   try { drawRisers(); drawUnder(); } catch(err){ diag('under', err); }
   try { drawUnassigned(); } catch(err){ diag('unassigned', err); }
   try { drawLegendOnPlan(); } catch(err){ diag('legenda', err); }
+  try { drawVertexHandles(); } catch(err){ diag('vtx', err); }
 }
 // ---------- wymiary automatyczne: światło pomieszczeń przez środek + przejścia wokół zaznaczonego mebla ----------
 function rayPoly(o, d, poly){ // odległość od o wzdłuż d do krawędzi wielokąta
@@ -581,7 +602,7 @@ function renderItems(){
   box.querySelectorAll('.it').forEach(d=>d.addEventListener('click',()=>{ selectedId=d.dataset.id; drawProject(); renderItems(); }));
   document.getElementById('jsonBox').value = JSON.stringify(visibleItems(floor));
 }
-function deleteSelected(){ if(!selectedId) return; pushHistory(); project[floor].items=project[floor].items.filter(i=>i.id!==selectedId); selectedId=null; hideInlineEdit(); commit(); }
+function deleteSelected(){ if(!selectedId && selRoomNr){ const m=visibleItems(floor).find(z=>z.type==='rpoly'&&z.nr===selRoomNr); if(m){ pushHistory(); project[floor].items=project[floor].items.filter(i=>i.id!==m.id); drawRooms(); commit(); hintToast('Obrys pomieszczenia '+selRoomNr+' wrócił do automatycznego.'); } return; } if(!selectedId) return; pushHistory(); project[floor].items=project[floor].items.filter(i=>i.id!==selectedId); selectedId=null; hideInlineEdit(); commit(); }
 function undo(){ const h=hist[floor].pop(); if(h===undefined) return; project[floor].items=JSON.parse(h); selectedId=null; commit(); }
 
 // inline editor for label/unit
@@ -951,6 +972,8 @@ function updateWallDrag(e){
 }
 svg.addEventListener('pointerdown',e=>{
   lastClient={x:e.clientX,y:e.clientY}; DIAG.events++; DIAG.lastEvent='down:'+(e.pointerType||'?')+':'+tool;
+  if (tool==='select' && e.button===0){ const dh=e.target.closest('[data-drag]'); if(dh){ const q=svgPoint(e); const o=sheetOpt(); blockDrag={k:dh.dataset.drag,sx:q.x,sy:q.y,o:(o[dh.dataset.drag]||[0,0]).slice()}; svg.setPointerCapture(e.pointerId); return; }
+    const vh=e.target.closest('[data-vtx]'); if(vh){ const q=svgPoint(e); const [kind,id]=vh.dataset.vowner.split(':'); let pts=null, it=null, r=null; if(kind==='item'){ it=project[floor].items.find(i=>i.id===id); pts=it&&it.pts; } else { r=MODEL.floors[floor].rooms.find(x=>x.nr===id); pts=r&&r.poly; } if(pts){ pushHistory(); vtxDrag={kind,id,it,r,idx:+vh.dataset.vtx,sx:q.x,sy:q.y,orig:pts[+vh.dataset.vtx].slice()}; svg.setPointerCapture(e.pointerId); return; } } }
   if (tool==='select' && e.button===0 && selectedId){ const sw=project[floor].items.find(i=>i.id===selectedId); if (sw && (sw.type==='wall'||sw.type==='demo') && sw.pts.length===2 && startEndDrag(sw,e)) return; }
   if (tool==='select' && e.button===0){ const t=e.target.closest('[data-id]'); if(t){ const it=project[floor].items.find(i=>i.id===t.dataset.id); if(it && (it.type==='furn'||it.type==='note'||it.type==='riser')){ const q=svgPoint(e); pushHistory(); dragging={it,sx:q.x,sy:q.y,orig:it.pts.map(p=>p.slice()),moved:false}; selectedId=it.id; svg.setPointerCapture(e.pointerId); return; }
       if(it && (it.type==='wall'||it.type==='demo') && it.pts.length===2){ if(startEndDrag(it,e)) return; if(startWallDrag(it,e)) return; }
@@ -963,6 +986,8 @@ svg.addEventListener('pointermove',e=>{
   lastClient={x:e.clientX,y:e.clientY};
   const p=svgPoint(e); document.getElementById('coord').textContent=`x ${(p.x/1000).toFixed(2)} m · y ${(p.y/1000).toFixed(2)} m · 1 m = ${document.getElementById('coord').dataset.scale||'?'} px · ${tool}${draft?' · pkt '+draft.pts.length:''} · ${e.pointerType||'?'}`;
   try{ const hr=document.getElementById('hRead'); const hh=heightAt(p.x,p.y); if(hh===null){ hr.hidden=true; } else { hr.hidden=false; const rc=svg.getBoundingClientRect(); hr.style.left=(e.clientX-rc.left+14)+'px'; hr.style.top=(e.clientY-rc.top+14)+'px'; hr.style.right='auto'; hr.style.bottom='auto'; hr.textContent='h ≈ '+(hh/1000).toFixed(2).replace('.',',')+' m'; hr.style.color=hh<1900?'var(--new)':hh<2200?'#e07a1f':'var(--ink)'; } }catch(err){}
+  if (blockDrag){ const q=svgPoint(e); const o=sheetOpt(); o[blockDrag.k]=[Math.round((blockDrag.o[0]+q.x-blockDrag.sx)/10)*10, Math.round((blockDrag.o[1]+q.y-blockDrag.sy)/10)*10]; if(!blockDrag.raf){ blockDrag.raf=true; requestAnimationFrame(()=>{ if(blockDrag) blockDrag.raf=false; try{ drawLegendOnPlan(); }catch(err){ diag('legenda',err); } }); } return; }
+  if (vtxDrag){ const q=svgPoint(e); const np=[Math.round((vtxDrag.orig[0]+q.x-vtxDrag.sx)/10)*10, Math.round((vtxDrag.orig[1]+q.y-vtxDrag.sy)/10)*10]; if(vtxDrag.kind==='item'){ vtxDrag.it.pts[vtxDrag.idx]=np; vtxDrag.it.auto=false; } else { let m=visibleItems(floor).find(z=>z.type==='rpoly'&&z.nr===vtxDrag.id); if(!m){ m={id:uid(),type:'rpoly',nr:vtxDrag.id,pts:vtxDrag.r.poly.map(p=>p.slice())}; project[floor].items.push(m); } m.pts[vtxDrag.idx]=np; vtxDrag.m=m; } if(!vtxDrag.raf){ vtxDrag.raf=true; requestAnimationFrame(()=>{ if(vtxDrag) vtxDrag.raf=false; try{ if(vtxDrag&&vtxDrag.kind==='inv'){ drawRooms(); } drawProject(); }catch(err){ diag('vtx',err); } }); } return; }
   if (panning){ const k=mmPerPx(); view.x=panning.vx-(e.clientX-panning.x)*k; view.y=panning.vy+(e.clientY-panning.y)*k; applyView(); return; }
   if (inkDraft){ const q=svgPoint(e); const l=inkDraft.pts[inkDraft.pts.length-1]; if(Math.hypot(q.x-l[0],q.y-l[1])>25){ inkDraft.pts.push([Math.round(q.x),Math.round(q.y)]); gl.draft.innerHTML=''; el('path',{d:'M'+inkDraft.pts.map(p=>p.join(' ')).join('L'),fill:'none',stroke:'var(--mark)','stroke-width':70,'stroke-linecap':'round','stroke-linejoin':'round',opacity:0.85},gl.draft); } return; }
   if (doorDrag){ const q=svgPoint(e); const D=doorDrag; let t=(q.x-D.sx)*D.d[0]+(q.y-D.sy)*D.d[1]; t=Math.round(t/10)*10; if(t!==0) D.moved=true; D.it.pts=[[Math.round(D.orig[0][0]+D.d[0]*t),Math.round(D.orig[0][1]+D.d[1]*t)],[Math.round(D.orig[1][0]+D.d[0]*t),Math.round(D.orig[1][1]+D.d[1]*t)]]; drawProject(); return; }
@@ -976,13 +1001,15 @@ svg.addEventListener('pointermove',e=>{
 });
 svg.addEventListener('pointerup',e=>{ try{ onPointerUp(e); }catch(err){ diag('pointerup/'+tool, err); } });
 function onPointerUp(e){
+  if (blockDrag){ blockDrag=null; saveSheetOpt(); suppressClick=true; try{ drawLegendOnPlan(); }catch(err){} return; }
+  if (vtxDrag){ const V=vtxDrag; vtxDrag=null; suppressClick=true; if(V.kind==='inv'){ drawRooms(); } commit(); try{ drawVertexHandles(); }catch(err){} return; }
   DIAG.events++; DIAG.lastEvent='up:'+(e.pointerType||'?')+':'+tool;
   if (inkDraft){ const d=inkDraft; inkDraft=null; gl.draft.innerHTML=''; if(d.pts.length>=2){ pushHistory(); const it={id:uid(),type:'ink',pts:d.pts,v:sel[floor]||undefined}; project[floor].items.push(it); commit(); } return; }
   if (doorDrag){ const D=doorDrag; doorDrag=null; if(D.moved){ suppressClick=true; commit(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(D.it,e); } return; }
   if (endDrag){ const E=endDrag; endDrag=null; gl.draft.innerHTML=''; if(E.moved){ suppressClick=true; try{ snapWallEnds(E.it, 200); }catch(err){ diag('snapWallEnds',err); } obstStamp++; commit(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(E.it,e); } return; }
   if (wallDrag){ const W=wallDrag; wallDrag=null; gl.draft.innerHTML=''; if(W.moved){ suppressClick=true; try{ snapWallEnds(W.it, 200); }catch(err){ diag('snapWallEnds',err); } obstStamp++; commit(); const col=collidingFurn(); if(col.length) showConflict(col,'wall'); else hideConflict(); } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(W.it,e); } return; }
   if (dragging){ const d=dragging; dragging=null; const moved=JSON.stringify(d.it.pts)!==JSON.stringify(d.orig); if(moved){ suppressClick=true; noSnapOnce=!!e.altKey; if(d.it.type==='furn') afterFurnChange(d.it); else commit(); noSnapOnce=false; } else { hist[floor].pop(); drawProject(); renderItems(); showInlineEdit(d.it,e); } return; }
-  if (panning){ const moved=Math.hypot(e.clientX-panning.x,e.clientY-panning.y)>4; panning=null; svg.classList.remove('grabbing'); if(!moved && tool==='select'){ selectedId=null; hideInlineEdit(); drawProject(); renderItems(); document.querySelectorAll('.roompoly.active').forEach(p=>p.classList.remove('active')); } return; }
+  if (panning){ const moved=Math.hypot(e.clientX-panning.x,e.clientY-panning.y)>4; panning=null; svg.classList.remove('grabbing'); if(!moved && tool==='select'){ selectedId=null; selRoomNr=null; gl.ui.querySelectorAll('.vtx').forEach(e=>e.remove()); hideInlineEdit(); drawProject(); renderItems(); document.querySelectorAll('.roompoly.active').forEach(p=>p.classList.remove('active')); } return; }
   if (anchorMove){ const q=svgPoint(e); const it=anchorMove; anchorMove=null; pushHistory(); it.anchor=[Math.round(q.x),Math.round(q.y)]; recomputeRooms(true); commit(); return; }
   if (tool==='select') return;
   const p=snap(svgPoint(e));
@@ -1077,6 +1104,11 @@ us.addEventListener('change',()=>{ under[floor]={...(under[floor]||{}),f:us.valu
 uo.addEventListener('input',()=>{ under[floor]={...(under[floor]||{}),op:+uo.value}; saveUnder(); drawUnder(); });
 document.querySelectorAll('#underAdj button[data-n]').forEach(b=>b.addEventListener('click',()=>{ const [dx,dy]=b.dataset.n.split(',').map(Number); const j=alignAdj[floor]||[0,0]; alignAdj[floor]=[j[0]-dx,j[1]-dy]; saveUnder(); renderUnderSel(); drawUnder(); drawRisers(); }));
 document.getElementById('underReset').addEventListener('click',()=>{ delete alignAdj[floor]; saveUnder(); renderUnderSel(); drawUnder(); drawRisers(); });
+
+// ---------- arkusz UI ----------
+document.getElementById('shFmt').addEventListener('change',(e)=>{ const o=sheetOpt(); if(e.target.value) o.fmt=e.target.value; else delete o.fmt; saveSheetOpt(); drawLegendOnPlan(); fitFloor(); });
+document.getElementById('shScale').addEventListener('change',(e)=>{ const o=sheetOpt(); if(e.target.value) o.S=+e.target.value; else delete o.S; saveSheetOpt(); drawLegendOnPlan(); fitFloor(); });
+document.getElementById('shReset').addEventListener('click',()=>{ const o=sheetOpt(); delete o.leg; delete o.notes; delete o.plan; saveSheetOpt(); drawLegendOnPlan(); fitFloor(); });
 
 // ---------- floors UI ----------
 const ft=document.getElementById('floorTabs');

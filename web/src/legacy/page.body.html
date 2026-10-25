@@ -32,6 +32,15 @@
       <p class="hint">Podrys pokazuje ściany, schody, przybory, pomieszczenia i meble sanitarne wybranej kondygnacji (fiolet) – do prowadzenia pionów. Kondygnacje dopasowane po ścianach; strzałki poprawiają dopasowanie dla tej pary. Piony (narzędzie „Pion”) widać na wszystkich kondygnacjach.</p>
     </section>
     <section>
+      <h2>Arkusz rysunku (ta kondygnacja)</h2>
+      <div class="row">
+        <label for="shFmt" class="hint">Format</label><select id="shFmt"><option value="">auto</option><option>A3</option><option>A2</option><option>A1</option><option>A0</option></select>
+        <label for="shScale" class="hint">Skala</label><select id="shScale"><option value="">auto</option><option value="50">1:50</option><option value="100">1:100</option><option value="200">1:200</option></select>
+        <button id="shReset" class="hint" title="Wyzeruj przesunięcia rysunku, legendy i uwag na arkuszu">zeruj położenie</button>
+      </div>
+      <p class="hint">Na arkuszu przeciągasz: uchwyt „⤧ rysunek” (lewy górny róg ramki) – przesuwa rzut względem arkusza; ramkę legendy; ramkę „UWAGI”. Położenie zapamiętuje się dla kondygnacji.</p>
+    </section>
+    <section>
       <h2>Narzędzia projektowe</h2>
       <div class="tools" id="tools"></div>
       <div class="row" style="margin-top:6px">

@@ -34,7 +34,8 @@
       {"id":"…","type":"demo","pts":[[x,y],[x,y]],"w":430,"label":"wyburzenie 2,63 m"},
       {"id":"…","type":"door","pts":[[x,y],[x,y]],"w":160,"flip":false,"open":false,"fire":"EI 30","fireNote":"…"},   // pts = światło otworu; w = grubość ściany+40; fire = klasa ppoż. (min. 90 cm)
       {"id":"…","type":"riser","kind":"K","pts":[[x,y]],"label":"K1"},
-      {"id":"…","type":"zone","nr":"3","pts":[[x,y]]},   // przypisanie obszaru bez numeru do pomieszczenia inwentaryzacji (punkt w obszarze)   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
+      {"id":"…","type":"zone","nr":"3","pts":[[x,y]]},   // przypisanie obszaru bez numeru do pomieszczenia inwentaryzacji (punkt w obszarze)
+      {"id":"…","type":"rpoly","nr":"110","pts":[…]},    // ręczny obrys pomieszczenia inwentaryzacji (po przeciągnięciu punktu załamania)   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
       {"id":"…","type":"room","pts":[…],"holes":[[…]],"anchor":[x,y],"label":"salon","unit":"M1","color":"#f4a261","auto":true,"no":"M1.1"}   // no = ręczny numer projektowy (puste → automatycznie lokal.nr),
       {"id":"…","type":"furn","kind":"pax200","pts":[[x0,y0],[x1,y1]],"rot":0,"label":"PAX 200×58"},
       {"id":"…","type":"dim","pts":[[x,y],[x,y]]},
