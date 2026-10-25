@@ -65,3 +65,6 @@ Zasady:
 
 ## Kondygnacja `dach`
 Rzut dachu w układzie lokalnym parteru (`variants.align.dach` = align parteru); `model.floors.dach.geo.fixtures` – linie DWG projektu dachu (podkład), elementy w `items_dach.json` (iroofl, slope, chimney, iroof). Narzędzie: `tools/dwg/roof_plan.py`.
+
+- `unkans` {pts:[[x,y]], bb, segs, ans:'N'|'D'|'X'|'', c, t} – odpowiedź użytkownika na „Q” (kreski podkładu bez odpowiednika w modelu).
+- `chimney.hideOn` [kondygnacje] – na tych kondygnacjach komina z innych kondygnacji nie pokazujemy (użytkownik: tu go nie ma).

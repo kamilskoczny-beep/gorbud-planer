@@ -493,7 +493,7 @@
     ],
     [
      9430,
-     23570
+     24220
     ]
    ],
    "type": "iwall",
@@ -617,7 +617,7 @@
    "inv": "N",
    "pts": [
     [
-     21330,
+     23090,
      9120
     ],
     [
@@ -669,8 +669,8 @@
      9070
     ],
     [
-     10540,
-     9050
+     9110,
+     9040
     ]
    ],
    "type": "iwall",
@@ -701,8 +701,8 @@
      1100
     ],
     [
-     22310,
-     1270
+     22820,
+     1300
     ]
    ],
    "type": "iwall",
@@ -766,7 +766,7 @@
    "pts": [
     [
      15860,
-     3560
+     4890
     ],
     [
      15860,
@@ -838,7 +838,7 @@
     ],
     [
      22560,
-     2820
+     960
     ]
    ],
    "type": "iwall",
@@ -1193,7 +1193,7 @@
      5810
     ]
    ],
-   "q": "ta sama ściana ma obok grubość 58 cm, tu 43 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 58 cm (potwierdzam = przyjmij).",
+   "q": "ta sama ściana ma obok grubość 58 cm, tu 43 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 58 cm (potwierdzam = przyjmij). · koniec ściany (19.18; 5.81 m) nie styka się z żadną ścianą ani otworem – z czym się łączy? (komentarz: np. „dochodzi do ściany X”, „tu są drzwi”)",
    "qFix": {
     "w": 580
    },
@@ -1205,7 +1205,7 @@
    "inv": "N",
    "pts": [
     [
-     17310,
+     16000,
      16100
     ],
     [
@@ -1258,7 +1258,7 @@
    "pts": [
     [
      22620,
-     7010
+     9380
     ],
     [
      22620,
@@ -1421,7 +1421,7 @@
      15060
     ],
     [
-     10090,
+     12350,
      15060
     ]
    ],
@@ -1502,7 +1502,7 @@
    "pts": [
     [
      9150,
-     9400
+     8840
     ],
     [
      9150,

@@ -130,8 +130,8 @@
      24410
     ],
     [
-     13950,
-     24170
+     11850,
+     24060
     ]
    ],
    "type": "iwall",
@@ -367,7 +367,7 @@
    "pts": [
     [
      6860,
-     12170
+     10800
     ],
     [
      6860,
@@ -503,7 +503,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 100
+   "w": 100,
+   "q": "koniec ściany (8.06; 5.40 m) nie styka się z żadną ścianą ani otworem – z czym się łączy? (komentarz: np. „dochodzi do ściany X”, „tu są drzwi”)"
   },
   {
    "id": "inw-s-parter-027",
@@ -727,7 +728,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 120
+   "w": 120,
+   "q": "koniec ściany (10.70; 20.34 m) nie styka się z żadną ścianą ani otworem – z czym się łączy? (komentarz: np. „dochodzi do ściany X”, „tu są drzwi”)"
   },
   {
    "id": "inw-s-parter-041",
@@ -802,7 +804,7 @@
      10900
     ],
     [
-     8200,
+     6620,
      10900
     ]
    ],
@@ -823,7 +825,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 200
+   "w": 200,
+   "q": "koniec ściany (8.20; 12.64 m) nie styka się z żadną ścianą ani otworem – z czym się łączy? (komentarz: np. „dochodzi do ściany X”, „tu są drzwi”)"
   },
   {
    "id": "inw-s-parter-047",
@@ -834,7 +837,7 @@
      15200
     ],
     [
-     10360,
+     11920,
      15200
     ]
    ],
@@ -1150,7 +1153,7 @@
    "inv": "D",
    "pts": [
     [
-     6190,
+     4480,
      20930
     ],
     [
@@ -1667,62 +1670,11 @@
     ],
     [
      15540,
-     7260
+     9350
     ]
    ],
    "type": "iwall",
    "w": 780
-  },
-  {
-   "id": "inw-s-parter-100",
-   "inv": "D",
-   "pts": [
-    [
-     10450,
-     8920
-    ],
-    [
-     10470,
-     10780
-    ]
-   ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
-   "type": "iwall",
-   "w": 80
-  },
-  {
-   "id": "inw-s-parter-101",
-   "inv": "D",
-   "pts": [
-    [
-     10510,
-     10740
-    ],
-    [
-     9020,
-     10740
-    ]
-   ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
-   "type": "iwall",
-   "w": 80
-  },
-  {
-   "id": "inw-s-parter-102",
-   "inv": "D",
-   "pts": [
-    [
-     9060,
-     10780
-    ],
-    [
-     9060,
-     8920
-    ]
-   ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
-   "type": "iwall",
-   "w": 80
   },
   {
    "id": "inw-s-parter-103",
@@ -1730,7 +1682,7 @@
    "pts": [
     [
      120,
-     23000
+     20820
     ],
     [
      120,
@@ -1874,7 +1826,11 @@
      16200
     ]
    ],
-   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
+    "t": "2026-10-25"
+   },
    "type": "iwall",
    "w": 80
   },
@@ -4961,6 +4917,24 @@
    "q": "okno uzupełnione z podkładu, szer. 80 cm – potwierdzić",
    "type": "iwin",
    "w": 160
+  },
+  {
+   "id": "inw-k-parter-zew",
+   "label": "komin zewnętrzny – 2 kan. + wkład stal.",
+   "n": 2,
+   "note": "komin przy ścianie zewnętrznej w narożu wewnętrznym (na zewnątrz budynku, od podwórza); nad dachem KM4: 2 kanały murowane + wkład stalowy – przewód spalinowy kotłowni (zdjęcia z drona). Wg uwagi użytkownika: trzy „ścianki 8 cm” z podkładu to obrys komina.",
+   "ns": 1,
+   "pts": [
+    [
+     9060,
+     8920
+    ],
+    [
+     10470,
+     10740
+    ]
+   ],
+   "type": "chimney"
   }
  ]
 }
