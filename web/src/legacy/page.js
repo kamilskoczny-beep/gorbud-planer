@@ -192,7 +192,7 @@ function drawChimney(it,f,ghost){ const [p0,p1]=it.pts.map(p=>f===floor?p:toFloo
   el('rect',{x:x0,y:y0,width:w,height:h,fill:'#b5651d','fill-opacity':0.85,stroke:'#6f3b10','stroke-width':20},e); const n=Math.max(1,Math.round(Math.max(w,h)/Math.min(w,h)||1)); // kanały 14×14 jako kwadraty z przekątną
   const horiz=w>=h; const cs=Math.min(w,h)*0.55; for (let k=0;k<Math.min(n,6);k++){ const cx=horiz?x0+w*(k+0.5)/Math.min(n,6):x0+w/2, cy=horiz?y0+h/2:y0+h*(k+0.5)/Math.min(n,6); el('rect',{x:cx-cs/2,y:cy-cs/2,width:cs,height:cs,fill:'#fff','fill-opacity':0.9,stroke:'#6f3b10','stroke-width':14},e); el('line',{x1:cx-cs/2,y1:cy-cs/2,x2:cx+cs/2,y2:cy+cs/2,stroke:'#6f3b10','stroke-width':12},e); }
   if(!ghost){ el('rect',{x:x0,y:y0,width:w,height:h,fill:'transparent','pointer-events':'all',class:'hit'},e); if(it.id===selectedId) el('rect',{x:x0-60,y:y0-60,width:w+120,height:h+120,fill:'none',stroke:'var(--sel)','stroke-width':30,'stroke-dasharray':'120 80'},e); if(it.q){ const c=[x0+w/2,y0+h/2]; el('circle',{cx:c[0],cy:c[1]+h/2+180,r:150,fill:'#c2187a'},e); const g=el('g',{transform:`translate(${c[0]} ${c[1]+h/2+180}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:65,'text-anchor':'middle','font-size':190,fill:'#fff','font-weight':'800'},g); t.textContent='?'; } }
-  if(it.label){ const g=el('g',{transform:`translate(${x0+w+120} ${y0+h/2-60}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'font-size':150,fill:'#6f3b10','font-weight':'700',stroke:'var(--canvas)','stroke-width':40,'paint-order':'stroke'},g); t.textContent=it.label+(ghost?' ('+MODEL.floors[f].name+')':''); } }
+  { const no=ghost?'':(chimNoCache[it.id]||''); const g=el('g',{transform:`translate(${x0+w+120} ${y0+h/2-60}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'font-size':170,fill:'#6f3b10','font-weight':'800',stroke:'var(--canvas)','stroke-width':40,'paint-order':'stroke'},g); t.textContent=[no,it.label].filter(Boolean).join(' · ')+(ghost?' ('+MODEL.floors[f].name+')':''); } }
 // ---------- do wyjaśnienia: kreski ścian z podkładu DWG, których model inwentaryzacyjny nie odwzorowuje ----------
 let unkList=[];
 function computeUnknown(){ const F=MODEL.floors[floor]; const items=visibleItems(floor); if(!items.some(i=>i.type==='iwall')) return []; const out=[];
@@ -416,7 +416,8 @@ function roomArea(it){ return Math.abs(polyArea(it.pts))-(it.holes||[]).reduce((
 // ---------- numeracja projektowa pomieszczeń i legenda na rysunku ----------
 const ROOM_ORDER=[[/przedsionek|wiatrołap|hol|korytarz|komunikacja/i,1],[/salon|pokój dzienny|open space|dzienn/i,2],[/kuchnia|jadaln|aneks/i,3],[/sypialnia/i,4],[/pokój|gabinet|gość/i,5],[/łazienka/i,6],[/\bwc\b|toaleta/i,7],[/garderoba/i,8],[/schowek|gospod|pralnia|techn/i,9]];
 function roomRank(lbl){ for (const [re,n] of ROOM_ORDER) if(re.test(lbl||'')) return n; return 10; }
-let projNoCache={}; let noteNoCache={};
+let projNoCache={}; let noteNoCache={}; let winNoCache={}, chimNoCache={};
+function seqNumbers(f,types,prefix){ const out={}; const arr=visibleItems(f).filter(i=>types.includes(i.type)).map(i=>({i,c:[(i.pts[0][0]+i.pts[1][0])/2,(i.pts[0][1]+i.pts[1][1])/2]})); arr.sort((p,q)=>(Math.round(q.c[1]/1500)-Math.round(p.c[1]/1500))||(p.c[0]-q.c[0])); arr.forEach((x,k)=>out[x.i.id]=prefix+(k+1)); return out; } // numeracja porządkowa: rzędami od góry rzutu, w rzędzie od lewej
 const INV_TYPES=new Set(['iwall','iwin','idoor','chimney','istair','ifix','iroof']); let invLocked=true; try{ invLocked=localStorage.getItem('p11.invLocked')!=='0'; }catch(e){}
 const isInvLocked=(it)=>invLocked&&it&&INV_TYPES.has(it.type);
 function invBadge(it,e){ const [a,b]=it.pts; const m=[(a[0]+b[0])/2,(a[1]+b[1])/2]; el('circle',{cx:m[0],cy:m[1],r:170,fill:'#c2187a',stroke:'#fff','stroke-width':20},e); const g=el('g',{transform:`translate(${m[0]} ${m[1]}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:70,'text-anchor':'middle','font-size':210,fill:'#fff','font-weight':'800'},g); t.textContent='?'; }
@@ -439,7 +440,7 @@ function clsSums(rows){ const s={M:0,N:0,K:0,T:0,all:0}; for (const r of rows){ 
 function fmt2(x){ return x.toFixed(2).replace('.',','); }
 let sheetBox=null, sheetInfo=null;
 let sheetOpts={}; try{ sheetOpts=JSON.parse(localStorage.getItem('p11.sheet')||'{}'); }catch(e){}
-function sheetOpt(){ return sheetOpts[floor]||(sheetOpts[floor]={}); }
+function sheetOpt(){ const o=sheetOpts[floor]||(sheetOpts[floor]={}); if(o.v!==3){ for (const k of Object.keys(o)) delete o[k]; o.v=3; saveSheetOpt(); } return o; } // v3: jeden arkusz A2 (rzut + legenda) – stare ustawienia czyszczone
 function saveSheetOpt(){ try{ localStorage.setItem('p11.sheet',JSON.stringify(sheetOpts)); }catch(e){} }
 let blockDrag=null, vtxDrag=null, selRoomNr=null;
 function drawLegendOnPlan(){ gl.legenda.innerHTML=''; gl.sheet.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const META=VARIANTS.meta||{}; const rows=roomSchedule(floor);
@@ -449,72 +450,89 @@ function drawLegendOnPlan(){ gl.legenda.innerHTML=''; gl.sheet.innerHTML=''; con
   const g=el('g',{'pointer-events':'none'},gl.legenda);
   const FMT={A4:[297,210],A3:[420,297],A2:[594,420],A1:[841,594],A0:[1189,841]}; const OPT=sheetOpt();
   const dim=(fm,ori)=>{ const d=FMT[fm]||FMT.A2; return ori==='P'?[d[1],d[0]]:d; };
-  // ---------- ARKUSZ RYSUNKU (format/orientacja/skala rysunku; PO – przesunięcie rzutu w arkuszu) ----------
-  const S=+OPT.S||100, fmtName=OPT.fmt||'A2', ori=OPT.ori||'L'; const PS=(mm)=>mm*S; const PO=OPT.plan||[0,0];
-  const [fw,fh]=dim(fmtName,ori); const sx0=b[0]-PS(25)-PO[0], sy1=b[3]+PS(10)-PO[1], sx1=sx0+PS(fw), sy0=sy1-PS(fh);
-  const FST=PS(2.5), LHT=PS(3.7);
-  const T=(x,yy,t,attrs,maxW)=>{ const tt=el('text',{x:0,y:0,'font-size':FST,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; if(maxW){ try{ let str=String(t); let n=str.length; while(n>3&&tt.getComputedTextLength()>maxW){ n=Math.floor(n*Math.min(0.92,maxW/tt.getComputedTextLength())); tt.textContent=str.slice(0,n).trimEnd()+'…'; } }catch(e){} } return tt; };
-  el('rect',{x:sx0,y:sy0,width:sx1-sx0,height:sy1-sy0,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':PS(0.2)},gl.sheet); el('rect',{x:sx0+PS(20),y:sy0+PS(10),width:sx1-sx0-PS(30),height:sy1-sy0-PS(20),fill:'none',stroke:'var(--ink)','stroke-width':PS(0.7)},gl.sheet);
-  // tabelka rysunkowa + podziałka
-  const TBW=PS(180), TBH=7*LHT*1.15+PS(2); const tx=sx1-PS(10)-TBW, ty=sy0+PS(10); el('rect',{x:tx,y:ty,width:TBW,height:TBH,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':PS(0.5)},g);
+  // ---------- ARKUSZ (jeden: rzut + legenda + uwagi + tabelka) ----------
+  const S=+OPT.S||100, fmtName=OPT.fmt||'A2', ori=OPT.ori||'L'; const P=(mm)=>mm*S; /* P – mm papieru → mm modelu */ const PO=OPT.plan||[0,0];
+  const [fw,fh]=dim(fmtName,ori); const sx0=b[0]-P(25)-PO[0], sy1=b[3]+P(12)-PO[1], sx1=sx0+P(fw), sy0=sy1-P(fh);
+  const ix0=sx0+P(20), ix1=sx1-P(10), iy0=sy0+P(10), iy1=sy1-P(10); // ramka wewnętrzna
+  const T=(x,yy,t,attrs,maxW,fs)=>{ const tt=el('text',{x:0,y:0,'font-size':fs||P(2.5),fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; if(maxW){ try{ let str=String(t); let n=str.length; while(n>3&&tt.getComputedTextLength()>maxW){ n=Math.floor(n*Math.min(0.92,maxW/tt.getComputedTextLength())); tt.textContent=str.slice(0,n).trimEnd()+'…'; } }catch(e){} } return tt; };
+  el('rect',{x:sx0,y:sy0,width:sx1-sx0,height:sy1-sy0,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.2)},gl.sheet); el('rect',{x:ix0,y:iy0,width:ix1-ix0,height:iy1-iy0,fill:'none',stroke:'var(--ink)','stroke-width':P(0.7)},gl.sheet);
+  // tabelka rysunkowa (prawy dolny róg) + podziałka
+  const FST=P(2.5), LHT=P(3.7); const TBW=P(180), TBH=7*LHT*1.15+P(2); const tx=ix1-TBW, ty=iy0; el('rect',{x:tx,y:ty,width:TBW,height:TBH,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.5)},g);
   const rowsTB=[['Inwestor',META.investor||''],['Obiekt',META.object||''],['Stadium / branża',(META.stage||'').split(':')[0]+' · architektoniczna'],['Tytuł rysunku','Rzut – '+F.name+' – stan projektowany'],['Projektant',(META.designer||'')+(META.designerNo?' · upr. nr '+META.designerNo:'')],['Opracowanie',META.author||''],['Skala · format · nr rys. · data','1:'+S+' · '+fmtName+(ori==='P'?' pion':'')+' · '+((META.drawings||{})[floor]||'')+' · '+new Date().toLocaleDateString('pl-PL',{month:'2-digit',year:'numeric'})]];
-  let yy=ty+TBH-PS(1); for (const [k,val] of rowsTB){ T(tx+PS(3),yy-LHT*0.85,k,{'font-size':FST*0.7,fill:'var(--muted)'}); T(tx+PS(48),yy-LHT*0.85,String(val),{'font-size':FST*0.85,'font-weight':k==='Tytuł rysunku'||k==='Projektant'?'700':'500'},TBW-PS(51)); yy-=LHT*1.15; el('line',{x1:tx,y1:yy+LHT*0.12,x2:tx+TBW,y2:yy+LHT*0.12,stroke:'var(--ink)','stroke-width':PS(0.12)},g); }
-  el('line',{x1:tx+PS(45),y1:ty,x2:tx+PS(45),y2:ty+TBH,stroke:'var(--ink)','stroke-width':PS(0.12)},g);
-  { const yb=ty+TBH+PS(4); for (let i=0;i<5;i++) el('rect',{x:tx+i*1000,y:yb,width:1000,height:PS(1.2),fill:i%2?'var(--canvas)':'var(--ink)',stroke:'var(--ink)','stroke-width':PS(0.1)},g); for (let i=0;i<=5;i++) T(tx+i*1000-FST*0.3,yb+PS(2.2)+FST*0.7,String(i),{'font-size':FST*0.7}); T(tx+5000+PS(3),yb+PS(0.3),'m · skala 1:'+S,{'font-size':FST*0.7,fill:'var(--muted)'}); }
-  // uwagi (dotyczą kropek na rzucie – zostają w arkuszu rysunku); przesuwalne
-  const NO=OPT.notes||[0,0];
-  if (notes.length){ const NW=Math.min(b[2]-b[0],sx1-sx0-PS(40)); const NX=b[0]+NO[0]; let yN=b[1]-PS(8)+NO[1]; const cpl=Math.max(40,Math.floor((NW-PS(6))/(FST*0.85*0.56)));
-    const wrap=(t)=>{ const out=[]; let line=''; for (const w of String(t).split(/\s+/)){ if((line+' '+w).trim().length>cpl){ out.push(line.trim()); line=w; } else line+=' '+w; } if(line.trim()) out.push(line.trim()); return out; };
-    const yNTop=yN; T(NX+PS(2),yN-LHT*0.9,'UWAGI',{'font-weight':'800'}); yN-=LHT*1.1;
-    for (const it of notes){ const lines=wrap(it.label); el('circle',{cx:NX+PS(3.6),cy:yN-LHT*0.62,r:PS(1.4),fill:'var(--note)'},g); const tn=el('text',{x:0,y:0,'text-anchor':'middle','font-size':FST*0.8,fill:'#fff','font-weight':'800',transform:`translate(${NX+PS(3.6)} ${yN-LHT*0.62+FST*0.3}) scale(1,-1)`},g); tn.textContent=noteNoCache[it.id]; lines.forEach((ln)=>{ T(NX+PS(6.5),yN-LHT*0.9,ln,{'font-size':FST*0.85},NW-PS(8)); yN-=LHT*0.8; }); yN-=LHT*0.25; }
-    el('rect',{x:NX,y:yN-PS(2),width:NW,height:yNTop-yN+PS(2),fill:'none',stroke:'var(--ink)','stroke-width':PS(0.2),rx:PS(0.5)},g);
-    const hn=el('rect',{x:NX,y:yN-PS(2),width:NW,height:yNTop-yN+PS(2),fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hn.dataset.drag='notes'; hn.style.cursor='move'; }
-  // ---------- ARKUSZ LEGENDY (osobny: własny format/orientacja/skala, przesuwany w całości) ----------
-  const SL=+OPT.legS||100, lfmt=OPT.lfmt||'A3', lori=OPT.lori||'P'; const P=(mm)=>mm*SL; const LS=OPT.lsheet||[0,0]; // legenda: skala i położenie niezależne od rysunku
-  const [lw,lh]=dim(lfmt,lori); const lx0=b[2]+12000+LS[0], ly1=b[3]+1000+LS[1], lx1=lx0+P(lw), ly0=ly1-P(lh);
-  el('rect',{x:lx0,y:ly0,width:lx1-lx0,height:ly1-ly0,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.2)},gl.sheet); el('rect',{x:lx0+P(20),y:ly0+P(10),width:lx1-lx0-P(30),height:ly1-ly0-P(20),fill:'none',stroke:'var(--ink)','stroke-width':P(0.7)},gl.sheet);
-  { const hl=el('rect',{x:lx0,y:ly0,width:lx1-lx0,height:ly1-ly0,fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hl.dataset.drag='lsheet'; hl.style.cursor='move'; }
-  const FS=P(2.5), LH=P(3.7); const X0=lx0+P(25), W=lx1-lx0-P(40), XR=X0+W; let y=ly1-P(15);
-  const txt=(x,yy,t,attrs,maxW)=>{ const tt=el('text',{x:0,y:0,'font-size':FS,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; if(maxW){ try{ let str=String(t); let n=str.length; while(n>3&&tt.getComputedTextLength()>maxW){ n=Math.floor(n*Math.min(0.92,maxW/tt.getComputedTextLength())); tt.textContent=str.slice(0,n).trimEnd()+'…'; } }catch(e){} } return tt; };
-  const hr=(yy,w)=>el('line',{x1:X0,y1:yy,x2:XR,y2:yy,stroke:'var(--ink)','stroke-width':w||P(0.15)},g);
-  txt(X0,y-LH*0.95,'ZESTAWIENIA I OZNACZENIA – '+F.name.toUpperCase(),{'font-size':FS*1.3,'font-weight':'800'},W); y-=LH*1.2; txt(X0,y-LH*0.95,(v?v.name:'')+' · do rys. '+((META.drawings||{})[floor]||'')+' · powierzchnie w m² (PN-ISO 9836)',{'font-size':FS*0.8,fill:'var(--muted)'},W); y-=LH*1.3; hr(y,P(0.25)); y-=LH*0.4;
-  txt(X0,y-LH*0.9,'ZESTAWIENIE POMIESZCZEŃ',{'font-weight':'800'}); y-=LH;
-  const cNo=X0, cName=X0+P(14), cA=XR-P(26), cCls=XR; const nameW=cA-P(13)-cName; txt(cNo,y-LH*0.9,'Nr',{'font-weight':'700','font-size':FS*0.8}); txt(cName,y-LH*0.9,'Pomieszczenie',{'font-weight':'700','font-size':FS*0.8}); txt(cA,y-LH*0.9,'pow. użytk. m²',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); txt(cCls,y-LH*0.9,'klasyfikacja',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); y-=LH*0.9; hr(y);
-  for (const G of groups){ const U=UNITS[G.u]||{name:G.u,color:'#999'}; y-=LH*0.25; el('rect',{x:X0,y:y-LH*0.85,width:FS*1.2,height:FS*1.0,fill:U.color,stroke:'var(--ink)','stroke-width':P(0.12)},g); txt(X0+FS*1.6,y-LH*0.9,U.name,{'font-weight':'700','font-size':FS*0.9},cA-P(13)-X0-FS*1.6); txt(cA,y-LH*0.9,fmt2(G.a),{'font-weight':'700','text-anchor':'end'}); y-=LH;
-    for (const r of G.rows){ txt(cNo,y-LH*0.9,String(r.no),{'font-size':FS*0.85,'font-weight':/\./.test(r.no)?'700':'400',fill:/\./.test(r.no)?'var(--new)':'var(--ink)'}); txt(cName,y-LH*0.9,r.name,{'font-size':FS*0.85},nameW); txt(cA,y-LH*0.9,fmt2(r.a),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,CLS[r.cls][0],{'font-size':FS*0.7,'text-anchor':'end',fill:CLS[r.cls][1]}); y-=LH*0.85; } }
-  y-=LH*0.2; hr(y,P(0.25)); y-=LH*0.2; txt(X0,y-LH*0.9,'RAZEM kondygnacja',{'font-weight':'800'}); txt(cA,y-LH*0.9,fmt2(fl.all),{'font-weight':'800','text-anchor':'end'}); y-=LH;
-  for (const k of ['M','N','K','T']){ txt(X0,y-LH*0.9,'w tym '+CLS[k][0],{'font-size':FS*0.85,fill:CLS[k][1]}); txt(cA,y-LH*0.9,fmt2(fl[k]),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,fl.use>0&&(k==='M'||k==='N')?Math.round(100*fl[k]/fl.use)+' % pow. użytk.':'',{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; }
-  y-=LH*0.3; hr(y,P(0.25)); y-=LH*0.3; txt(X0,y-LH*0.9,'BILANS BUDYNKU – STAN PROJEKTOWANY (wszystkie kondygnacje)',{'font-weight':'800'},W); y-=LH;
-  const line=(l,a,r,attrs)=>{ txt(X0,y-LH*0.9,l,{'font-size':FS*0.85,...(attrs||{})},cA-P(13)-X0); txt(cA,y-LH*0.9,a,{'font-size':FS*0.85,'text-anchor':'end',...(attrs||{})}); if(r) txt(cCls,y-LH*0.9,r,{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; };
-  line('powierzchnia pomieszczeń ogółem',fmt2(bs.all),''); line('– komunikacja (klatki, korytarze)',fmt2(bs.K),''); line('– pomieszczenia techniczne',fmt2(bs.T),'');
+  let yy=ty+TBH-P(1); for (const [k,val] of rowsTB){ T(tx+P(3),yy-LHT*0.85,k,{'font-size':FST*0.7,fill:'var(--muted)'}); T(tx+P(48),yy-LHT*0.85,String(val),{'font-size':FST*0.85,'font-weight':k==='Tytuł rysunku'||k==='Projektant'?'700':'500'},TBW-P(51)); yy-=LHT*1.15; el('line',{x1:tx,y1:yy+LHT*0.12,x2:tx+TBW,y2:yy+LHT*0.12,stroke:'var(--ink)','stroke-width':P(0.12)},g); }
+  el('line',{x1:tx+P(45),y1:ty,x2:tx+P(45),y2:ty+TBH,stroke:'var(--ink)','stroke-width':P(0.12)},g);
+  { const yb=ty+TBH+P(3); for (let i=0;i<5;i++) el('rect',{x:tx+i*1000,y:yb,width:1000,height:P(1.2),fill:i%2?'var(--canvas)':'var(--ink)',stroke:'var(--ink)','stroke-width':P(0.1)},g); for (let i=0;i<=5;i++) T(tx+i*1000-FST*0.3,yb+P(2.2)+FST*0.7,String(i),{'font-size':FST*0.7}); T(tx+5000+P(3),yb+P(0.3),'m · skala 1:'+S,{'font-size':FST*0.7,fill:'var(--muted)'}); }
+  // ---------- LEGENDA: stały rozmiar na papierze (tekst legT mm), jedna ramka, kolumny gdy brak wysokości ----------
+  const TXT=+OPT.legT||2.5; const k=TXT/2.5; const FS=P(2.5*k), LH=P(3.7*k), CW=P(104*k), PAD=P(3*k);
+  const L=[]; // wiersze: {h (w LH), d:(x,y,W)=>…}
+  const add=(h,d)=>L.push({h,d});
+  const hrL=(x,yy,W,w)=>el('line',{x1:x,y1:yy,x2:x+W,y2:yy,stroke:'var(--ink)','stroke-width':w||P(0.15*k)},g);
+  add(1.3,(x,y,W)=>T(x,y-LH*0.95,'LEGENDA – '+F.name.toUpperCase(),{'font-size':FS*1.25,'font-weight':'800'},W,FS*1.25));
+  add(1.0,(x,y,W)=>T(x,y-LH*0.9,(v?v.name:'')+' · powierzchnie w m² (PN-ISO 9836)',{'font-size':FS*0.78,fill:'var(--muted)'},W,FS*0.78));
+  add(0.4,(x,y,W)=>hrL(x,y-LH*0.2,W,P(0.25*k)));
+  add(1.0,(x,y,W)=>T(x,y-LH*0.9,'ZESTAWIENIE POMIESZCZEŃ',{'font-weight':'800'},W,FS));
+  const cols=(x,W)=>({cNo:x,cName:x+P(14*k),cA:x+W-P(26*k),cCls:x+W});
+  add(1.0,(x,y,W)=>{ const c=cols(x,W); T(c.cNo,y-LH*0.9,'Nr',{'font-weight':'700'},0,FS*0.8); T(c.cName,y-LH*0.9,'Pomieszczenie',{'font-weight':'700'},0,FS*0.8); T(c.cA,y-LH*0.9,'pow. m²',{'font-weight':'700','text-anchor':'end'},0,FS*0.8); T(c.cCls,y-LH*0.9,'klasyfikacja',{'font-weight':'700','text-anchor':'end'},0,FS*0.8); hrL(x,y-LH*1.0,W); });
+  for (const G of groups){ const U=UNITS[G.u]||{name:G.u,color:'#999'};
+    add(1.15,(x,y,W)=>{ const c=cols(x,W); el('rect',{x,y:y-LH*1.0,width:FS*1.2,height:FS*1.0,fill:U.color,stroke:'var(--ink)','stroke-width':P(0.12*k)},g); T(x+FS*1.6,y-LH*1.05,U.name,{'font-weight':'700'},c.cA-P(13*k)-x-FS*1.6,FS*0.9); T(c.cA,y-LH*1.05,fmt2(G.a),{'font-weight':'700','text-anchor':'end'},0,FS); });
+    for (const r of G.rows) add(0.85,(x,y,W)=>{ const c=cols(x,W); const pn=/\./.test(r.no); T(c.cNo,y-LH*0.8,String(r.no),{'font-weight':pn?'700':'400',fill:pn?'var(--new)':'var(--ink)'},0,FS*0.85); T(c.cName,y-LH*0.8,r.name,{},c.cA-P(13*k)-c.cName,FS*0.85); T(c.cA,y-LH*0.8,fmt2(r.a),{'text-anchor':'end'},0,FS*0.85); T(c.cCls,y-LH*0.8,CLS[r.cls][0],{'text-anchor':'end',fill:CLS[r.cls][1]},0,FS*0.7); }); }
+  add(0.4,(x,y,W)=>hrL(x,y-LH*0.2,W,P(0.25*k)));
+  add(1.0,(x,y,W)=>{ const c=cols(x,W); T(x,y-LH*0.9,'RAZEM kondygnacja',{'font-weight':'800'},0,FS); T(c.cA,y-LH*0.9,fmt2(fl.all),{'font-weight':'800','text-anchor':'end'},0,FS); });
+  for (const kk of ['M','N','K','T']) add(0.85,(x,y,W)=>{ const c=cols(x,W); T(x,y-LH*0.8,'w tym '+CLS[kk][0],{fill:CLS[kk][1]},0,FS*0.85); T(c.cA,y-LH*0.8,fmt2(fl[kk]),{'text-anchor':'end'},0,FS*0.85); if(fl.use>0&&(kk==='M'||kk==='N')) T(c.cCls,y-LH*0.8,Math.round(100*fl[kk]/fl.use)+' %',{'text-anchor':'end',fill:'var(--muted)'},0,FS*0.7); });
+  add(0.4,(x,y,W)=>hrL(x,y-LH*0.2,W,P(0.25*k)));
+  add(1.0,(x,y,W)=>T(x,y-LH*0.9,'BILANS BUDYNKU (wszystkie kondygnacje)',{'font-weight':'800'},W,FS));
+  const line=(l,a,r,attrs)=>add(0.85,(x,y,W)=>{ const c=cols(x,W); T(x,y-LH*0.8,l,{...(attrs||{})},c.cA-P(13*k)-x,FS*0.85); T(c.cA,y-LH*0.8,a,{'text-anchor':'end',...(attrs||{})},0,FS*0.85); if(r) T(c.cCls,y-LH*0.8,r,{'text-anchor':'end',fill:'var(--muted)'},0,FS*0.7); });
+  line('powierzchnia pomieszczeń ogółem',fmt2(bs.all),''); line('– komunikacja',fmt2(bs.K),''); line('– pomieszczenia techniczne',fmt2(bs.T),'');
   line('= powierzchnia użytkowa',fmt2(bs.use),'100 %',{'font-weight':'700'});
-  line('   mieszkalna (lokale + pomocnicze + ogólnego użytku)',fmt2(bs.M),Math.round(100*bs.M/(bs.use||1))+' %',{fill:CLS.M[1],'font-weight':'700'});
-  line('   niemieszkalna (usługi: Poczta, Orange)',fmt2(bs.N),Math.round(100*bs.N/(bs.use||1))+' %',{fill:CLS.N[1]});
-  if(ex){ y-=LH*0.2; line('Stan istniejący wg ekspertyzy PPSA:','','',{fill:'var(--muted)'}); line('   mieszkalna',fmt2(ex.M),Math.round(100*ex.M/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); line('   niemieszkalna',fmt2(ex.N),Math.round(100*ex.N/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); }
-  txt(X0,y-LH*0.9,'Budynek mieszkalny (PKOB 11): udział pow. mieszkalnej ≥ 50 % – '+(bs.M/(bs.use||1)>=0.5?'SPEŁNIONE':'NIESPEŁNIONE'),{'font-size':FS*0.8,'font-weight':'700',fill:bs.M/(bs.use||1)>=0.5?CLS.M[1]:CLS.N[1]},W); y-=LH;
-  y-=LH*0.3; hr(y,P(0.25)); y-=LH*0.3; txt(X0,y-LH*0.9,'OZNACZENIA',{'font-weight':'800'}); y-=LH;
-  const sym=(draw,label)=>{ draw(X0,y-LH*0.5); txt(X0+P(14),y-LH*0.9,label,{'font-size':FS*0.85},W-P(14)); y-=LH*0.9; }; const SW=P(11);
-  sym((x,yy)=>el('rect',{x,y:yy-P(0.9),width:SW,height:P(1.8),fill:'#2b2d42'},g),'ściany istniejące nośne');
-  sym((x,yy)=>el('rect',{x,y:yy-P(0.6),width:SW,height:P(1.2),fill:'#8d99ae'},g),'ściany istniejące działowe');
-  sym((x,yy)=>el('rect',{x,y:yy-P(0.6),width:SW,height:P(1.2),fill:'var(--new)'},g),'ściany projektowane (nowe)');
-  sym((x,yy)=>el('rect',{x,y:yy-P(0.9),width:SW,height:P(1.8),fill:'var(--demo)','fill-opacity':0.85},g),'ściany istniejące do wyburzenia (otwory, przebicia)');
-  sym((x,yy)=>{ el('rect',{x,y:yy-P(1),width:SW,height:P(2),fill:'#b5651d'},g); el('rect',{x:x+SW*0.3,y:yy-P(0.55),width:P(1.1),height:P(1.1),fill:'#fff'},g); },'komin / kanał');
-  sym((x,yy)=>{ for (const o of [-0.7,0.7]) el('line',{x1:x,y1:yy+P(o),x2:x+SW,y2:yy+P(o),stroke:'#1d6fd6','stroke-width':P(0.25)},g); },'okno istniejące');
-  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#d62828','stroke-width':P(0.7)},g); const t=el('text',{x:0,y:0,'font-size':FS*0.8,fill:'#d62828','font-weight':'900',transform:`translate(${x+SW*0.3} ${yy+P(0.9)}) scale(1,-1)`},g); t.textContent='EI30'; },'drzwi przeciwpożarowe EI 30, światło 90 cm (wydzielenie klatki)');
-  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#2a9d3a','stroke-width':P(0.6)},g); el('circle',{cx:x,cy:yy,r:P(0.9),fill:'#2a9d3a'},g); },'dojście ewakuacyjne do klatki schodowej (≤ 20 m)');
-  sym((x,yy)=>{ el('circle',{cx:x+SW/2,cy:yy,r:P(1.1),fill:'#8d5524',stroke:'#fff','stroke-width':P(0.14)},g); },'pion instalacyjny (K Ø110 / W / C / Wn / E)');
-  sym((x,yy)=>{ el('circle',{cx:x+SW/2,cy:yy,r:P(1.3),fill:'var(--note)'},g); const t=el('text',{x:0,y:0,'font-size':FS*0.75,fill:'#fff','font-weight':'800','text-anchor':'middle',transform:`translate(${x+SW/2} ${yy+P(0.7)}) scale(1,-1)`},g); t.textContent='1'; },'uwaga – treść w ramce UWAGI w arkuszu rysunku');
-  sym((x,yy)=>el('rect',{x,y:yy-P(1),width:SW,height:P(2),fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane – kolor lokalu, numer lokal.nr');
-  if (y < ly0+P(30)) { const w=el('text',{x:0,y:0,'font-size':FS,fill:'#d62828','font-weight':'800',transform:`translate(${X0} ${ly0+P(13)}) scale(1,-1)`},g); w.textContent='⚠ treść nie mieści się w arkuszu legendy – zwiększ format lub zmień skalę legendy'; }
-  sheetBox={x0:Math.min(sx0,lx0),y0:Math.min(sy0,ly0),x1:Math.max(sx1,lx1),y1:Math.max(sy1,ly1)}; sheetInfo={S,fmt:fmtName,SL,lfmt};
-  try{ const sv=(id,v)=>{ const e=document.getElementById(id); if(e&&document.activeElement!==e) e.value=v; }; sv('shFmt',fmtName); sv('shOri',ori); sv('shScale',S); sv('lgFmt',lfmt); sv('lgOri',lori); sv('lgScale',SL); }catch(e){}
+  line('   mieszkalna',fmt2(bs.M),Math.round(100*bs.M/(bs.use||1))+' %',{fill:CLS.M[1],'font-weight':'700'});
+  line('   niemieszkalna (usługi)',fmt2(bs.N),Math.round(100*bs.N/(bs.use||1))+' %',{fill:CLS.N[1]});
+  if(ex){ line('stan istniejący (ekspertyza): mieszkalna',fmt2(ex.M),Math.round(100*ex.M/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); }
+  add(1.0,(x,y,W)=>T(x,y-LH*0.85,'Budynek mieszkalny (PKOB 11) – udział mieszkalnej ≥ 50 %: '+(bs.M/(bs.use||1)>=0.5?'SPEŁNIONE':'NIESPEŁNIONE'),{'font-weight':'700',fill:bs.M/(bs.use||1)>=0.5?CLS.M[1]:CLS.N[1]},W,FS*0.78));
+  add(0.4,(x,y,W)=>hrL(x,y-LH*0.2,W,P(0.25*k)));
+  add(1.0,(x,y,W)=>T(x,y-LH*0.9,'OZNACZENIA',{'font-weight':'800'},W,FS));
+  const SW=P(11*k); const sym=(draw,label)=>add(0.9,(x,y,W)=>{ draw(x,y-LH*0.45); T(x+P(14*k),y-LH*0.8,label,{},W-P(14*k),FS*0.85); });
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.9*k),width:SW,height:P(1.8*k),fill:'#2b2d42'},g),'ściany istniejące nośne');
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.6*k),width:SW,height:P(1.2*k),fill:'#8d99ae'},g),'ściany istniejące działowe');
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.6*k),width:SW,height:P(1.2*k),fill:'var(--new)'},g),'ściany projektowane');
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.9*k),width:SW,height:P(1.8*k),fill:'var(--demo)'},g),'ściany do wyburzenia');
+  sym((x,yy)=>{ el('rect',{x,y:yy-P(1*k),width:SW,height:P(2*k),fill:'#b5651d'},g); el('rect',{x:x+SW*0.3,y:yy-P(0.55*k),width:P(1.1*k),height:P(1.1*k),fill:'#fff'},g); },'komin / kanał');
+  sym((x,yy)=>{ for (const o of [-0.7,0.7]) el('line',{x1:x,y1:yy+P(o*k),x2:x+SW,y2:yy+P(o*k),stroke:'#1d6fd6','stroke-width':P(0.25*k)},g); },'okno istniejące');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#d62828','stroke-width':P(0.7*k)},g); T(x+SW*0.25,yy+P(0.9*k),'EI30',{fill:'#d62828','font-weight':'900'},0,FS*0.8); },'drzwi EI 30, światło 90 cm (klatka)');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#2a9d3a','stroke-width':P(0.6*k)},g); el('circle',{cx:x,cy:yy,r:P(0.9*k),fill:'#2a9d3a'},g); },'dojście ewakuacyjne do klatki (≤ 20 m)');
+  sym((x,yy)=>el('circle',{cx:x+SW/2,cy:yy,r:P(1.1*k),fill:'#8d5524',stroke:'#fff','stroke-width':P(0.14*k)},g),'pion instalacyjny');
+  sym((x,yy)=>{ el('circle',{cx:x+SW/2,cy:yy,r:P(1.3*k),fill:'var(--note)'},g); T(x+SW/2,yy+P(0.7*k),'1',{fill:'#fff','font-weight':'800','text-anchor':'middle'},0,FS*0.75); },'uwaga – treść w ramce UWAGI');
+  sym((x,yy)=>el('rect',{x,y:yy-P(1*k),width:SW,height:P(2*k),fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane (kolor lokalu, nr lokal.nr)');
+  // rozmieszczenie: prawa część arkusza, nad tabelką; kolumny gdy brak wysokości
+  const LO=OPT.leg||[0,0]; const availH=(iy1-P(3))-(ty+TBH+P(8))-2*PAD; const totH=L.reduce((s,r)=>s+r.h*LH,0);
+  const ncol=Math.max(1,Math.ceil(totH/availH)); const BW=ncol*CW+(ncol+1)*PAD;
+  const bx0=ix1-P(3)-BW+P(LO[0]), by1=iy1-P(3)+P(LO[1]);
+  // podział na kolumny (bez rozrywania nagłówków grup na końcu kolumny)
+  let col=0, y=by1-PAD, maxDepth=0; const colX=(c)=>bx0+PAD+c*(CW+PAD);
+  for (const r of L){ if(y-r.h*LH<by1-PAD-availH && col<ncol-1){ maxDepth=Math.max(maxDepth,by1-y); col++; y=by1-PAD; } r.d(colX(col),y,CW); y-=r.h*LH; }
+  maxDepth=Math.max(maxDepth,by1-y)+PAD;
+  el('rect',{x:bx0,y:by1-maxDepth,width:BW,height:maxDepth,fill:'none',stroke:'var(--ink)','stroke-width':P(0.3*k)},g);
+  { const hl=el('rect',{x:bx0,y:by1-maxDepth,width:BW,height:maxDepth,fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hl.dataset.drag='leg'; hl.style.cursor='move'; }
+  for (let c=1;c<ncol;c++) el('line',{x1:bx0+c*(CW+PAD)+PAD/2,y1:by1-maxDepth+PAD,x2:bx0+c*(CW+PAD)+PAD/2,y2:by1-PAD,stroke:'var(--line,#ccc)','stroke-width':P(0.12*k)},g);
+  // UWAGI – pod legendą, gdy jest miejsce nad tabelką; inaczej pod rzutem
+  const NO=OPT.notes||[0,0];
+  if (notes.length){ const NW=BW; const NX=bx0+P(NO[0]); let yN=by1-maxDepth-P(4)+P(NO[1]); const cpl=Math.max(30,Math.floor((NW-P(8*k))/(FS*0.85*0.56)));
+    const wrap=(t)=>{ const out=[]; let line=''; for (const w of String(t).split(/\s+/)){ if((line+' '+w).trim().length>cpl){ out.push(line.trim()); line=w; } else line+=' '+w; } if(line.trim()) out.push(line.trim()); return out; };
+    const yNTop=yN; T(NX+PAD,yN-LH*0.9,'UWAGI',{'font-weight':'800'},0,FS); yN-=LH*1.1;
+    for (const it of notes){ const lines=wrap(it.label); el('circle',{cx:NX+PAD+P(1.4*k),cy:yN-LH*0.62,r:P(1.4*k),fill:'var(--note)'},g); T(NX+PAD+P(1.4*k),yN-LH*0.62+FS*0.3,String(noteNoCache[it.id]),{fill:'#fff','font-weight':'800','text-anchor':'middle'},0,FS*0.8); lines.forEach(ln=>{ T(NX+PAD+P(4.5*k),yN-LH*0.9,ln,{},NW-2*PAD-P(4.5*k),FS*0.85); yN-=LH*0.8; }); yN-=LH*0.25; }
+    el('rect',{x:NX,y:yN-PAD,width:NW,height:yNTop-yN+PAD,fill:'none',stroke:'var(--ink)','stroke-width':P(0.2*k)},g);
+    const hn=el('rect',{x:NX,y:yN-PAD,width:NW,height:yNTop-yN+PAD,fill:'transparent','pointer-events':'all',class:'blockdrag'},gl.legenda); hn.dataset.drag='notes'; hn.style.cursor='move'; }
+  // ostrzeżenie: rzut nachodzi na legendę lub wychodzi poza ramkę
+  const planX1=b[2], planX0=b[0], planY0=b[1], planY1=b[3]; const warn=[]; if(planX1>bx0-P(3)&&planY1>by1-maxDepth&&planY0<by1) warn.push('rzut nachodzi na legendę'); if(planX0<ix0||planY0<iy0||planY1>iy1||planX1>ix1) warn.push('rzut wychodzi poza ramkę');
+  if(warn.length) T(ix0+P(3),iy0+P(3),'⚠ '+warn.join(', ')+' – zmień skalę/format albo przesuń rzut lub legendę',{fill:'#d62828','font-weight':'800'},ix1-ix0-TBW-P(10),FST);
+  sheetBox={x0:sx0,y0:sy0,x1:sx1,y1:sy1}; sheetInfo={S,fmt:fmtName};
+  try{ const sv=(id,val)=>{ const e=document.getElementById(id); if(e&&document.activeElement!==e) e.value=val; }; sv('shFmt',fmtName); sv('shOri',ori); sv('shScale',S); sv('lgText',TXT); }catch(e){}
 }
 let lastZoneKey=null;
 function drawProject(){
   try{ const zk=floor+'|'+visibleItems(floor).filter(i=>i.type==='zone'||i.type==='rpoly').map(i=>i.type+i.nr+':'+JSON.stringify(i.pts)).join(';'); if(zk!==lastZoneKey){ lastZoneKey=zk; drawRooms(); } }catch(err){ diag('zones',err); } // przypisania obszarów (zone) zmieniają podział stref
   try{ if(!fillCache||fillCache.key!==floor+'|'+wallsHash()) drawWallFill(); }catch(err){ diag('wallfill',err); }
   try{ recomputeRooms(); }catch(err){ diag('rooms',err); }
-  gl.project.innerHTML=''; gl.inwSt.innerHTML=''; gl.inwFx.innerHTML=''; gl.inwN.innerHTML=''; gl.inwD.innerHTML=''; gl.inwO.innerHTML=''; gl.inwDr.innerHTML=''; gl.demo.querySelectorAll(':scope > g').forEach(e=>e.remove()); gl.rfill.innerHTML=''; gl.rline.querySelectorAll(':not(.rl-inv)').forEach(e=>e.remove()); gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); noteNoCache=noteNumbers(floor); }catch(err){ diag('numery',err); projNoCache={}; }
+  gl.project.innerHTML=''; gl.inwSt.innerHTML=''; gl.inwFx.innerHTML=''; gl.inwN.innerHTML=''; gl.inwD.innerHTML=''; gl.inwO.innerHTML=''; gl.inwDr.innerHTML=''; gl.demo.querySelectorAll(':scope > g').forEach(e=>e.remove()); gl.rfill.innerHTML=''; gl.rline.querySelectorAll(':not(.rl-inv)').forEach(e=>e.remove()); gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); noteNoCache=noteNumbers(floor); winNoCache=seqNumbers(floor,['iwin','iroof'],'O'); chimNoCache=seqNumbers(floor,['chimney'],'KM'); }catch(err){ diag('numery',err); projNoCache={}; }
   for (const it of visibleItems(floor)){
     try { drawOneItem(it, markN); if(it.type==='mark') markN++; } catch(err){ diag('render '+it.type, err); }
   }
@@ -612,8 +630,8 @@ function drawOneItem(it, markN){
     else if (it.type==='mark'){ const [a]=it.pts; const n=it.n||(markN+1); e=el('g',{},gl.sketch); el('circle',{cx:a[0],cy:a[1],r:280,fill:'var(--mark)',opacity:0.95},e); const g=el('g',{transform:`translate(${a[0]} ${a[1]}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:95,'text-anchor':'middle','font-size':300,fill:'#fff','font-weight':'700'},g); t.textContent=n; if(it.label){ const g2=el('g',{transform:`translate(${a[0]+360} ${a[1]-80}) scale(1,-1)`,'pointer-events':'none'},e); const bg=el('text',{x:0,y:0,'font-size':220,fill:'var(--mark)','font-weight':'600',stroke:'var(--canvas)','stroke-width':60,'paint-order':'stroke'},g2); bg.textContent=it.label; } }
     else if (it.type==='dim'){ const [a,b]=it.pts; e=el('g',{},gl.project); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--accent)','stroke-width':20},e); [a,b].forEach(p=>el('circle',{cx:p[0],cy:p[1],r:60,fill:'var(--accent)'},e)); const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const g=el('g',{transform:`translate(${(a[0]+b[0])/2} ${(a[1]+b[1])/2+150}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':180,fill:'var(--accent)',class:'lbl-ar','font-weight':'500'},g); t.textContent=(L/1000).toFixed(2).replace('.',',')+' m'; }
     else if (it.type==='iwall'){ const [a,b]=it.pts; const N=it.inv!=='D'; e=el('g',{},N?gl.inwN:gl.inwD); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:N?'#2b2d42':'#8d99ae','stroke-width':it.w||120,'stroke-linecap':'butt'},e); if(isSel) el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--sel)','stroke-width':Math.max(30,2*mmPerPx()),'stroke-dasharray':'120 80'},e); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'transparent','stroke-width':Math.max(it.w||120,12*mmPerPx()),'pointer-events':'stroke',class:'hit'},e); if(it.q) invBadge(it,e); }
-    else if (it.type==='iwin'){ const [a,b]=it.pts; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const u=[(b[0]-a[0])/L,(b[1]-a[1])/L], nl=[-u[1],u[0]]; const th=it.w||300; e=el('g',{},gl.inwO); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--canvas)','stroke-width':th-20},e); for (const o of [-th/2+10,-30,30,th/2-10]) el('line',{x1:a[0]+nl[0]*o,y1:a[1]+nl[1]*o,x2:b[0]+nl[0]*o,y2:b[1]+nl[1]*o,stroke:'#1d6fd6','stroke-width':Math.abs(o)<40?22:14},e); for (const p of [a,b]) el('line',{x1:p[0]-nl[0]*th/2,y1:p[1]-nl[1]*th/2,x2:p[0]+nl[0]*th/2,y2:p[1]+nl[1]*th/2,stroke:'#1d6fd6','stroke-width':16},e); if(isSel) el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--sel)','stroke-width':40,'stroke-dasharray':'120 80'},e); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'transparent','stroke-width':Math.max(th,12*mmPerPx()),'pointer-events':'stroke',class:'hit'},e); const g=el('g',{transform:`translate(${(a[0]+b[0])/2-nl[0]*(th/2+180)} ${(a[1]+b[1])/2-nl[1]*(th/2+180)}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':120,fill:'#1d6fd6',class:'lbl-ar'},g); t.textContent=(L/10).toFixed(0); }
-    else if (it.type==='iroof'){ const [p0,p1]=it.pts; const x0=Math.min(p0[0],p1[0]), y0=Math.min(p0[1],p1[1]), w=Math.abs(p1[0]-p0[0]), h=Math.abs(p1[1]-p0[1]); e=el('g',{},gl.inwO); el('rect',{x:x0,y:y0,width:w,height:h,fill:'#1d6fd6','fill-opacity':0.08,stroke:isSel?'var(--sel)':'#1d6fd6','stroke-width':22},e); el('path',{d:`M${x0} ${y0}L${x0+w} ${y0+h}M${x0+w} ${y0}L${x0} ${y0+h}`,stroke:'#1d6fd6','stroke-width':12,fill:'none'},e); el('rect',{x:x0,y:y0,width:w,height:h,fill:'transparent','pointer-events':'all',class:'hit'},e); const g=el('g',{transform:`translate(${x0+w/2} ${y0-180}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':110,fill:'#1d6fd6',class:'lbl-ar'},g); t.textContent='okno dach. '+Math.round(w/10)+'×'+Math.round(h/10); if(it.q) invBadge(it,e); }
+    else if (it.type==='iwin'){ const [a,b]=it.pts; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const u=[(b[0]-a[0])/L,(b[1]-a[1])/L], nl=[-u[1],u[0]]; const th=it.w||300; e=el('g',{},gl.inwO); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--canvas)','stroke-width':th-20},e); for (const o of [-th/2+10,-30,30,th/2-10]) el('line',{x1:a[0]+nl[0]*o,y1:a[1]+nl[1]*o,x2:b[0]+nl[0]*o,y2:b[1]+nl[1]*o,stroke:'#1d6fd6','stroke-width':Math.abs(o)<40?22:14},e); for (const p of [a,b]) el('line',{x1:p[0]-nl[0]*th/2,y1:p[1]-nl[1]*th/2,x2:p[0]+nl[0]*th/2,y2:p[1]+nl[1]*th/2,stroke:'#1d6fd6','stroke-width':16},e); if(isSel) el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--sel)','stroke-width':40,'stroke-dasharray':'120 80'},e); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'transparent','stroke-width':Math.max(th,12*mmPerPx()),'pointer-events':'stroke',class:'hit'},e); const g=el('g',{transform:`translate(${(a[0]+b[0])/2-nl[0]*(th/2+180)} ${(a[1]+b[1])/2-nl[1]*(th/2+180)}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':120,fill:'#1d6fd6',class:'lbl-ar'},g); t.textContent=(winNoCache[it.id]?winNoCache[it.id]+' · ':'')+(L/10).toFixed(0); t.setAttribute('font-weight','700'); t.setAttribute('font-size','140'); }
+    else if (it.type==='iroof'){ const [p0,p1]=it.pts; const x0=Math.min(p0[0],p1[0]), y0=Math.min(p0[1],p1[1]), w=Math.abs(p1[0]-p0[0]), h=Math.abs(p1[1]-p0[1]); e=el('g',{},gl.inwO); el('rect',{x:x0,y:y0,width:w,height:h,fill:'#1d6fd6','fill-opacity':0.08,stroke:isSel?'var(--sel)':'#1d6fd6','stroke-width':22},e); el('path',{d:`M${x0} ${y0}L${x0+w} ${y0+h}M${x0+w} ${y0}L${x0} ${y0+h}`,stroke:'#1d6fd6','stroke-width':12,fill:'none'},e); el('rect',{x:x0,y:y0,width:w,height:h,fill:'transparent','pointer-events':'all',class:'hit'},e); const g=el('g',{transform:`translate(${x0+w/2} ${y0-180}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':110,fill:'#1d6fd6',class:'lbl-ar'},g); t.textContent=(winNoCache[it.id]?winNoCache[it.id]+' · ':'')+'okno dach. '+Math.round(w/10)+'×'+Math.round(h/10); t.setAttribute('font-weight','700'); if(it.q) invBadge(it,e); }
     else if (it.type==='idoor'){ e=el('g',{},gl.inwDr); drawDoor2D(it,e,isSel?'var(--sel)':'#6c757d'); const [a,b]=it.pts; el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'transparent','stroke-width':Math.max(300,12*mmPerPx()),'pointer-events':'stroke',class:'hit'},e); if(it.q) invBadge(it,e); }
     else if (it.type==='istair'||it.type==='ifix'){ const st=it.type==='istair'; e=el('g',{},st?gl.inwSt:gl.inwFx); const d=(it.lines||[]).map(l=>'M'+l.map(q=>q.join(' ')).join('L')).join(''); el('path',{d,fill:'none',stroke:isSel?'var(--sel)':(st?'#495057':'#868e96'),'stroke-width':st?26:18,'stroke-linecap':'round','stroke-linejoin':'round'},e); const [p0,p1]=it.pts; el('rect',{x:Math.min(p0[0],p1[0])-60,y:Math.min(p0[1],p1[1])-60,width:Math.abs(p1[0]-p0[0])+120,height:Math.abs(p1[1]-p0[1])+120,fill:'transparent',stroke:isSel?'var(--sel)':'none','stroke-width':20,'stroke-dasharray':'100 80','pointer-events':'all',class:'hit'},e); if(it.q) invBadge(it,e); }
     else if (it.type==='note'){ const [a]=it.pts; const n=noteNoCache[it.id]||''; e=el('g',{},gl.project); el('circle',{cx:a[0],cy:a[1],r:210,fill:'var(--note)',stroke:'#fff','stroke-width':16},e); if(isSel) el('circle',{cx:a[0],cy:a[1],r:300,fill:'none',stroke:'var(--sel)','stroke-width':24},e); const g=el('g',{transform:`translate(${a[0]} ${a[1]}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:75,'text-anchor':'middle','font-size':230,fill:'#fff','font-weight':'800'},g); t.textContent=n; }  // treść uwagi jest w ramce „UWAGI” pod rzutem (arkusz)
@@ -790,6 +808,7 @@ const JAMB=45, ARCH_W=70, ARCH_T=16, LEAF_T=40, LEAF_H=2040;
 let dwgSegCache=null;
 function dwgWallSegs(){ if(dwgSegCache&&dwgSegCache.floor===floor) return dwgSegCache.segs; const F=MODEL.floors[floor]; const segs=[]; for (const sg of (F.geo.walls||[])) if(sg.k==='l') for(let i=1;i<sg.p.length;i++) segs.push({a:sg.p[i-1],b:sg.p[i],t:0}); dwgSegCache={floor,segs}; return segs; }
 function doorWallThick(it){ // grubość ściany, w której siedzą drzwi – ościeżnica regulowana dopasowuje się automatycznie
+  if (it.type==='idoor') return Math.max(60,(it.w||300)-40); // drzwi istniejące: grubość z modelu inwentaryzacyjnego (zawias w licu zgodny z łukiem z podkładu)
   const [a,b]=it.pts; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const u=[(b[0]-a[0])/L,(b[1]-a[1])/L]; const nl=[-u[1],u[0]]; const m=[(a[0]+b[0])/2,(a[1]+b[1])/2];
   for (const o of visibleItems(floor)) if(o.type==='wall') for(let i=1;i<o.pts.length;i++){ const pa=o.pts[i-1], pb=o.pts[i]; const Lw=Math.hypot(pb[0]-pa[0],pb[1]-pa[1])||1; const d=[(pb[0]-pa[0])/Lw,(pb[1]-pa[1])/Lw]; if (Math.abs(d[0]*u[0]+d[1]*u[1])<0.95) continue; if (distPtSeg(m,pa,pb)<=(o.w||120)/2+40) return o.w||120; }
   const segs=dwgWallSegs(); let best=null;
@@ -798,7 +817,7 @@ function doorWallThick(it){ // grubość ściany, w której siedzą drzwi – o�
 }
 function doorFrame(it){ const [a,b]=it.pts; const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const u=[(b[0]-a[0])/L,(b[1]-a[1])/L]; const nl=[-u[1],u[0]]; const sgn=it.flip?-1:1; const n=[nl[0]*sgn,nl[1]*sgn]; let th; try{ th=doorWallThick(it); }catch(e){ th=Math.max(60,(it.w||300)-40); } return {a,b,L,u,nl,n,sgn,th}; }
 function drawDoor2D(it, parent, col){
-  const {a,b,L,u,nl,n,th}=doorFrame(it); const P=(o,du,dn)=>[o[0]+u[0]*du+nl[0]*dn, o[1]+u[1]*du+nl[1]*dn]; const poly=(pts,attrs)=>el('polygon',Object.assign({points:pts.map(q=>q.join(',')).join(' ')},attrs),parent);
+  let {a,b,L,u,nl,n,th}=doorFrame(it); const P=(o,du,dn)=>[o[0]+u[0]*du+nl[0]*dn, o[1]+u[1]*du+nl[1]*dn]; const poly=(pts,attrs)=>el('polygon',Object.assign({points:pts.map(q=>q.join(',')).join(' ')},attrs),parent);
   // otwór w ścianie = światło + stojaki ościeżnicy
   const g0=P(a,-JAMB,0), g1=P(b,JAMB,0); el('line',{x1:g0[0],y1:g0[1],x2:g1[0],y2:g1[1],stroke:'var(--canvas)','stroke-width':th+40},parent);
   if (it.open){ el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:col,'stroke-width':20},parent); }
@@ -810,7 +829,8 @@ function drawDoor2D(it, parent, col){
     for (const sd of [1,-1]){ const z0=sd*th/2, z1=sd*(th/2+ARCH_T);
       poly([P(a,-ARCH_W,z0),P(a,0,z0),P(a,0,z1),P(a,-ARCH_W,z1)],{fill:col,stroke:'none'});
       poly([P(b,0,z0),P(b,ARCH_W,z0),P(b,ARCH_W,z1),P(b,0,z1)],{fill:col,stroke:'none'}); }
-    // skrzydło otwarte 90° (grubość 40 mm) + 3 zawiasy
+    // skrzydło otwarte 90° (grubość 40 mm) + 3 zawiasy – zawias w LICU ściany po stronie otwierania (nie w osi)
+    const a0=a; { const A=[a[0]+n[0]*th/2,a[1]+n[1]*th/2]; a=A; }
     const tip=[a[0]+n[0]*L,a[1]+n[1]*L];
     poly([a,[a[0]+u[0]*LEAF_T,a[1]+u[1]*LEAF_T],[tip[0]+u[0]*LEAF_T,tip[1]+u[1]*LEAF_T],tip],{fill:it.fire?'#d62828':'var(--canvas)',stroke:it.fire?'#d62828':col,'stroke-width':it.fire?30:18});
     // łuk otwierania – wypukły, środek w zawiasie
@@ -818,6 +838,7 @@ function drawDoor2D(it, parent, col){
     el('path',{d,fill:'none',stroke:col,'stroke-width':14,'stroke-dasharray':'none'},parent);
     // klamka
     const h=[a[0]+n[0]*(L-90)+u[0]*(LEAF_T+40), a[1]+n[1]*(L-90)+u[1]*(LEAF_T+40)]; el('circle',{cx:h[0],cy:h[1],r:28,fill:col},parent);
+    a=a0;
   }
   // etykieta
   const g=el('g',{transform:`translate(${(a[0]+b[0])/2+n[0]*L*0.6} ${(a[1]+b[1])/2+n[1]*L*0.6}) scale(1,-1)`,'pointer-events':'none'},parent); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':150,fill:it.fire?'#d62828':col,class:'lbl-ar','font-weight':it.fire?'600':'400'},g); t.textContent=it.open?('otwór '+(L/10).toFixed(0)+' cm'):(it.fire?('szer. '+(L/10).toFixed(0)+(it.fireNote?' '+it.fireNote:'')):((L/10).toFixed(0)+' '+doorSide(it)));
@@ -1040,7 +1061,7 @@ svg.addEventListener('pointermove',e=>{
   lastClient={x:e.clientX,y:e.clientY};
   const p=svgPoint(e); document.getElementById('coord').textContent=`x ${(p.x/1000).toFixed(2)} m · y ${(p.y/1000).toFixed(2)} m · 1 m = ${document.getElementById('coord').dataset.scale||'?'} px · ${tool}${draft?' · pkt '+draft.pts.length:''} · ${e.pointerType||'?'}`;
   try{ const hr=document.getElementById('hRead'); const hh=heightAt(p.x,p.y); if(hh===null){ hr.hidden=true; } else { hr.hidden=false; const rc=svg.getBoundingClientRect(); hr.style.left=(e.clientX-rc.left+14)+'px'; hr.style.top=(e.clientY-rc.top+14)+'px'; hr.style.right='auto'; hr.style.bottom='auto'; hr.textContent='h ≈ '+(hh/1000).toFixed(2).replace('.',',')+' m'; hr.style.color=hh<1900?'var(--new)':hh<2200?'#e07a1f':'var(--ink)'; } }catch(err){}
-  if (blockDrag){ const q=svgPoint(e); const o=sheetOpt(); const prev=(o[blockDrag.k]||[0,0]).slice(); if(blockDrag.k==='plan'){ /* arkusz stoi na ekranie, rzut jedzie za kursorem: przesuwamy widok razem z arkuszem */ const sc=blockDrag.scr||(blockDrag.scr={x:e.clientX,y:e.clientY}); const k=mmPerPx(); const dx=(e.clientX-sc.x)*k, dy=-(e.clientY-sc.y)*k; o.plan=[Math.round((blockDrag.o[0]+dx)/10)*10, Math.round((blockDrag.o[1]+dy)/10)*10]; view.x-=(o.plan[0]-prev[0]); view.y-=(o.plan[1]-prev[1]); applyView(); } else o[blockDrag.k]=[Math.round((blockDrag.o[0]+q.x-blockDrag.sx)/10)*10, Math.round((blockDrag.o[1]+q.y-blockDrag.sy)/10)*10]; if(!blockDrag.raf){ blockDrag.raf=true; requestAnimationFrame(()=>{ if(blockDrag) blockDrag.raf=false; try{ drawLegendOnPlan(); }catch(err){ diag('legenda',err); } }); } return; }
+  if (blockDrag){ const q=svgPoint(e); const o=sheetOpt(); const prev=(o[blockDrag.k]||[0,0]).slice(); if(blockDrag.k==='plan'){ /* arkusz stoi na ekranie, rzut jedzie za kursorem: przesuwamy widok razem z arkuszem */ const sc=blockDrag.scr||(blockDrag.scr={x:e.clientX,y:e.clientY}); const k=mmPerPx(); const dx=(e.clientX-sc.x)*k, dy=-(e.clientY-sc.y)*k; o.plan=[Math.round((blockDrag.o[0]+dx)/10)*10, Math.round((blockDrag.o[1]+dy)/10)*10]; view.x-=(o.plan[0]-prev[0]); view.y-=(o.plan[1]-prev[1]); applyView(); } else { const Sx=(sheetInfo&&sheetInfo.S)||100; o[blockDrag.k]=[Math.round(blockDrag.o[0]+(q.x-blockDrag.sx)/Sx), Math.round(blockDrag.o[1]+(q.y-blockDrag.sy)/Sx)]; } /* legenda i uwagi: przesunięcie w mm papieru */ if(!blockDrag.raf){ blockDrag.raf=true; requestAnimationFrame(()=>{ if(blockDrag) blockDrag.raf=false; try{ drawLegendOnPlan(); }catch(err){ diag('legenda',err); } }); } return; }
   if (vtxDrag){ const q=svgPoint(e); const np=[Math.round((vtxDrag.orig[0]+q.x-vtxDrag.sx)/10)*10, Math.round((vtxDrag.orig[1]+q.y-vtxDrag.sy)/10)*10]; if(vtxDrag.kind==='item'){ const I=vtxDrag.it; if(I.type!=='room'){ const o=I.pts[1-vtxDrag.idx]; const L=Math.hypot(vtxDrag.orig[0]-o[0],vtxDrag.orig[1]-o[1])||1; const u=[(vtxDrag.orig[0]-o[0])/L,(vtxDrag.orig[1]-o[1])/L]; const t=(np[0]-o[0])*u[0]+(np[1]-o[1])*u[1]; I.pts[vtxDrag.idx]=e.shiftKey?np:[Math.round((o[0]+u[0]*t)/10)*10,Math.round((o[1]+u[1]*t)/10)*10]; /* koniec przesuwa się wzdłuż osi elementu (Shift – dowolnie) */ } else { I.pts[vtxDrag.idx]=np; I.auto=false; } } else { let m=visibleItems(floor).find(z=>z.type==='rpoly'&&z.nr===vtxDrag.id); if(!m){ m={id:uid(),type:'rpoly',nr:vtxDrag.id,pts:vtxDrag.r.poly.map(p=>p.slice())}; project[floor].items.push(m); } m.pts[vtxDrag.idx]=np; vtxDrag.m=m; } if(!vtxDrag.raf){ vtxDrag.raf=true; requestAnimationFrame(()=>{ if(vtxDrag) vtxDrag.raf=false; try{ if(vtxDrag&&vtxDrag.kind==='inv'){ drawRooms(); } drawProject(); }catch(err){ diag('vtx',err); } }); } return; }
   if (panning){ const k=mmPerPx(); view.x=panning.vx-(e.clientX-panning.x)*k; view.y=panning.vy+(e.clientY-panning.y)*k; applyView(); return; }
   if (inkDraft){ const q=svgPoint(e); const l=inkDraft.pts[inkDraft.pts.length-1]; if(Math.hypot(q.x-l[0],q.y-l[1])>25){ inkDraft.pts.push([Math.round(q.x),Math.round(q.y)]); gl.draft.innerHTML=''; el('path',{d:'M'+inkDraft.pts.map(p=>p.join(' ')).join('L'),fill:'none',stroke:'var(--mark)','stroke-width':70,'stroke-linecap':'round','stroke-linejoin':'round',opacity:0.85},gl.draft); } return; }
@@ -1176,11 +1197,9 @@ const shSet=(k,v)=>{ const o=sheetOpt(); if(v===''||v==null||(typeof v==='number
 document.getElementById('shFmt').addEventListener('change',(e)=>shSet('fmt',e.target.value));
 document.getElementById('shOri').addEventListener('change',(e)=>shSet('ori',e.target.value));
 document.getElementById('shScale').addEventListener('change',(e)=>shSet('S',Math.round(+e.target.value)));
-document.getElementById('lgFmt').addEventListener('change',(e)=>shSet('lfmt',e.target.value));
-document.getElementById('lgOri').addEventListener('change',(e)=>shSet('lori',e.target.value));
-document.getElementById('lgScale').addEventListener('change',(e)=>shSet('legS',Math.round(+e.target.value)));
+document.getElementById('lgText').addEventListener('change',(e)=>shSet('legT',Math.round(+e.target.value*10)/10));
 let sheetMove=false; document.getElementById('shMove').addEventListener('click',(e)=>{ sheetMove=!sheetMove; e.currentTarget.setAttribute('aria-pressed',sheetMove); e.currentTarget.classList.toggle('primary',sheetMove); hintToast(sheetMove?'Przeciągnij rzut – arkusz stoi w miejscu (kliknij przycisk ponownie, żeby zakończyć).':'Przesuwanie rysunku wyłączone.'); });
-document.getElementById('shReset').addEventListener('click',()=>{ const o=sheetOpt(); delete o.leg; delete o.notes; delete o.plan; delete o.lsheet; saveSheetOpt(); drawLegendOnPlan(); fitFloor(); });
+document.getElementById('shReset').addEventListener('click',()=>{ const o=sheetOpt(); delete o.leg; delete o.notes; delete o.plan; delete o.lsheet; delete o.legPos; saveSheetOpt(); drawLegendOnPlan(); fitFloor(); });
 
 // ---------- floors UI ----------
 const ft=document.getElementById('floorTabs');
