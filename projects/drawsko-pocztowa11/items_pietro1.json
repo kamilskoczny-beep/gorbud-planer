@@ -3145,7 +3145,7 @@
   },
   {
    "id": "inw-s-pietro1-044",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      120,
@@ -3156,9 +3156,22 @@
      0
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji poddasze w tym miejscu 45 cm. Proponuję 45 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 450,
+    "pts": [
+     [
+      300,
+      1160
+     ],
+     [
+      300,
+      0
+     ]
+    ]
+   }
   },
   {
    "id": "inw-o-pietro1-000",

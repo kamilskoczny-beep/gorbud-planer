@@ -1726,7 +1726,7 @@
   },
   {
    "id": "inw-s-parter-103",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      120,
@@ -1737,13 +1737,26 @@
      23830
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 73 cm. Proponuję 73 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 730,
+    "pts": [
+     [
+      440,
+      23000
+     ],
+     [
+      440,
+      23830
+     ]
+    ]
+   }
   },
   {
    "id": "inw-s-parter-104",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      8660,
@@ -1754,30 +1767,13 @@
      24610
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
-   "type": "iwall",
-   "w": 80
-  },
-  {
-   "id": "inw-s-parter-105",
-   "inv": "D",
-   "pts": [
-    [
-     120,
-     23830
-    ],
-    [
-     120,
-     23000
-    ]
-   ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
    "type": "iwall",
    "w": 80
   },
   {
    "id": "inw-s-parter-106",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      120,
@@ -1788,13 +1784,26 @@
      0
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 59 cm. Proponuję 59 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 590,
+    "pts": [
+     [
+      380,
+      980
+     ],
+     [
+      380,
+      0
+     ]
+    ]
+   }
   },
   {
    "id": "inw-s-parter-107",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      11450,
@@ -1805,13 +1814,26 @@
      590
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 58 cm. Proponuję 58 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 580,
+    "pts": [
+     [
+      11440,
+      740
+     ],
+     [
+      13540,
+      840
+     ]
+    ]
+   }
   },
   {
    "id": "inw-s-parter-108",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      24400,
@@ -1822,13 +1844,26 @@
      660
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 43 cm. Proponuję 43 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 430,
+    "pts": [
+     [
+      24390,
+      780
+     ],
+     [
+      25450,
+      830
+     ]
+    ]
+   }
   },
   {
    "id": "inw-s-parter-109",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      18470,
@@ -1839,7 +1874,7 @@
      16200
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
    "type": "iwall",
    "w": 80
   },

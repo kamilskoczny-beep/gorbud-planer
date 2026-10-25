@@ -1,0 +1,2132 @@
+{
+ "items": [
+  {
+   "id": "inw-dach-l000",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     130,
+     23400
+    ],
+    [
+     18470,
+     24470
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l001",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     18470,
+     24470
+    ],
+    [
+     18390,
+     14860
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l002",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     18390,
+     14860
+    ],
+    [
+     17730,
+     14870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l003",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     17730,
+     14870
+    ],
+    [
+     17690,
+     9970
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l004",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     18460,
+     24210
+    ],
+    [
+     140,
+     23140
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l005",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     140,
+     23140
+    ],
+    [
+     110,
+     19840
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l006",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     400,
+     19840
+    ],
+    [
+     2800,
+     17780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l007",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     2800,
+     17780
+    ],
+    [
+     400,
+     15780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l008",
+   "type": "iroofl",
+   "k": "kalenica",
+   "pts": [
+    [
+     2800,
+     17780
+    ],
+    [
+     400,
+     17780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l009",
+   "type": "iroofl",
+   "k": "kalenica",
+   "pts": [
+    [
+     4840,
+     23670
+    ],
+    [
+     4740,
+     4820
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l010",
+   "type": "iroofl",
+   "k": "kalenica",
+   "pts": [
+    [
+     4740,
+     4820
+    ],
+    [
+     19980,
+     4940
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l011",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     19980,
+     4940
+    ],
+    [
+     25540,
+     9880
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l012",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     10,
+     9400
+    ],
+    [
+     3520,
+     6160
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l013",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     3520,
+     6160
+    ],
+    [
+     10,
+     2910
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l014",
+   "type": "iroofl",
+   "k": "kalenica",
+   "pts": [
+    [
+     3520,
+     6160
+    ],
+    [
+     10,
+     6160
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l015",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -510,
+     2910
+    ],
+    [
+     -510,
+     -290
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l016",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -510,
+     -290
+    ],
+    [
+     8070,
+     -50
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l017",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     4740,
+     4820
+    ],
+    [
+     -510,
+     -290
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l018",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10010,
+     23970
+    ],
+    [
+     9940,
+     10710
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l019",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10110,
+     23980
+    ],
+    [
+     10030,
+     10720
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l020",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     4740,
+     4820
+    ],
+    [
+     6440,
+     6470
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l021",
+   "type": "iroofl",
+   "k": "kosz",
+   "pts": [
+    [
+     6710,
+     6730
+    ],
+    [
+     9440,
+     9390
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l022",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -350,
+     23140
+    ],
+    [
+     -380,
+     19820
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l023",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -480,
+     23140
+    ],
+    [
+     -510,
+     19820
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l024",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18460,
+     24210
+    ],
+    [
+     19080,
+     24250
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l025",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     19080,
+     24250
+    ],
+    [
+     19040,
+     14420
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l026",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     19040,
+     14420
+    ],
+    [
+     18300,
+     14420
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l027",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18300,
+     14420
+    ],
+    [
+     18290,
+     10000
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l028",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18290,
+     10000
+    ],
+    [
+     28660,
+     10000
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l029",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     28660,
+     10000
+    ],
+    [
+     28620,
+     540
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l030",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     28620,
+     540
+    ],
+    [
+     25600,
+     570
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l031",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10350,
+     10030
+    ],
+    [
+     18290,
+     10000
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l032",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10350,
+     9900
+    ],
+    [
+     18290,
+     9870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l033",
+   "type": "iroofl",
+   "k": "krawedz",
+   "pts": [
+    [
+     6040,
+     -100
+    ],
+    [
+     6050,
+     3540
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l034",
+   "type": "iroofl",
+   "k": "krawedz",
+   "pts": [
+    [
+     6050,
+     3540
+    ],
+    [
+     21650,
+     3690
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l035",
+   "type": "iroofl",
+   "k": "krawedz",
+   "pts": [
+    [
+     21650,
+     3690
+    ],
+    [
+     21690,
+     390
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l036",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21690,
+     390
+    ],
+    [
+     10860,
+     20
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l037",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10860,
+     -80
+    ],
+    [
+     10840,
+     620
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l038",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10840,
+     620
+    ],
+    [
+     8050,
+     550
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l039",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     8050,
+     550
+    ],
+    [
+     8070,
+     -150
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l040",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10850,
+     410
+    ],
+    [
+     8060,
+     320
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l041",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25650,
+     10000
+    ],
+    [
+     25600,
+     570
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l042",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     28520,
+     9860
+    ],
+    [
+     18290,
+     9870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l043",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25600,
+     670
+    ],
+    [
+     28510,
+     660
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l044",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     28510,
+     660
+    ],
+    [
+     28520,
+     9860
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l045",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     28520,
+     9860
+    ],
+    [
+     25630,
+     6990
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l046",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     28510,
+     660
+    ],
+    [
+     25610,
+     3540
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l047",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21680,
+     290
+    ],
+    [
+     10850,
+     -80
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l048",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25480,
+     760
+    ],
+    [
+     25520,
+     9860
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l049",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     25480,
+     760
+    ],
+    [
+     19980,
+     4940
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l050",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -640,
+     -400
+    ],
+    [
+     8070,
+     -150
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l051",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -630,
+     2910
+    ],
+    [
+     -640,
+     -400
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l052",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -610,
+     9400
+    ],
+    [
+     -550,
+     15780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l053",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -550,
+     15780
+    ],
+    [
+     110,
+     15780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l054",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     -470,
+     9400
+    ],
+    [
+     -410,
+     15780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l055",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18200,
+     14550
+    ],
+    [
+     18180,
+     10000
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l056",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18200,
+     14550
+    ],
+    [
+     18920,
+     14550
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l057",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     18920,
+     14550
+    ],
+    [
+     18920,
+     24240
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l058",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     9530,
+     23690
+    ],
+    [
+     9510,
+     10670
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l059",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     110,
+     15780
+    ],
+    [
+     10,
+     9400
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l060",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     10,
+     2910
+    ],
+    [
+     10,
+     220
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l061",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     10,
+     220
+    ],
+    [
+     8060,
+     320
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l062",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     10850,
+     410
+    ],
+    [
+     21680,
+     690
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l063",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     10350,
+     9470
+    ],
+    [
+     28060,
+     9400
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l064",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     25010,
+     9410
+    ],
+    [
+     24990,
+     4570
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l065",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     28060,
+     9390
+    ],
+    [
+     28010,
+     1150
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l066",
+   "type": "iroofl",
+   "k": "sciana",
+   "pts": [
+    [
+     28010,
+     1150
+    ],
+    [
+     25570,
+     1150
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l067",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     22030,
+     4450
+    ],
+    [
+     24820,
+     4440
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l068",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     25490,
+     980
+    ],
+    [
+     25490,
+     970
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l069",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22030,
+     300
+    ],
+    [
+     24820,
+     290
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l070",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22030,
+     4450
+    ],
+    [
+     24820,
+     4440
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l071",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     22030,
+     4450
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l072",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     21350,
+     3770
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l073",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     24820,
+     4440
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l074",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     25490,
+     3760
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l075",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     22030,
+     290
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l076",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     21350,
+     960
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l077",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     24820,
+     300
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l078",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23420,
+     2370
+    ],
+    [
+     25490,
+     970
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l079",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22390,
+     3910
+    ],
+    [
+     24460,
+     3900
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l080",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22390,
+     830
+    ],
+    [
+     24460,
+     840
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l081",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     24950,
+     3410
+    ],
+    [
+     24950,
+     1330
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l082",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     21870,
+     3400
+    ],
+    [
+     21880,
+     1320
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l083",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22390,
+     3910
+    ],
+    [
+     21870,
+     3400
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l084",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     24460,
+     3900
+    ],
+    [
+     24950,
+     3400
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l085",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     24950,
+     1330
+    ],
+    [
+     24460,
+     840
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l086",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22390,
+     830
+    ],
+    [
+     21880,
+     1320
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l087",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22900,
+     3140
+    ],
+    [
+     23940,
+     3140
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l088",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22900,
+     1600
+    ],
+    [
+     23940,
+     1600
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l089",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22640,
+     1830
+    ],
+    [
+     22650,
+     2870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l090",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     24190,
+     1850
+    ],
+    [
+     24190,
+     2890
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l091",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22900,
+     3140
+    ],
+    [
+     22650,
+     2870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l092",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     22640,
+     1830
+    ],
+    [
+     22900,
+     1600
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l093",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23940,
+     1600
+    ],
+    [
+     24190,
+     1850
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l094",
+   "type": "iroofl",
+   "k": "wieza",
+   "pts": [
+    [
+     23940,
+     3140
+    ],
+    [
+     24180,
+     2880
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l095",
+   "type": "iroofl",
+   "k": "krawedz",
+   "pts": [
+    [
+     21350,
+     3770
+    ],
+    [
+     21350,
+     960
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l096",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25490,
+     3760
+    ],
+    [
+     25490,
+     970
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l097",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21990,
+     260
+    ],
+    [
+     24840,
+     270
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l098",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21910,
+     140
+    ],
+    [
+     24920,
+     150
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l099",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21910,
+     4590
+    ],
+    [
+     24930,
+     4590
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l100",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21990,
+     4470
+    ],
+    [
+     24840,
+     4470
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l101",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25520,
+     960
+    ],
+    [
+     25520,
+     3800
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l102",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     25650,
+     870
+    ],
+    [
+     25640,
+     3880
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l103",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21200,
+     860
+    ],
+    [
+     21190,
+     3870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l104",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     21320,
+     940
+    ],
+    [
+     21310,
+     3790
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l105",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     21990,
+     4470
+    ],
+    [
+     21310,
+     3790
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l106",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     21910,
+     4590
+    ],
+    [
+     21190,
+     3870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l107",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     24840,
+     4470
+    ],
+    [
+     25520,
+     3800
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l108",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     24920,
+     4590
+    ],
+    [
+     25640,
+     3880
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l109",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     21990,
+     270
+    ],
+    [
+     21320,
+     940
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l110",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     21910,
+     140
+    ],
+    [
+     21200,
+     860
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l111",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     24840,
+     260
+    ],
+    [
+     25530,
+     960
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l112",
+   "type": "iroofl",
+   "k": "naroze",
+   "pts": [
+    [
+     24920,
+     140
+    ],
+    [
+     25650,
+     870
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l113",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10350,
+     10670
+    ],
+    [
+     10350,
+     9390
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l114",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     400,
+     19840
+    ],
+    [
+     400,
+     15780
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l115",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     6960,
+     6730
+    ],
+    [
+     6960,
+     5270
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l116",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     10,
+     9400
+    ],
+    [
+     10,
+     2910
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l117",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     15290,
+     6710
+    ],
+    [
+     15290,
+     5110
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l118",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     7630,
+     12570
+    ],
+    [
+     8320,
+     12570
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l119",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     8320,
+     12570
+    ],
+    [
+     8320,
+     11830
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l120",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     8320,
+     11830
+    ],
+    [
+     7630,
+     11830
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l121",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     7720,
+     12480
+    ],
+    [
+     8230,
+     12480
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l122",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     8230,
+     12480
+    ],
+    [
+     8230,
+     11920
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-l123",
+   "type": "iroofl",
+   "k": "okap",
+   "pts": [
+    [
+     8230,
+     11920
+    ],
+    [
+     7720,
+     11920
+    ]
+   ]
+  },
+  {
+   "id": "inw-dach-kA",
+   "type": "chimney",
+   "pts": [
+    [
+     18326,
+     5804
+    ],
+    [
+     18734,
+     6580
+    ]
+   ],
+   "n": 2,
+   "ns": 0,
+   "label": "2 kan.",
+   "note": "skrzydło płd., przy wieżyczce; 2 kanały obok siebie (DJI_0375, DJI_0404)"
+  },
+  {
+   "id": "inw-dach-kB",
+   "type": "chimney",
+   "pts": [
+    [
+     14759,
+     5112
+    ],
+    [
+     15292,
+     6709
+    ]
+   ],
+   "n": 4,
+   "ns": 1,
+   "label": "5 kan. (1 stal.)",
+   "note": "skrzydło płd.; trzon z 3 lizen, 4 kanały murowane + element stalowy (wkład/nasada?) (DJI_0375, DJI_0404)",
+   "q": "na koronie widać 4 kanały murowane i zardzewiały element stalowy – czy to 5. kanał z wkładem stalowym? potwierdzić (kominiarz)"
+  },
+  {
+   "id": "inw-dach-kC",
+   "type": "chimney",
+   "pts": [
+    [
+     6443,
+     5266
+    ],
+    [
+     6959,
+     6728
+    ]
+   ],
+   "n": 2,
+   "ns": 0,
+   "label": "2 kan.",
+   "note": "skrzydło płd. przy narożu wewn.; 2 kanały (DJI_0375, DJI_0404)"
+  },
+  {
+   "id": "inw-dach-kD",
+   "type": "chimney",
+   "pts": [
+    [
+     9444,
+     9389
+    ],
+    [
+     10345,
+     10670
+    ]
+   ],
+   "n": 2,
+   "ns": 1,
+   "label": "3 kan. (1 stal.)",
+   "note": "wysoki komin w narożu wewn. (kosz); 2 kanały murowane + wkład stalowy z nasadą – przewód spalinowy kotłowni gazowej (DJI_0375, DJI_0404)"
+  },
+  {
+   "id": "inw-dach-kE",
+   "type": "chimney",
+   "pts": [
+    [
+     5905,
+     8998
+    ],
+    [
+     6916,
+     9395
+    ]
+   ],
+   "n": 2,
+   "ns": 0,
+   "label": "2 kan.",
+   "note": "skrzydło zach. przy narożu; 2 kanały jeden za drugim; to ten sam trzon co „występ” w 108 (I p.) i 211 (poddasze) (DJI_0375, DJI_0404)"
+  },
+  {
+   "id": "inw-dach-kF",
+   "type": "chimney",
+   "pts": [
+    [
+     7034,
+     14893
+    ],
+    [
+     8024,
+     15325
+    ]
+   ],
+   "n": 2,
+   "ns": 0,
+   "label": "2 kan.",
+   "note": "skrzydło zach., komin pom. 217 (poddasze); 2 kanały jeden za drugim (DJI_0375, DJI_0379)"
+  },
+  {
+   "id": "inw-dach-kG",
+   "type": "chimney",
+   "pts": [
+    [
+     8300,
+     23150
+    ],
+    [
+     8700,
+     23550
+    ]
+   ],
+   "n": 1,
+   "ns": 0,
+   "label": "1 kan.",
+   "note": "ściana szczytowa płn. (od strony podwórza), 1 kanał (DJI_0375, DJI_0379)",
+   "q": "komin przy ścianie szczytowej płn. widoczny tylko na zdjęciach – brak w rysunkach; położenie przybliżone (±0,5 m), 1 kanał – potwierdzić"
+  },
+  {
+   "id": "inw-dach-kH",
+   "type": "chimney",
+   "pts": [
+    [
+     4500,
+     22930
+    ],
+    [
+     4900,
+     23330
+    ]
+   ],
+   "n": 1,
+   "ns": 0,
+   "label": "1 kan.",
+   "note": "ściana szczytowa płn., przy kalenicy, 1 kanał (DJI_0375, DJI_0379)",
+   "q": "komin przy kalenicy skrzydła zach. (ściana płn.) widoczny tylko na zdjęciach – brak w rysunkach; położenie przybliżone (±0,5 m), 1 kanał – potwierdzić"
+  },
+  {
+   "id": "inw-dach-o0",
+   "type": "iroof",
+   "pts": [
+    [
+     7610,
+     11710
+    ],
+    [
+     8770,
+     12440
+    ]
+   ],
+   "note": "wyłaz / okno połaciowe 116×73 (DWG dachu: ramka – okno wyłazowe; protokół kominiarski: „okno wyłazowe do wymiany”)"
+  },
+  {
+   "id": "inw-dach-o1",
+   "type": "iroof",
+   "pts": [
+    [
+     7610,
+     16480
+    ],
+    [
+     8770,
+     17220
+    ]
+   ],
+   "note": "okno połaciowe 116×73"
+  },
+  {
+   "id": "inw-dach-o2",
+   "type": "iroof",
+   "pts": [
+    [
+     7610,
+     20420
+    ],
+    [
+     8770,
+     21150
+    ]
+   ],
+   "note": "okno połaciowe 116×73"
+  },
+  {
+   "id": "inw-dach-o3",
+   "type": "iroof",
+   "pts": [
+    [
+     4350,
+     850
+    ],
+    [
+     5080,
+     2010
+    ]
+   ],
+   "note": "okno połaciowe 73×116",
+   "q": "okno połaciowe na połaci płd.-zach. (z rzutu poddasza) – na zdjęciach z drona niewidoczne; potwierdzić"
+  },
+  {
+   "id": "inw-dach-s0",
+   "type": "slope",
+   "pts": [
+    [
+     3531,
+     13760
+    ]
+   ],
+   "dir": [
+    -1,
+    0
+   ],
+   "deg": 46
+  },
+  {
+   "id": "inw-dach-s1",
+   "type": "slope",
+   "pts": [
+    [
+     5481,
+     13760
+    ]
+   ],
+   "dir": [
+    1,
+    0
+   ],
+   "deg": 46
+  },
+  {
+   "id": "inw-dach-s2",
+   "type": "slope",
+   "pts": [
+    [
+     12380,
+     6190
+    ]
+   ],
+   "dir": [
+    0,
+    1
+   ],
+   "deg": 46
+  },
+  {
+   "id": "inw-dach-s3",
+   "type": "slope",
+   "pts": [
+    [
+     12380,
+     4380
+    ]
+   ],
+   "dir": [
+    0,
+    -1
+   ],
+   "deg": 46
+  }
+ ]
+}

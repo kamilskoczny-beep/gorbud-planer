@@ -39,7 +39,12 @@
       {"id":"inw-s-…","type":"iwall","inv":"N","pts":[[x,y],[x,y]],"w":420,"q":"…"},  // model inwentaryzacyjny: ściana nośna (N) / działowa (D), oś + grubość; q = pytanie do potwierdzenia
       {"id":"inw-o-…","type":"iwin","pts":[[x,y],[x,y]],"w":420}, {"id":"inw-d-…","type":"idoor","pts":[[zawias],[koniec]],"w":460,"flip":false},
       {"id":"inw-r-…","type":"iroof","pts":[[x0,y0],[x1,y1]]},   // okno połaciowe istniejące
-      {"id":"inw-k-…","type":"chimney","pts":[[x0,y0],[x1,y1]],"label":"komin"},   // komin/kanał (prostokąt), widoczny na wszystkich kondygnacjach    // ręczny obrys pomieszczenia inwentaryzacji (po przeciągnięciu punktu załamania)   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
+      {"id":"inw-k-…","type":"chimney","pts":[[x0,y0],[x1,y1]],"label":"komin"},   // n – kanały murowane, ns – wkłady stalowe, note – źródło/opis
+      {"id":"inw-dach-l…","type":"iroofl","k":"kalenica|naroze|kosz|okap|krawedz|sciana|wieza","pts":[[x0,y0],[x1,y1]]},   // rzut dachu – linie dachu
+      {"id":"inw-dach-s…","type":"slope","pts":[[x,y]],"dir":[dx,dy],"deg":46},   // spadek połaci
+      // każdy element może mieć: q – pytanie Claude'a, qFix – propozycja wprowadzana przy „potwierdzam” (np. {"w":570,"pts":[…]}),
+      //   qAns – „nie potwierdzam” {"c":komentarz,"t":data}, qOk – potwierdzone {"q","c","t"}
+   // komin/kanał (prostokąt), widoczny na wszystkich kondygnacjach    // ręczny obrys pomieszczenia inwentaryzacji (po przeciągnięciu punktu załamania)   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
       {"id":"…","type":"room","pts":[…],"holes":[[…]],"anchor":[x,y],"label":"salon","unit":"M1","color":"#f4a261","auto":true,"no":"M1.1"}   // no = ręczny numer projektowy (puste → automatycznie lokal.nr),
       {"id":"…","type":"furn","kind":"pax200","pts":[[x0,y0],[x1,y1]],"rot":0,"label":"PAX 200×58"},
       {"id":"…","type":"dim","pts":[[x,y],[x,y]]},
@@ -56,3 +61,7 @@ Zasady:
 - `v` w elemencie = widoczny tylko w tym wariancie; brak `v` = we wszystkich.
 - Pole `pts` ściany to **oś**; grubość `w`. Drzwi: `pts` = światło przejścia (80 cm standard); otwór w murze = światło + 2×45 mm ościeżnicy.
 - Pomieszczenie z `auto !== false` ma obrys przeliczany ze ścian od punktu `anchor`; `pts`/`holes` to ostatni wynik (zapisany dla kopii offline).
+
+
+## Kondygnacja `dach`
+Rzut dachu w układzie lokalnym parteru (`variants.align.dach` = align parteru); `model.floors.dach.geo.fixtures` – linie DWG projektu dachu (podkład), elementy w `items_dach.json` (iroofl, slope, chimney, iroof). Narzędzie: `tools/dwg/roof_plan.py`.

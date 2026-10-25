@@ -3218,9 +3218,22 @@
      23890
     ]
    ],
-   "q": "lico skośne – grubość 340–220 mm, przyjęto średnią",
+   "q": "ściana zewnętrzna o grubości tylko 28 cm – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 42 cm. Proponuję 42 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 280
+   "w": 280,
+   "qFix": {
+    "w": 420,
+    "pts": [
+     [
+      9610,
+      23930
+     ],
+     [
+      6430,
+      23820
+     ]
+    ]
+   }
   },
   {
    "id": "inw-s-poddasze-026",
@@ -3930,7 +3943,7 @@
   },
   {
    "id": "inw-s-poddasze-070",
-   "inv": "D",
+   "inv": "N",
    "pts": [
     [
      0,
@@ -3941,9 +3954,22 @@
      9700
     ]
    ],
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 55 cm. Proponuję 55 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "type": "iwall",
-   "w": 80
+   "w": 80,
+   "qFix": {
+    "w": 550,
+    "pts": [
+     [
+      240,
+      7080
+     ],
+     [
+      240,
+      9700
+     ]
+    ]
+   }
   },
   {
    "id": "inw-o-poddasze-000",

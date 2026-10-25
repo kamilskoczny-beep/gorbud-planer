@@ -13,6 +13,7 @@ import seedItems from '../../projects/drawsko-pocztowa11/items_pietro1.json';
 import seedAttic from '../../projects/drawsko-pocztowa11/items_poddasze.json';
 import seedParter from '../../projects/drawsko-pocztowa11/items_parter.json';
 import seedPiwnica from '../../projects/drawsko-pocztowa11/items_piwnica.json';
+import seedDach from '../../projects/drawsko-pocztowa11/items_dach.json';
 
 declare global { interface Window { PLANER?: PlanerAdapter } }
 interface PlanerAdapter { key: string; name: string; loadItems(floor: string): Promise<unknown[] | null>; saveItems(floor: string, items: unknown[]): Promise<void>; }
@@ -29,7 +30,7 @@ async function seedIfEmpty() {
     id: 'drawsko-pocztowa11', schema: 1, name: 'Pocztowa 11',
     subtitle: 'Drawsko Pomorskie · model roboczy zmiany sposobu użytkowania',
     createdAt: now, updatedAt: now, model: seedModel, variants: seedVariants,
-    items: { pietro1: (seedItems as { items: unknown[] }).items, poddasze: (seedAttic as { items: unknown[] }).items, parter: (seedParter as { items: unknown[] }).items, piwnica: (seedPiwnica as { items: unknown[] }).items },
+    items: { pietro1: (seedItems as { items: unknown[] }).items, poddasze: (seedAttic as { items: unknown[] }).items, parter: (seedParter as { items: unknown[] }).items, piwnica: (seedPiwnica as { items: unknown[] }).items, dach: (seedDach as { items: unknown[] }).items },
   };
   await store.put(p);
 }
