@@ -8,7 +8,8 @@
 
 ## Etap 1 – import i wiele projektów
 - [ ] Import DWG w przeglądarce (@mlightcad/libredwg-web jako WASM) i DXF (parser tekstowy)
-- [ ] Kreator nowego projektu: wybór warstw (ściany/okna/drzwi/opisy), wykrywanie arkuszy kondygnacji, wyrównanie klatki schodowej
+- [ ] Kreator nowego projektu: wybór warstw (ściany/okna/drzwi/opisy), wykrywanie arkuszy kondygnacji, wyrównanie kondygnacji (korelacja rastrów ścian jak w `variants.align` – 25.10.2026 zrobione offline w Pythonie, do przeniesienia do przeglądarki)
+- [x] Podrys innej kondygnacji i piony instalacyjne widoczne na wszystkich kondygnacjach (25.10.2026)
 - [ ] Pomieszczenia z inwentaryzacji przez flood fill w przeglądarce (ten sam algorytm co dla projektowanych)
 - [ ] Wysokości: odczyt `h_sufitu`, linie załamania, kreator skosów (kierunek, h0, spadek) zamiast ręcznej tabeli
 - [ ] Lista projektów z miniaturami, kopie zapasowe do folderu (File System Access API / OneDrive)
@@ -22,7 +23,8 @@
 - [ ] Kolizje mebli ze ścianami i skrzydłami drzwi; dojścia do mebli (min. szerokości)
 - [ ] Szerokości przejść i korytarzy, światło drzwi (80 / 90 wejściowe), kierunek otwierania na drogach ewakuacji
 - [ ] Wysokości na poddaszu: udział powierzchni h ≥ 2,2 / 1,9, pas 2,2 m na drodze komunikacji
-- [ ] Długość dojścia ewakuacyjnego (z analizy ppoż.), doświetlenie (1:8), bilans PAX (tylko 150/175/200/250/275/300)
+- [x] Długość dojścia ewakuacyjnego – warstwa w edytorze (25.10.2026), drzwi EI 30 / 90 cm
+- [ ] Doświetlenie (1:8), bilans PAX (tylko 150/175/200/250/275/300)
 - [ ] Raport jako strona w aplikacji + zapis do Projektu Claude
 
 ## Równolegle – jakość kodu

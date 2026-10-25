@@ -19,6 +19,19 @@
       <div class="chk" id="layers"></div>
     </section>
     <section>
+      <h2>Podrys – inna kondygnacja pod rzutem</h2>
+      <div class="row">
+        <select id="underSel" aria-label="Kondygnacja podrysu"></select>
+        <input id="underOp" type="range" min="10" max="100" value="55" title="Krycie podrysu" style="width:90px">
+      </div>
+      <div class="row" id="underAdj" style="margin-top:4px">
+        <span class="hint">Dopasuj (±5 cm):</span>
+        <button data-n="-50,0" title="w lewo">←</button><button data-n="50,0" title="w prawo">→</button><button data-n="0,50" title="w górę">↑</button><button data-n="0,-50" title="w dół">↓</button>
+        <span class="hint" id="underOff"></span><button id="underReset" class="hint">zeruj</button>
+      </div>
+      <p class="hint">Podrys pokazuje ściany, schody, przybory, pomieszczenia i meble sanitarne wybranej kondygnacji (fiolet) – do prowadzenia pionów. Kondygnacje dopasowane po ścianach; strzałki poprawiają dopasowanie dla tej pary. Piony (narzędzie „Pion”) widać na wszystkich kondygnacjach.</p>
+    </section>
+    <section>
       <h2>Narzędzia projektowe</h2>
       <div class="tools" id="tools"></div>
       <div class="row" style="margin-top:6px">
