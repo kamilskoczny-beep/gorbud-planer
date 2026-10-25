@@ -24,7 +24,7 @@
     "units": { "M1": {"name":"M1 — 108 jako 1 mieszkanie","color":"#e0a04a"} },
     "floors": { "pietro1": [ {"id":"P9","name":"…","desc":"…","assign":{"108":"M1"},"hide":["108"],"rename":{"203":"pom. sprzątaczki"},"cls":{"007":"T"}}   // cls: klasyfikacja powierzchni M mieszkalna / N niemieszkalna / K komunikacja / T techniczna (nadpisuje regułę z nazwy) ] },
     "attic":  { "floor":"poddasze","hmin":900,"planes":[ {"line":[[x,y],[x,y]],"dir":[-1,0],"h0":2775,"tan":1.04,"room":"213/216"} ] },
-    "meta":   { "investor":"…","object":"…","stage":"PAB – …","drawings":{"parter":"A-02"},"existing":{"M":486.05,"N":376.25,"K":244.43,"T":140.16} },   // tabelka rysunkowa + stan istniejący do bilansu
+    "meta":   { "investor":"…","designer":"…","author":"…","object":"…","stage":"PAB – …","drawings":{"parter":"A-02"},"existing":{"M":486.05,"N":376.25,"K":244.43,"T":140.16} },   // tabelka rysunkowa + stan istniejący do bilansu
     "align":  { "piwnica":[20,300], "parter":[180,220], "pietro1":[0,0], "poddasze":[-20,140] },   // przesunięcie układu lokalnego kondygnacji do wspólnego (mm) – podrys, piony
     "evac":   { "pietro1": { "exit":[x,y], "limit":20000, "starts":[ {"u":"M1 (108)","p":[x,y],"dy":-450} ] } }   // dojścia ewakuacyjne: wyjście = drzwi klatki, starty = drzwi lokali
   },
@@ -33,7 +33,8 @@
       {"id":"abc1234","type":"wall","pts":[[x,y],[x,y]],"w":120,"v":"P9"},
       {"id":"…","type":"demo","pts":[[x,y],[x,y]],"w":430,"label":"wyburzenie 2,63 m"},
       {"id":"…","type":"door","pts":[[x,y],[x,y]],"w":160,"flip":false,"open":false,"fire":"EI 30","fireNote":"…"},   // pts = światło otworu; w = grubość ściany+40; fire = klasa ppoż. (min. 90 cm)
-      {"id":"…","type":"riser","kind":"K","pts":[[x,y]],"label":"K1"},   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
+      {"id":"…","type":"riser","kind":"K","pts":[[x,y]],"label":"K1"},
+      {"id":"…","type":"zone","nr":"3","pts":[[x,y]]},   // przypisanie obszaru bez numeru do pomieszczenia inwentaryzacji (punkt w obszarze)   // pion: K kanalizacja Ø110 / W woda / C c.o. / Wn wentylacja / E elektryka; rysowany na wszystkich kondygnacjach przez variants.align
       {"id":"…","type":"room","pts":[…],"holes":[[…]],"anchor":[x,y],"label":"salon","unit":"M1","color":"#f4a261","auto":true,"no":"M1.1"}   // no = ręczny numer projektowy (puste → automatycznie lokal.nr),
       {"id":"…","type":"furn","kind":"pax200","pts":[[x0,y0],[x1,y1]],"rot":0,"label":"PAX 200×58"},
       {"id":"…","type":"dim","pts":[[x,y],[x,y]]},

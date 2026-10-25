@@ -41,7 +41,7 @@ variants={'units':units,'floors':{
 # ---- dojścia ewakuacyjne (§ 256 WT: ZL IV, jedno dojście ≤ 60 m, w tym ≤ 20 m po poziomej drodze; punkty: strona korytarza przy drzwiach mieszkania → przed drzwiami EI 30 klatki)
 # przesunięcie układu lokalnego każdej kondygnacji do wspólnego układu (I piętro = 0,0); wyliczone korelacją rastrów ścian (20 mm), do podrysu i pionów
 # metryka rysunków PAB (tabelka rysunkowa) + stan istniejący wg ekspertyzy PPSA (COM.xlsx) do porównania bilansu
-variants['meta']={'investor':'SANDER Sp. z o.o.','object':'Budynek dawnej poczty – ul. Pocztowa 11, 78-500 Drawsko Pomorskie','stage':'PAB – projekt architektoniczno-budowlany: zmiana sposobu użytkowania części usługowej na mieszkalną (cały budynek mieszkalny wielorodzinny z usługami)','drawings':{'piwnica':'A-01','parter':'A-02','pietro1':'A-03','poddasze':'A-04'},'existing':{'M':486.05,'N':376.25,'K':244.43,'T':140.16,'note':'stan istniejący wg ekspertyzy PPSA (COM.xlsx): pow. mieszkalna 486,05 m² (56 %), niemieszkalna 376,25 m² (44 %) z pow. użytkowej 862,30 m²'}}
+variants['meta']={'investor':'SANDER Sp. z o.o.','designer':'Dariusz Ruta','designerNo':'','author':'GORBUD Sp. z o.o., ul. Kołobrzeska 8C, 78-300 Świdwin','object':'Budynek dawnej poczty – ul. Pocztowa 11, 78-500 Drawsko Pomorskie','stage':'PAB – projekt architektoniczno-budowlany: zmiana sposobu użytkowania części usługowej na mieszkalną (cały budynek mieszkalny wielorodzinny z usługami)','drawings':{'piwnica':'A-01','parter':'A-02','pietro1':'A-03','poddasze':'A-04'},'existing':{'M':486.05,'N':376.25,'K':244.43,'T':140.16,'note':'stan istniejący wg ekspertyzy PPSA (COM.xlsx): pow. mieszkalna 486,05 m² (56 %), niemieszkalna 376,25 m² (44 %) z pow. użytkowej 862,30 m²'}}
 variants['align']={'piwnica':[20,300],'parter':[180,220],'pietro1':[0,0],'poddasze':[-20,140]}
 variants['evac']={
  'pietro1':{'exit':[22250,8150],'limit':20000,'starts':[{'u':'M1 (108)','p':[7500,8000]},{'u':'M2 (107)','p':[10120,7500],'dy':-450},{'u':'M3 (104)','p':[19910,7500],'dy':-450}]},
@@ -68,6 +68,12 @@ variants['attic']={'floor':'poddasze','hmin':900,'planes':[
  # pokój 209 – skos od południa (opada w stronę -y)
  {'line':[[2328,2250],[6925,2250]],'dir':[0,-1],'h0':2350,'tan':1.05,'room':'209'},
 ]}
+# obrys ściany zewnętrznej piwnicy (część płn.-zach.) jest w DWG na warstwie „linie wymiarowe” – przenosimy do ścian
+_P=m['floors']['piwnica']['geo']; _mv=[]
+for s in list(_P.get('dims',[])):
+    if s.get('k')=='l' and any(tuple(p) in {(3100,20621),(3100,23701),(290,20621),(18710,17607),(9703,17607),(9703,24253)} for p in map(tuple,s['p'])):
+        _P['dims'].remove(s); _mv.append(s)
+_P.setdefault('walls',[]).extend(_mv)
 html=open('page_template.html',encoding='utf-8').read()
 mj=json.dumps(m,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
 vj=json.dumps(variants,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')

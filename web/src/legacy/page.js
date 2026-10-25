@@ -16,7 +16,7 @@ const layerDefs = [
   ['walls','Ściany','var(--ink)',true],['windows','Okna','var(--win)',true],['doors','Drzwi','var(--door)',true],
   ['stairs','Schody','var(--stair)',true],['fixtures','Wyposażenie','var(--fix)',false],['sills','Parapety','var(--fix)',false],
   ['rooms','Pomieszczenia (etykiety + strefy)','var(--accent)',true],['dwgtext','Opisy z inwentaryzacji','var(--dim)',false],
-  ['dims','Linie wymiarowe','var(--dim)',false],['skosy','Skosy poddasza (załamanie sufitu, h = 1,90 / 2,20)','var(--demo)',true],['evac','Dojścia ewakuacyjne do klatki (limit 20 m)','#d62828',true],['project','Projekt (nowe elementy: ściany, drzwi)','var(--new)',true],['rfill','Pomieszczenia projektowane – kolor (podkład)','var(--new)',true],['rline','Pomieszczenia projektowane – obrys przerywany','var(--new)',false],['rlbl','Pomieszczenia projektowane – nazwa i powierzchnia','var(--new)',true],['furn','Meble (projekt)','var(--muted)',true],['sketch','Szkic i uwagi (dla Claude)','var(--mark)',true],['autodim','Wymiary automatyczne (pomieszczenia, przejścia)','var(--accent)',true],['piony','Piony instalacyjne (z wszystkich kondygnacji)','#1b7f5e',true],['legenda','Legenda na rysunku (lokale, numeracja projektowa)','var(--ink)',true],['under','Podrys innej kondygnacji (wybór poniżej)','#7b5cff',true]
+  ['dims','Linie wymiarowe','var(--dim)',false],['skosy','Skosy poddasza (załamanie sufitu, h = 1,90 / 2,20)','var(--demo)',true],['evac','Dojścia ewakuacyjne do klatki (limit 20 m)','#d62828',true],['project','Projekt (nowe elementy: ściany, drzwi)','var(--new)',true],['rfill','Pomieszczenia projektowane – kolor (podkład)','var(--new)',true],['rline','Pomieszczenia projektowane – obrys przerywany','var(--new)',false],['rlbl','Pomieszczenia projektowane – nazwa i powierzchnia','var(--new)',true],['furn','Meble (projekt)','var(--muted)',true],['sketch','Szkic i uwagi (dla Claude)','var(--mark)',true],['autodim','Wymiary automatyczne (pomieszczenia, przejścia)','var(--accent)',true],['piony','Piony instalacyjne (z wszystkich kondygnacji)','#1b7f5e',true],['legenda','Arkusz PAB: ramka, tabelka rysunkowa, zestawienie pomieszczeń, uwagi','var(--ink)',true],['under','Podrys innej kondygnacji (wybór poniżej)','#7b5cff',true]
 ];
 const layerOn = {}; layerDefs.forEach(l=>layerOn[l[0]]=l[3]);
 try{ const s=JSON.parse(localStorage.getItem(KEYP+'.layers')||'{}'); Object.keys(s).forEach(k=>{ if(k in layerOn) layerOn[k]=s[k]; }); }catch(e){}
@@ -30,7 +30,7 @@ let selectedId=null, tool='select', draft=null, hoverPt=null, roomIdx=0;
 // ---------- view ----------
 let view = {x:0,y:0,w:30000,h:25000}; // in mm, y-up; svg viewBox uses flipped coords
 function fitFloor(){
-  const b0 = MODEL.floors[floor].bbox; const m=1500; const b=layerOn.legenda?[b0[0],b0[1],b0[2]+8600,b0[3]]:b0; // z legendą na rysunku
+  const b0 = MODEL.floors[floor].bbox; const m=1500; const b=(layerOn.legenda&&sheetBox)?[sheetBox.x0,sheetBox.y0,sheetBox.x1,sheetBox.y1]:(layerOn.legenda?[b0[0],b0[1]-6000,b0[2]+8600,b0[3]]:b0); // z arkuszem
   const W=svg.clientWidth||800, H=svg.clientHeight||600;
   let w=b[2]-b[0]+2*m, h=b[3]-b[1]+2*m;
   if (w/h < W/H) w = h*W/H; else h = w*H/W;
@@ -44,8 +44,9 @@ function mmPerPx(){ return view.w/(svg.clientWidth||1); }
 
 // ---------- build static layers ----------
 const root = document.createElementNS(NS,'g'); root.setAttribute('transform','scale(1,-1)'); svg.appendChild(root);
+{ const d=document.createElementNS(NS,'defs'); d.innerHTML='<pattern id="hatchUn" patternUnits="userSpaceOnUse" width="300" height="300" patternTransform="rotate(45)"><rect width="300" height="300" fill="#c2187a" fill-opacity="0.06"/><line x1="0" y1="0" x2="0" y2="300" stroke="#c2187a" stroke-width="40" stroke-opacity="0.5"/></pattern>'; svg.insertBefore(d,svg.firstChild); }
 const gl = {}; // layer groups
-['grid','zones','rfill','under','walls','windows','doors','stairs','sills','fixtures','dims','skosy','dwgtext','roomlbl','project','evac','rline','rlbl','furn','piony','rhit','sketch','autodim','legenda','draft','ui'].forEach(k=>{ const g=document.createElementNS(NS,'g'); g.dataset.layer=k; root.appendChild(g); gl[k]=g; });
+['sheet','grid','zones','rfill','under','walls','windows','doors','stairs','sills','fixtures','dims','skosy','dwgtext','roomlbl','project','evac','rline','rlbl','furn','piony','rhit','sketch','autodim','legenda','draft','ui'].forEach(k=>{ const g=document.createElementNS(NS,'g'); g.dataset.layer=k; root.appendChild(g); gl[k]=g; });
 
 function el(tag, attrs, parent){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k, attrs[k]); (parent||root).appendChild(e); return e; }
 function segPath(s){
@@ -60,7 +61,7 @@ function parseH(t){ if(!t) return null; const m=/=\s*(\d+)\s*cm/.exec(t); return
 function pointInPoly(p,poly){ let c=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const a=poly[i],b=poly[j]; if(((a[1]>p[1])!==(b[1]>p[1])) && (p[0] < (b[0]-a[0])*(p[1]-a[1])/((b[1]-a[1])||1e-9)+a[0])) c=!c; } return c; }
 function flatH(x,y,f){ f=f||floor; const F=MODEL.floors[f]; for (const r of (F.rooms||[])) if(r.poly && pointInPoly([x,y],r.poly)){ const h=parseH(r.h); if(h) return h; } return FLOOR_H[f]||2780; }
 function heightAt(x,y,f){ f=f||floor; if(!ATTIC||f!==ATTIC.floor) return null; let h=flatH(x,y,f);
-  for (const pl of ATTIC.planes){ const [a,b]=pl.line; const vx=b[0]-a[0], vy=b[1]-a[1]; const L2=vx*vx+vy*vy||1; const u=((x-a[0])*vx+(y-a[1])*vy)/L2; if(u<0||u>1) continue; const d=(x-a[0])*pl.dir[0]+(y-a[1])*pl.dir[1]; if(d<=0 || d>(pl.h0-(ATTIC.hmin||900))/pl.tan+450) continue; const hh=pl.h0-pl.tan*d; if(hh<h) h=hh; }
+  for (const pl of ATTIC.planes){ const [a,b]=pl.line; const vx=b[0]-a[0], vy=b[1]-a[1]; const L2=vx*vx+vy*vy||1; const Ll=Math.sqrt(L2); const u=((x-a[0])*vx+(y-a[1])*vy)/L2; if(u<-250/Ll||u>1+250/Ll) continue; const d=(x-a[0])*pl.dir[0]+(y-a[1])*pl.dir[1]; if(d<=0) continue; const hh=pl.h0-pl.tan*d; if(hh<h) h=hh; } // połać biegnie aż do okapu – ściany zewnętrzne pod skosem znikają (h→0)
   return Math.max(0,Math.round(h)); }
 function roomHeightStats(it,f){ // próbkowanie co 150 mm: h min/max, pow. użytkowa wg PN-ISO 9836 (100% h≥2,20; 50% 1,40–2,20; 0 poniżej)
   f=f||floor; if(!ATTIC||f!==ATTIC.floor) return null; const xs=it.pts.map(q=>q[0]), ys=it.pts.map(q=>q[1]); const st=150; let n=0, use=0, hmin=1e9, hmax=0;
@@ -93,18 +94,34 @@ function drawGeo(){
   drawRooms();
 }
 function polyCentroid(p){ let a=0,cx=0,cy=0; for(let i=0;i<p.length;i++){ const j=(i+1)%p.length; const f=p[i][0]*p[j][1]-p[j][0]*p[i][1]; a+=f; cx+=(p[i][0]+p[j][0])*f; cy+=(p[i][1]+p[j][1])*f; } a*=0.5; if(Math.abs(a)<1) return p[0]; return [cx/(6*a), cy/(6*a)]; }
+function polyArea2(p){ let a=0; for(let i=0;i<p.length;i++){ const j=(i+1)%p.length; a+=p[i][0]*p[j][1]-p[j][0]*p[i][1]; } return a/2; } // ze znakiem
 function polyArea(p){ let a=0; for(let i=0;i<p.length;i++){ const j=(i+1)%p.length; a+=p[i][0]*p[j][1]-p[j][0]*p[i][1]; } return Math.abs(a)/2; }
 function roomName(r,f){ const v=curVariant(f||floor); const rn=v&&v.rename||{}; return rn[r.nr]||r.name||''; } // nazwa pomieszczenia wg wariantu (np. 203 → pom. sprzątaczki)
 function unitOf(nr){ const v=curVariant(floor); const m=v?(v.assign||{}):{}; return m[nr]||null; }
+let partCache=null;
+function roomPartition(rk){ // podział wolnej przestrzeni rastra między pomieszczenia inwentaryzacji (wielo-źródłowy BFS od etykiet + punktów 'zone') → pełne pokrycie stref
+  if(partCache&&partCache.key===floor+'|'+rk) return partCache.map; const R=getRaster(); const {g,W,H,ox,oy}=R; const F=MODEL.floors[floor]; const hide=new Set((curVariant(floor)||{}).hide||[]);
+  const labs=[]; for (const r of F.rooms){ if(hide.has(r.nr)) continue; labs.push({nr:r.nr,x:(r.lx||0)+300,y:(r.ly||0)+60}); } for (const z of visibleItems(floor)) if(z.type==='zone') labs.push({nr:z.nr,x:z.pts[0][0],y:z.pts[0][1]});
+  const owner=new Int32Array(W*H).fill(-1); const nrs=[]; const idxOf=(nr)=>{ let k=nrs.indexOf(nr); if(k<0){ nrs.push(nr); k=nrs.length-1; } return k; };
+  // komórki „na zewnątrz” (komponent brzegowy) – etykiety tam leżące ignorujemy
+  const outside=new Uint8Array(W*H); { const st=[]; for(let x=0;x<W;x++){ st.push(x, (H-1)*W+x); } for(let y=0;y<H;y++){ st.push(y*W, y*W+W-1); } for (const i of st){ if(!g[i]&&!outside[i]){ outside[i]=1; const q=[i]; while(q.length){ const k=q.pop(); for (const j of [k-1,k+1,k-W,k+W]){ if(j>=0&&j<g.length&&!g[j]&&!outside[j]){ outside[j]=1; q.push(j); } } } } } }
+  // źródła 1: obrysy z inwentaryzacji (DWG) – komórki wewnątrz obrysu należą do pomieszczenia (scanline), BFS rozdziela tylko resztę
+  let q=[]; const scan=(poly,cb)=>{ const ys=poly.map(p=>p[1]); const y0=Math.max(0,Math.floor((Math.min(...ys)-oy)/RES)), y1=Math.min(H-1,Math.ceil((Math.max(...ys)-oy)/RES)); for (let yy=y0;yy<=y1;yy++){ const Y=oy+yy*RES+RES/2; const xs=[]; for (let i=0,j=poly.length-1;i<poly.length;j=i++){ const a=poly[i],b=poly[j]; if((a[1]>Y)!==(b[1]>Y)) xs.push(a[0]+(Y-a[1])*(b[0]-a[0])/(b[1]-a[1])); } xs.sort((p,r)=>p-r); for (let k=0;k+1<xs.length;k+=2){ const xa=Math.max(0,Math.ceil((xs[k]-ox-RES/2)/RES)), xb=Math.min(W-1,Math.floor((xs[k+1]-ox-RES/2)/RES)); for (let xx=xa;xx<=xb;xx++) cb(yy*W+xx); } } };
+  for (const r of F.rooms){ if(hide.has(r.nr)) continue; if(r._poly0===undefined) r._poly0=r.poly||null; const p0=r._poly0; if(!p0) continue; const k=idxOf(r.nr); const inHole=new Uint8Array(0); const holes=r._holes0||[]; const hmask=new Set(); for (const h of holes) scan(h,(c)=>hmask.add(c)); scan(p0,(c)=>{ if(!g[c]&&owner[c]<0&&!outside[c]&&!hmask.has(c)){ owner[c]=k; q.push(c); } }); }
+  for (const L of labs){ let sx=Math.round((L.x-ox)/RES), sy=Math.round((L.y-oy)/RES); if(sx<1||sy<1||sx>=W-1||sy>=H-1) continue; let cell=-1; if(!g[sy*W+sx]) cell=sy*W+sx; else { for(let r=1;r<=12&&cell<0;r++){ for(let a=-r;a<=r&&cell<0;a++) for(let c=-r;c<=r;c++){ if(Math.max(Math.abs(a),Math.abs(c))!==r) continue; const X=sx+a,Y=sy+c; if(X>0&&Y>0&&X<W-1&&Y<H-1&&!g[Y*W+X]){ cell=Y*W+X; break; } } } } if(cell<0||outside[cell]||owner[cell]>=0) continue; owner[cell]=idxOf(L.nr); q.push(cell); }
+  let head=0; while(head<q.length){ const k=q[head++]; const o=owner[k]; for (const j of [k-1,k+1,k-W,k+W]){ if(j<0||j>=g.length||g[j]||owner[j]>=0) continue; owner[j]=o; q.push(j); } }
+  const map={}; for (let k=0;k<nrs.length;k++){ const m=new Uint8Array(W*H); let n=0; for (let i=0;i<owner.length;i++) if(owner[i]===k){ m[i]=1; n++; } if(!n) continue; try{ const t=traceMask(m,W,H,ox,oy); if(t) map[nrs[k]]=t; }catch(e){} }
+  partCache={key:floor+'|'+rk,map}; return map; }
 function drawRooms(){
   const F = MODEL.floors[floor];
-  gl.zones.innerHTML=''; gl.roomlbl.innerHTML=''; try{ projNoCache=projectNumbers(floor); }catch(e){}
+  gl.zones.innerHTML=''; gl.roomlbl.innerHTML=''; try{ projNoCache=projectNumbers(floor); }catch(e){} let rk=''; try{ rk=sel[floor]+'|'+wallsHash()+'|'+visibleItems(floor).filter(i=>i.type==='zone').map(i=>i.nr+':'+i.pts[0].join(',')).join(';'); }catch(e){}
   const hide=new Set((curVariant(floor)||{}).hide||[]);
   for (const r of F.rooms){
-    if (!r.poly && !r._noPoly){ try{ const R=getRaster(); const res=floodRoom(R, (r.lx||0)+300, (r.ly||0)+60); if (res && res.area>1e6 && res.area<400e6){ r.poly=res.outer; r._auto=true; } else r._noPoly=true; }catch(e){ r._noPoly=true; } } // obrys z inwentaryzacji brakujący → flood fill w przeglądarce
+    if (r._fl!==rk){ r._fl=rk; try{ const P=roomPartition(rk)[r.nr]; if(P){ if(r._poly0===undefined) r._poly0=r.poly||null; if(r._holes0===undefined) r._holes0=r.holes||[]; r.poly=P.outer; r._parts=P.outers.slice(1); r.holes=P.holes; r._auto=true; } else if(!r.poly) r._noPoly=true; }catch(e){ if(!r.poly) r._noPoly=true; } } // strefa = część wolnej przestrzeni przydzielona pomieszczeniu (pełne pokrycie)
     const u = unitOf(r.nr); const idx=F.rooms.indexOf(r); const col = u ? UNITS[u].color : ROOM_PALETTE[idx % ROOM_PALETTE.length]; // bez przypisania do lokalu: własny kolor, żeby odróżnić pomieszczenia
+    r._extra=r._parts||[]; for (const pp of r._extra){ const pg=el('polygon',{points:pp.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones); pg.dataset.nr=r.nr; pg.addEventListener('click',(e)=>{ if(tool==='select'){ selectRoom(r.nr); e.stopPropagation(); } }); } // dodatkowe części strefy (np. obszar dołączony elementem 'zone')
     if (r.poly){
-      const pg = el('polygon',{points:r.poly.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones);
+      const pg = (r.holes&&r.holes.length)? el('path',{d:'M'+r.poly.map(q=>q.join(' ')).join('L')+'Z'+r.holes.map(h=>'M'+h.map(q=>q.join(' ')).join('L')+'Z').join(''), 'fill-rule':'evenodd', class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones) : el('polygon',{points:r.poly.map(q=>q.join(',')).join(' '), class:'roompoly', fill:col, 'fill-opacity': u?0.28:0.2}, gl.zones);
       pg.dataset.nr=r.nr;
       pg.addEventListener('pointerenter',()=>{ if(tool==='select'){ pg.classList.add('hover'); hiRow(r.nr,true);} });
       pg.addEventListener('pointerleave',()=>{ pg.classList.remove('hover'); hiRow(r.nr,false); });
@@ -119,8 +136,28 @@ function drawRooms(){
     const nm=roomName(r); if(!small || nm!==(r.name||'')){ const t2=el('text',{x:0,y:small?60:110,'text-anchor':'middle','font-size':small?105:150,class:'lbl-nm'},g); t2.textContent=nm.slice(0,small?22:26); }
     const t3 = el('text',{x:0,y:small?130:320,'text-anchor':'middle','font-size':small?140:170,class:'lbl-ar'},g); t3.textContent = r.area? r.area.toFixed(2).replace('.',',')+' m²' : (r.parea? '~'+r.parea.toFixed(1).replace('.',',')+' m²':'');
   }
+  try{ drawUnassigned(); }catch(err){ diag('unassigned',err); }
+  try{ gl.walls.querySelectorAll('.poche').forEach(e=>e.remove()); for (const p of (getRaster().cores||[])) el('polygon',{points:p.map(q=>q.join(',')).join(' '),fill:'var(--ink)','fill-opacity':0.55,stroke:'none',class:'poche','pointer-events':'none'},gl.walls); }catch(err){ diag('poche',err); }
   renderLegend(); renderRoomTable();
 }
+// ---------- obszary bez numeru: każda zamknięta wolna przestrzeń ma należeć do jakiegoś pomieszczenia ----------
+function roomCoverArea(r){ if(ATTIC&&floor===ATTIC.floor&&r.poly){ let a=0; const hs=roomHeightStats({pts:r.poly,holes:r.holes||[]}); if(hs) a+=hs.use; for (const p of (r._extra||[])){ const h2=roomHeightStats({pts:p,holes:[]}); if(h2) a+=h2.use; } return a/1e6; } let a=r.poly?polyArea(r.poly):0; for (const h of (r.holes||[])) a-=polyArea(h); for (const p of (r._extra||[])) a+=polyArea(p); return a/1e6; }
+function drawUnassigned(){ const F=MODEL.floors[floor]; const R=getRaster(); gl.zones.querySelectorAll('.unassigned').forEach(e=>e.remove()); gl.roomlbl.querySelectorAll('.unlbl').forEach(e=>e.remove()); const {g,W,H,ox,oy}=R; const lab=new Int32Array(W*H); let n=0; const comps=[];
+  const inside=(poly,x,y)=>pointInPoly([x,y],poly);
+  for (let i=0;i<g.length;i++){ if(g[i]||lab[i]) continue; n++; const st=[i]; lab[i]=n; let cnt=0, border=false, sx=0, sy=0; const smp=[]; while(st.length){ const k=st.pop(); cnt++; if(cnt%37===1) smp.push(k); const x=k%W, y=(k-x)/W; sx+=x; sy+=y; if(x===0||y===0||x===W-1||y===H-1) border=true; for (const j of [k-1,k+1,k-W,k+W]){ if(j<0||j>=g.length) continue; if(!g[j]&&!lab[j]){ lab[j]=n; st.push(j); } } } if(!border) comps.push({id:n,cnt,cx:(sx/cnt)*RES+ox,cy:(sy/cnt)*RES+oy,seed:i,smp}); }
+  const covered=(c)=>{ for (const r of F.rooms){ if(r.poly&&inside(r.poly,c.cx,c.cy)) return true; for (const p of (r._extra||[])) if(inside(p,c.cx,c.cy)) return true; } for (const it of visibleItems(floor)) if(it.type==='room'&&it.pts.length>=3&&inside(it.pts,c.cx,c.cy)) return true; return false; };
+  unassigned=[]; for (const c of comps){ if(c.cnt*RES*RES<1.0e6) continue; // < 1 m² pomijamy (wnęki, szachty)
+    // środek ciężkości może leżeć poza obszarem (L-kształt) – weź komórkę startową
+    const sx=c.seed%W, sy=(c.seed-sx)/W; const px=sx*RES+ox+RES/2, py=sy*RES+oy+RES/2; let hit=false; for (const r of F.rooms){ if(r.poly&&inside(r.poly,px,py)){ hit=true; break; } for (const p of (r._extra||[])) if(inside(p,px,py)){ hit=true; break; } if(hit) break; } if(!hit) for (const it of visibleItems(floor)) if(it.type==='room'&&it.pts.length>=3&&inside(it.pts,px,py)){ hit=true; break; }
+    if(hit||covered(c)) continue;
+    // próbkowanie: jeśli ≥ 30 % komórek obszaru leży w jakimś obrysie, to tylko niedokładność obrysu – nie zgłaszamy
+    let inN=0; for (const k of c.smp){ const X=(k%W)*RES+ox+RES/2, Y=Math.floor(k/W)*RES+oy+RES/2; let ok=false; for (const r of F.rooms){ if(r.poly&&inside(r.poly,X,Y)){ ok=true; break; } for (const p of (r._extra||[])) if(inside(p,X,Y)){ ok=true; break; } if(ok) break; } if(!ok) for (const it of visibleItems(floor)) if(it.type==='room'&&it.pts.length>=3&&inside(it.pts,X,Y)){ ok=true; break; } if(ok) inN++; } if(c.smp.length&&inN/c.smp.length>=0.3) continue;
+    const res=floodRoom(R,px,py); if(!res) continue; unassigned.push({poly:res.outer,area:res.area/1e6,p:[px,py]}); }
+  for (const z of unassigned){ const c=polyCentroid(z.poly); const pg=el('polygon',{points:z.poly.map(q=>q.join(',')).join(' '),fill:'url(#hatchUn)',stroke:'var(--mark)','stroke-width':14,'stroke-dasharray':'60 40',class:'roompoly unassigned'},gl.zones); pg.style.cursor='pointer'; pg.addEventListener('click',(e)=>{ if(tool==='select'){ showZoneAssign(z,e); e.stopPropagation(); } });
+    const gg=el('g',{transform:`translate(${c[0]} ${c[1]}) scale(1,-1)`,'pointer-events':'none',class:'unlbl'},gl.roomlbl); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':150,fill:'var(--mark)','font-weight':'700'},gg); t.textContent='? '+z.area.toFixed(1).replace('.',',')+' m²'; } }
+let unassigned=[];
+function showZoneAssign(z,ev){ ie.innerHTML=''; const F=MODEL.floors[floor]; const lbl=document.createElement('span'); lbl.className='hint'; lbl.textContent='Obszar bez numeru ('+z.area.toFixed(1).replace('.',',')+' m²) należy do:'; ie.appendChild(lbl); const sv=document.createElement('select'); sv.innerHTML='<option value="">— wybierz pomieszczenie —</option>'+F.rooms.slice().sort((a,b)=>a.nr.localeCompare(b.nr,'pl',{numeric:true})).map(r=>`<option value="${r.nr}">${r.nr} ${roomName(r)}</option>`).join(''); ie.appendChild(sv); const bt=document.createElement('button'); bt.textContent='Przypisz'; bt.addEventListener('click',()=>{ if(!sv.value) return; pushHistory(); project[floor].items.push({id:uid(),type:'zone',nr:sv.value,pts:[[Math.round(z.p[0]),Math.round(z.p[1])]]}); hideInlineEdit(); drawRooms(); commit(); }); ie.appendChild(bt);
+  const wrap=document.getElementById('canvasWrap').getBoundingClientRect(); ie.style.left=Math.min(ev.clientX-wrap.left+8, wrap.width-300)+'px'; ie.style.top=Math.min(ev.clientY-wrap.top+8, wrap.height-80)+'px'; ie.classList.add('show'); sv.focus(); }
 // ---------- podrys innej kondygnacji + piony ----------
 const ALIGN=VARIANTS.align||{}; // przesunięcie układu lokalnego kondygnacji do wspólnego układu (wyliczone po ścianach)
 let under={}, alignAdj={}; try{ under=JSON.parse(localStorage.getItem(KEYP+'.under')||'{}'); alignAdj=JSON.parse(localStorage.getItem(KEYP+'.alignAdj')||'{}'); }catch(e){}
@@ -155,7 +192,7 @@ function selectRoom(nr){ const F=MODEL.floors[floor]; const r=F.rooms.find(x=>x.
 function renderRoomTable(){
   const F = MODEL.floors[floor]; const tb=document.getElementById('roomTable');
   if (!F.rooms.length){ tb.innerHTML = '<tr><td class="hint">Na tej kondygnacji inwentaryzacja nie numeruje pomieszczeń (lokal Poczty Polskiej). Włącz warstwę „Opisy z inwentaryzacji”, aby zobaczyć nazwy i powierzchnie.</td></tr>'; return; }
-  let sum=0; const rows = F.rooms.slice().sort((a,b)=>a.nr.localeCompare(b.nr,'pl',{numeric:true})).map(r=>{ sum+=r.area||0; const u=unitOf(r.nr); return `<tr class="room" data-nr="${r.nr}"><td>${u?`<span class="unitdot" style="background:${UNITS[u].color}"></span>`:''}<b>${r.nr}</b></td><td>${roomName(r)||'—'}</td><td class="num">${r.area?r.area.toFixed(2).replace('.',','):'—'}</td></tr>`; }).join('');
+  let sum=0; const rows = F.rooms.slice().sort((a,b)=>a.nr.localeCompare(b.nr,'pl',{numeric:true})).map(r=>{ sum+=r.area||0; const cov=roomCoverArea(r); const rawA=(r.poly?polyArea(r.poly):0)/1e6; const attic=ATTIC&&floor===ATTIC.floor; r._covWarn=(r.area&&cov>0&&(attic?(rawA<r.area*0.92):(Math.abs(cov-r.area)/r.area>0.08)))?('obrys '+cov.toFixed(1).replace('.',',')+' m² ≠ '+r.area.toFixed(2).replace('.',',')):''; const u=unitOf(r.nr); return `<tr class="room" data-nr="${r.nr}"><td>${u?`<span class="unitdot" style="background:${UNITS[u].color}"></span>`:''}<b>${r.nr}</b></td><td>${roomName(r)||'—'}${r._covWarn?` <span class="hint" style="color:var(--mark)" title="Kolorowa strefa nie pokrywa się z powierzchnią z inwentaryzacji – kliknij obszar „?” na rzucie i przypisz go do pomieszczenia">⚠ ${r._covWarn}</span>`:''}</td><td class="num">${r.area?r.area.toFixed(2).replace('.',','):'—'}</td></tr>`; }).join('');
   tb.innerHTML = `<tr><th>Nr</th><th>Nazwa</th><th class="num">m²</th></tr>${rows}<tr><th>Razem</th><th></th><th class="num">${sum.toFixed(2).replace('.',',')}</th></tr>`;
   tb.querySelectorAll('tr.room').forEach(tr=>{ tr.addEventListener('click',()=>selectRoom(tr.dataset.nr)); tr.addEventListener('pointerenter',()=>{const pg=gl.zones.querySelector(`[data-nr="${tr.dataset.nr}"]`); if(pg) pg.classList.add('hover');}); tr.addEventListener('pointerleave',()=>{const pg=gl.zones.querySelector(`[data-nr="${tr.dataset.nr}"]`); if(pg) pg.classList.remove('hover');}); });
 }
@@ -256,6 +293,7 @@ function buildRaster(evac){ // evac=true: drzwi i otwory przejezdne (do dróg ew
         // przerwa musi być wolna: żaden inny odcinek nie może mieć końca w środku przerwy (wtedy to nie otwór, lecz załamanie ścian)
         const mx=(best.p[0]+best.q[0])/2, my=(best.p[1]+best.q[1])/2; const gx=(best.q[0]-best.p[0])/best.d, gy=(best.q[1]-best.p[1])/best.d; let blocked=false;
         for (let k=0;k<segs.length&&!blocked;k++){ if(k===i||k===j) continue; const C=segs[k]; for (const e of [C.a,C.b]){ const t=(e[0]-best.p[0])*gx+(e[1]-best.p[1])*gy; const dn=Math.abs((e[0]-best.p[0])*gy-(e[1]-best.p[1])*gx); if (t>60&&t<best.d-60&&dn<=300){ blocked=true; break; } } }
+        if (!blocked) for (const it of items) if(it.type==='demo'){ for(let q=1;q<it.pts.length&&!blocked;q++) if(distPtSeg([mx,my],it.pts[q-1],it.pts[q])<=(it.w||160)/2+200) blocked=true; } // otwór wyburzony – nie domykać
         if (blocked) continue; line(best.p[0],best.p[1],best.q[0],best.q[1],1,0); } } }catch(e){}
   const items=visibleItems(floor);
   for (const it of items) if(it.type==='demo'){ const r=Math.max(1,Math.round(((it.w||160)/2+60)/RES)); for(let i=1;i<it.pts.length;i++) line(it.pts[i-1][0],it.pts[i-1][1],it.pts[i][0],it.pts[i][1],0,r); }
@@ -265,7 +303,18 @@ function buildRaster(evac){ // evac=true: drzwi i otwory przejezdne (do dróg ew
   if (evac) return {g,W,H,ox,oy};
   const K=6; const t=new Uint8Array(W*H); const pass=(src,dst,fn)=>{ for(let y=0;y<H;y++){ for(let x=0;x<W;x++){ let v=fn===1?0:1; for(let a=-K;a<=K;a++){ const X=x+a; if(X<0||X>=W) continue; const q=src[y*W+X]; if(fn===1){ if(q){ v=1; break; } } else { if(!q){ v=0; break; } } } dst[y*W+x]=v; } } const tmp=new Uint8Array(W*H); for(let x=0;x<W;x++){ for(let y=0;y<H;y++){ let v=fn===1?0:1; for(let a=-K;a<=K;a++){ const Y=y+a; if(Y<0||Y>=H) continue; const q=dst[Y*W+x]; if(fn===1){ if(q){ v=1; break; } } else { if(!q){ v=0; break; } } } tmp[y*W+x]=v; } } dst.set(tmp); };
   pass(g,t,1); const g2=new Uint8Array(W*H); pass(t,g2,0); for(let i=0;i<g.length;i++) if(g[i]) g2[i]=1;
-  return {g:g2,W,H,ox,oy};
+  // wnętrza grubych ścian (podwójne linie, grubość > 480 mm – np. piwnica 0,85 m) są zamkniętą „wolną” przestrzenią bez numeru:
+  // komponenty węższe niż ~1,0 m i bez etykiety pomieszczenia wypełniamy jako ścianę (poché) i zapamiętujemy obrysy
+  const cores=[]; try{ const labs=[]; for (const r of (F.rooms||[])){ if(r.lx!=null) labs.push([r.lx+300,r.ly+60]); if(r.poly) labs.push(polyCentroid(r.poly)); } for (const it of items) if(it.type==='room'&&it.pts.length>=3) labs.push(it.anchor||polyCentroid(it.pts));
+    const labCell=new Set(labs.map(p=>{ const X=Math.round((p[0]-ox)/RES), Y=Math.round((p[1]-oy)/RES); return Y*W+X; }));
+    const lab=new Uint8Array(W*H); const g1=new Uint8Array(g2);
+    for (let i=0;i<g2.length;i++){ if(g2[i]||lab[i]) continue; const cells=[i]; lab[i]=1; let border=false, hasLab=false; for (let k=0;k<cells.length;k++){ const c=cells[k]; const x=c%W, y=(c-x)/W; if(x===0||y===0||x===W-1||y===H-1) border=true; if(labCell.has(c)) hasLab=true; for (const j of [c-1,c+1,c-W,c+W]){ if(j>=0&&j<g2.length&&!g2[j]&&!lab[j]){ lab[j]=1; cells.push(j); } } }
+      if(border||hasLab||cells.length*RES*RES>40e6) continue;
+      // głębokość erozji = pół szerokości
+      let S=new Set(cells), depth=0; while(S.size){ const rm=[]; for (const c of S){ if(!S.has(c-1)||!S.has(c+1)||!S.has(c-W)||!S.has(c+W)) rm.push(c); } if(!rm.length) break; for (const c of rm) S.delete(c); depth++; if(depth>20) break; }
+      if(depth*RES<=520){ const res=floodRoom({g:g1,W,H,ox,oy},(cells[0]%W)*RES+ox+RES/2,Math.floor(cells[0]/W)*RES+oy+RES/2); if(res) cores.push(res.outer); for (const c of cells) g2[c]=1; } }
+  }catch(e){ diag('cores',e); }
+  return {g:g2,W,H,ox,oy,cores};
 }
 function getRaster(){ const key=floor+'|'+sel[floor]+'|'+wallsHash(); if(rasterCache&&rasterCache.key===key) return rasterCache.r; const r=buildRaster(false); rasterCache={key,r}; return r; }
 let evacRasterCache=null; function getEvacRaster(){ const key=floor+'|'+sel[floor]+'|'+wallsHash()+'|'+visibleItems(floor).filter(i=>i.type==='door').map(i=>JSON.stringify(i.pts)).join(''); if(evacRasterCache&&evacRasterCache.key===key) return evacRasterCache.r; const r=buildRaster(true); evacRasterCache={key,r}; return r; }
@@ -277,7 +326,9 @@ function floodRoom(R, ax, ay){
   while(st.length){ const i=st.pop(); cnt++; if(cnt>MAX){ leak=true; break; } const x=i%W, y=(i-x)/W; if(x===0||y===0||x===W-1||y===H-1){ leak=true; break; }
     const nb=[i-1,i+1,i-W,i+W]; for(const j of nb){ if(!m[j]&&!g[j]){ m[j]=1; st.push(j); } } }
   if (leak) return null;
-  // krawędzie brzegowe (wypełnienie po lewej) -> pętle
+  return traceMask(m,W,H,ox,oy);
+}
+function traceMask(m,W,H,ox,oy){ // maska komórek → obrysy (outer = największa pętla, outers = wszystkie pętle zewnętrzne, holes = otwory)
   const edges=new Map(); const key=(x,y)=>y*(W+1)+x;
   for (let y=0;y<H;y++) for (let x=0;x<W;x++){ if(!m[y*W+x]) continue; const i=y*W+x;
     if(!m[i-W]) add(key(x,y),key(x+1,y)); if(!m[i+1]) add(key(x+1,y),key(x+1,y+1)); if(!m[i+W]) add(key(x+1,y+1),key(x,y+1)); if(!m[i-1]) add(key(x,y+1),key(x,y)); }
@@ -288,9 +339,10 @@ function floodRoom(R, ax, ay){
   const polys=loops.map(l=>simplify(l.map(toPt),RES*1.2)).filter(p=>p.length>=3);
   polys.sort((p,q)=>Math.abs(polyArea(q))-Math.abs(polyArea(p)));
   if (!polys.length) return null;
-  const outer=polys[0].map(q=>[Math.round(q[0]/10)*10,Math.round(q[1]/10)*10]);
-  const holes=polys.slice(1).filter(p=>Math.abs(polyArea(p))>0.08e6).map(p=>p.map(q=>[Math.round(q[0]/10)*10,Math.round(q[1]/10)*10]));
-  return {outer,holes,area:(Math.abs(polyArea(outer))-holes.reduce((a,h)=>a+Math.abs(polyArea(h)),0))};
+  const rnd=(p)=>p.map(q=>[Math.round(q[0]/10)*10,Math.round(q[1]/10)*10]); const sgn=Math.sign(polyArea2(polys[0]));
+  const outers=polys.filter(p=>Math.sign(polyArea2(p))===sgn&&Math.abs(polyArea(p))>0.08e6).map(rnd); const holes=polys.filter(p=>Math.sign(polyArea2(p))!==sgn&&Math.abs(polyArea(p))>0.08e6).map(rnd);
+  const outer=outers[0]||rnd(polys[0]);
+  return {outer,outers,holes,area:(outers.reduce((a,o)=>a+Math.abs(polyArea(o)),0)-holes.reduce((a,h)=>a+Math.abs(polyArea(h)),0))};
 }
 function simplify(pts, eps){ // Douglas–Peucker na pętli zamkniętej
   if (pts.length<4) return pts; let far=0, fi=0; for(let i=1;i<pts.length;i++){ const d=Math.hypot(pts[i][0]-pts[0][0],pts[i][1]-pts[0][1]); if(d>far){ far=d; fi=i; } }
@@ -310,7 +362,8 @@ function roomArea(it){ return Math.abs(polyArea(it.pts))-(it.holes||[]).reduce((
 // ---------- numeracja projektowa pomieszczeń i legenda na rysunku ----------
 const ROOM_ORDER=[[/przedsionek|wiatrołap|hol|korytarz|komunikacja/i,1],[/salon|pokój dzienny|open space|dzienn/i,2],[/kuchnia|jadaln|aneks/i,3],[/sypialnia/i,4],[/pokój|gabinet|gość/i,5],[/łazienka/i,6],[/\bwc\b|toaleta/i,7],[/garderoba/i,8],[/schowek|gospod|pralnia|techn/i,9]];
 function roomRank(lbl){ for (const [re,n] of ROOM_ORDER) if(re.test(lbl||'')) return n; return 10; }
-let projNoCache={};
+let projNoCache={}; let noteNoCache={};
+function noteNumbers(f){ const out={}; const arr=visibleItems(f).filter(i=>i.type==='note').slice().sort((a,b)=>(b.pts[0][1]-a.pts[0][1])||(a.pts[0][0]-b.pts[0][0])); arr.forEach((it,i)=>out[it.id]=i+1); return out; }
 function projectNumbers(f){ // {id: 'M2.1'} – kolejność: wejście → salon → kuchnia → sypialnie → pokoje → łazienka → WC → garderoba → gospodarcze; ręczne it.no ma pierwszeństwo
   const out={}; const by={}; for (const it of visibleItems(f)) if(it.type==='room'&&it.unit) (by[it.unit]=by[it.unit]||[]).push(it);
   const v=curVariant(f), m=v?(v.assign||{}):{}, hid=new Set(v&&v.hide||[]); for (const r of MODEL.floors[f].rooms){ const u=m[r.nr]; if(u&&/^M/.test(u)&&!hid.has(r.nr)) (by[u]=by[u]||[]).push({id:'inv:'+r.nr,label:roomName(r,f),no:r.no,_c:r.poly?polyCentroid(r.poly):[r.lx||0,r.ly||0]}); } // pomieszczenia istniejące włączone do mieszkania też dostają numer lokal.nr
@@ -327,61 +380,84 @@ function roomSchedule(f){ // wiersze zestawienia pomieszczeń kondygnacji: {u, n
   return rows; }
 function clsSums(rows){ const s={M:0,N:0,K:0,T:0,all:0}; for (const r of rows){ s[r.cls]+=r.a; s.all+=r.a; } s.use=s.all-s.K-s.T; return s; }
 function fmt2(x){ return x.toFixed(2).replace('.',','); }
-function drawLegendOnPlan(){ gl.legenda.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const META=VARIANTS.meta||{}; const rows=roomSchedule(floor);
-  const FS=185, LH=265, X0=b[2]+900, W=7600, XR=X0+W-350; let y=b[3]; const g=el('g',{'pointer-events':'none'},gl.legenda);
-  const txt=(x,yy,t,attrs)=>{ const tt=el('text',{x:0,y:0,'font-size':FS,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; return tt; };
-  const hr=(yy,w)=>el('line',{x1:X0-150,y1:yy,x2:X0+W-150,y2:yy,stroke:'var(--ink)','stroke-width':w||10},g);
-  const items=[]; // [type, ...] – najpierw policzmy wysokość
-  // --- 1. tabelka rysunkowa (metryka)
-  const title=[['RZUT – '+F.name.toUpperCase()+' – STAN PROJEKTOWANY',FS*1.35,'800'],[(META.stage||''),FS*0.78,'400'],['Obiekt: '+(META.object||''),FS*0.85,'400'],['Inwestor: '+(META.investor||''),FS*0.85,'400'],['Rys. nr '+((META.drawings||{})[floor]||'')+' · '+(v?v.name:'')+' · '+new Date().toLocaleDateString('pl-PL')+' · wymiary w mm, powierzchnie w m² (PN-ISO 9836)',FS*0.78,'400']];
-  // --- 2. zestawienie pomieszczeń
+let sheetBox=null, sheetInfo=null;
+function drawLegendOnPlan(){ gl.legenda.innerHTML=''; gl.sheet.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const META=VARIANTS.meta||{}; const rows=roomSchedule(floor);
+  const notes=visibleItems(floor).filter(i=>i.type==='note'&&(i.label||'').trim()).sort((a,b)=>noteNoCache[a.id]-noteNoCache[b.id]);
   const groups=[]; for (const r of rows){ let G=groups.find(x=>x.u===r.u); if(!G){ G={u:r.u,rows:[],a:0}; groups.push(G); } G.rows.push(r); G.a+=r.a; }
-  const fl=clsSums(rows);
-  // --- 3. bilans budynku (wszystkie kondygnacje)
-  const all=FLOORS.flatMap(f=>roomSchedule(f)); const bs=clsSums(all); const ex=META.existing||null;
-  const nRows=title.length+2+groups.reduce((n,G)=>n+G.rows.length+1.4,0)+2+6+(ex?4:0)+9+8;
-  const frame=el('rect',{x:X0-300,y:y-nRows*LH-800,width:W,height:nRows*LH+800,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':30,rx:60},g); const yTop=y;
-  for (const [t,fs,fw] of title){ txt(X0,y-LH*0.95,t,{'font-size':fs,'font-weight':fw,fill:fw==='800'?'var(--ink)':'var(--muted)'}); y-=fs<FS?LH*0.8:LH; }
-  // podziałka liniowa
-  y-=LH*0.3; const sx=X0; for (let i=0;i<5;i++) el('rect',{x:sx+i*1000,y:y-120,width:1000,height:120,fill:i%2?'var(--canvas)':'var(--ink)',stroke:'var(--ink)','stroke-width':8},g); for (let i=0;i<=5;i++) txt(sx+i*1000-60,y-LH*1.05,String(i),{'font-size':FS*0.7}); txt(sx+5300,y-LH*0.7,'m  (podziałka liniowa)',{'font-size':FS*0.7,fill:'var(--muted)'}); y-=LH*1.3; hr(y,16); y-=LH*0.4;
-  // nagłówek tabeli
+  const fl=clsSums(rows); const all=FLOORS.flatMap(f=>roomSchedule(f)); const bs=clsSums(all); const ex=META.existing||null;
+  const g=el('g',{'pointer-events':'none'},gl.legenda);
+  // wymiary arkusza liczone w mm PAPIERU (P) i przeliczane skalą S na mm modelu – teksty mają zawsze 2,5 mm na wydruku
+  const FMT={A3:[420,297],A2:[594,420],A1:[841,594],A0:[1189,841]}; const PREF=[[50,'A1'],[100,'A2'],[50,'A0'],[100,'A1'],[100,'A3'],[100,'A0']];
+  const measure=(S)=>{ const P=(mm)=>mm*S; const FS=P(2.5), LH=P(3.7); const colW=P(82); const X0=b[2]+P(12); const nR=2+1.6+1.2+groups.reduce((n,G)=>n+G.rows.length*0.85+1.3,0)+1.6+4*0.85+1.6+6*0.85+(ex?3*0.85:0)+1.3+1.6+7*0.9+1; const legBottom=b[3]-nR*LH-P(6);
+    const cpl=Math.max(40,Math.floor((b[2]-b[0])/(FS*0.5))); let nl=0; for (const it of notes) nl+=Math.max(1,Math.ceil(String(it.label).length/cpl))+0.3; const notesBottom=notes.length?b[1]-P(8)-LH*1.1-nl*LH*0.8-P(3):b[1];
+    const TBW=P(180), TBH=7*LH*1.15+P(2); return {S,P,FS,LH,colW,X0,legBottom,notesBottom,TBW,TBH}; };
+  let L=null, fmtName='', sx0=0,sy0=0,sx1=0,sy1=0;
+  for (const [S,fm] of PREF){ const M=measure(S); const P=M.P; const [fw,fh]=FMT[fm]; const _sx0=b[0]-P(25), _sy1=b[3]+P(10), _sx1=_sx0+P(fw), _sy0=_sy1-P(fh);
+    const colRight=M.X0+M.colW; if(colRight+P(10)>_sx1) continue; const bottoms=Math.min(M.legBottom,M.notesBottom); if(bottoms-P(10)<_sy0) continue;
+    const tbx0=_sx1-P(10)-M.TBW, tby1=_sy0+P(10)+M.TBH; // tabelka nie może nachodzić na rzut/uwagi ani na kolumnę zestawień
+    const planRect=[b[0]-P(3),Math.min(M.notesBottom,b[1]),b[2]+P(3),b[3]]; const colRect=[M.X0-P(2),M.legBottom,colRight,b[3]];
+    const hit=(R)=>!(R[2]<tbx0||R[0]>_sx1||R[1]>tby1||R[3]<_sy0); if(hit(planRect)||hit(colRect)) continue;
+    L=M; fmtName=fm; sx0=_sx0; sy0=_sy0; sx1=_sx1; sy1=_sy1; break; }
+  if(!L){ L=measure(100); fmtName='A0+'; const P=L.P; sx0=b[0]-P(25); sy1=b[3]+P(10); sx1=Math.max(L.X0+L.colW+P(10),sx0+P(1189)); sy0=Math.min(L.legBottom,L.notesBottom)-L.TBH-P(25); }
+  const {S,P,FS,LH,colW,X0,TBW,TBH}=L; const W=colW, XR=X0+W-P(2); let y=b[3];
+  const txt=(x,yy,t,attrs)=>{ const tt=el('text',{x:0,y:0,'font-size':FS,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; return tt; };
+  const hr=(yy,w)=>el('line',{x1:X0-P(2),y1:yy,x2:X0+W,y2:yy,stroke:'var(--ink)','stroke-width':w||P(0.15)},g);
+  // ARKUSZ: tło + ramka
+  el('rect',{x:sx0,y:sy0,width:sx1-sx0,height:sy1-sy0,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.2)},gl.sheet); el('rect',{x:sx0+P(20),y:sy0+P(10),width:sx1-sx0-P(30),height:sy1-sy0-P(20),fill:'none',stroke:'var(--ink)','stroke-width':P(0.7)},gl.sheet);
+  // KOLUMNA ZESTAWIEŃ
+  const frame=el('rect',{x:X0-P(3),y:0,width:W+P(4),height:0,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.3),rx:P(1)},g); const yTop=y;
+  txt(X0,y-LH*0.95,'RZUT – '+F.name.toUpperCase()+' – STAN PROJEKTOWANY',{'font-size':FS*1.3,'font-weight':'800'}); y-=LH*1.2; txt(X0,y-LH*0.95,(v?v.name:'')+' · wymiary w mm, powierzchnie w m² (PN-ISO 9836)',{'font-size':FS*0.8,fill:'var(--muted)'}); y-=LH;
+  y-=LH*0.3; for (let i=0;i<5;i++) el('rect',{x:X0+i*1000,y:y-P(1.2),width:1000,height:P(1.2),fill:i%2?'var(--canvas)':'var(--ink)',stroke:'var(--ink)','stroke-width':P(0.1)},g); for (let i=0;i<=5;i++) txt(X0+i*1000-FS*0.3,y-LH*1.05,String(i),{'font-size':FS*0.7}); txt(X0+5000+P(3),y-LH*0.7,'m · podziałka liniowa · skala 1:'+S,{'font-size':FS*0.7,fill:'var(--muted)'}); y-=LH*1.3; hr(y,P(0.25)); y-=LH*0.4;
   txt(X0,y-LH*0.9,'ZESTAWIENIE POMIESZCZEŃ – '+F.name.toUpperCase(),{'font-weight':'800'}); y-=LH;
-  const cNo=X0, cName=X0+1500, cA=XR-1900, cCls=XR; txt(cNo,y-LH*0.9,'Nr',{'font-weight':'700','font-size':FS*0.8}); txt(cName,y-LH*0.9,'Pomieszczenie',{'font-weight':'700','font-size':FS*0.8}); txt(cA,y-LH*0.9,'pow. użytk. m²',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); txt(cCls,y-LH*0.9,'klasyfikacja',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); y-=LH*0.9; hr(y,10);
-  for (const G of groups){ const U=UNITS[G.u]||{name:G.u,color:'#999'}; y-=LH*0.25; el('rect',{x:X0,y:y-LH*0.85,width:FS*1.2,height:FS*1.0,fill:U.color,stroke:'var(--ink)','stroke-width':12},g); txt(X0+FS*1.6,y-LH*0.9,U.name,{'font-weight':'700','font-size':FS*0.9}); txt(cA,y-LH*0.9,fmt2(G.a),{'font-weight':'700','text-anchor':'end'}); y-=LH;
+  const cNo=X0, cName=X0+P(16), cA=XR-P(20), cCls=XR; txt(cNo,y-LH*0.9,'Nr',{'font-weight':'700','font-size':FS*0.8}); txt(cName,y-LH*0.9,'Pomieszczenie',{'font-weight':'700','font-size':FS*0.8}); txt(cA,y-LH*0.9,'pow. użytk. m²',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); txt(cCls,y-LH*0.9,'klasyfikacja',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); y-=LH*0.9; hr(y);
+  for (const G of groups){ const U=UNITS[G.u]||{name:G.u,color:'#999'}; y-=LH*0.25; el('rect',{x:X0,y:y-LH*0.85,width:FS*1.2,height:FS*1.0,fill:U.color,stroke:'var(--ink)','stroke-width':P(0.12)},g); txt(X0+FS*1.6,y-LH*0.9,U.name.slice(0,44),{'font-weight':'700','font-size':FS*0.9}); txt(cA,y-LH*0.9,fmt2(G.a),{'font-weight':'700','text-anchor':'end'}); y-=LH;
     for (const r of G.rows){ txt(cNo,y-LH*0.9,String(r.no),{'font-size':FS*0.85,'font-weight':/\./.test(r.no)?'700':'400',fill:/\./.test(r.no)?'var(--new)':'var(--ink)'}); txt(cName,y-LH*0.9,r.name.slice(0,34),{'font-size':FS*0.85}); txt(cA,y-LH*0.9,fmt2(r.a),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,CLS[r.cls][0],{'font-size':FS*0.7,'text-anchor':'end',fill:CLS[r.cls][1]}); y-=LH*0.85; } }
-  y-=LH*0.2; hr(y,16); y-=LH*0.2; txt(X0,y-LH*0.9,'RAZEM kondygnacja',{'font-weight':'800'}); txt(cA,y-LH*0.9,fmt2(fl.all),{'font-weight':'800','text-anchor':'end'}); y-=LH;
+  y-=LH*0.2; hr(y,P(0.25)); y-=LH*0.2; txt(X0,y-LH*0.9,'RAZEM kondygnacja',{'font-weight':'800'}); txt(cA,y-LH*0.9,fmt2(fl.all),{'font-weight':'800','text-anchor':'end'}); y-=LH;
   for (const k of ['M','N','K','T']){ txt(cName,y-LH*0.9,'w tym '+CLS[k][0],{'font-size':FS*0.85,fill:CLS[k][1]}); txt(cA,y-LH*0.9,fmt2(fl[k]),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,fl.use>0&&(k==='M'||k==='N')?Math.round(100*fl[k]/fl.use)+' % pow. użytk.':'',{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; }
-  // bilans budynku
-  y-=LH*0.3; hr(y,16); y-=LH*0.3; txt(X0,y-LH*0.9,'BILANS BUDYNKU – STAN PROJEKTOWANY (wszystkie kondygnacje)',{'font-weight':'800'}); y-=LH;
+  y-=LH*0.3; hr(y,P(0.25)); y-=LH*0.3; txt(X0,y-LH*0.9,'BILANS BUDYNKU – STAN PROJEKTOWANY (wszystkie kondygnacje)',{'font-weight':'800'}); y-=LH;
   const line=(l,a,r,attrs)=>{ txt(cName,y-LH*0.9,l,{'font-size':FS*0.85,...(attrs||{})}); txt(cA,y-LH*0.9,a,{'font-size':FS*0.85,'text-anchor':'end',...(attrs||{})}); if(r) txt(cCls,y-LH*0.9,r,{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; };
-  line('powierzchnia pomieszczeń ogółem',fmt2(bs.all),'');
-  line('– komunikacja (klatki, korytarze)',fmt2(bs.K),''); line('– pomieszczenia techniczne',fmt2(bs.T),'');
+  line('powierzchnia pomieszczeń ogółem',fmt2(bs.all),''); line('– komunikacja (klatki, korytarze)',fmt2(bs.K),''); line('– pomieszczenia techniczne',fmt2(bs.T),'');
   line('= powierzchnia użytkowa',fmt2(bs.use),'100 %',{'font-weight':'700'});
   line('   mieszkalna (lokale + pomocnicze + ogólnego użytku)',fmt2(bs.M),Math.round(100*bs.M/(bs.use||1))+' %',{fill:CLS.M[1],'font-weight':'700'});
   line('   niemieszkalna (usługi: Poczta, Orange)',fmt2(bs.N),Math.round(100*bs.N/(bs.use||1))+' %',{fill:CLS.N[1]});
   if(ex){ y-=LH*0.2; line('Stan istniejący wg ekspertyzy PPSA:','','',{fill:'var(--muted)'}); line('   mieszkalna',fmt2(ex.M),Math.round(100*ex.M/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); line('   niemieszkalna',fmt2(ex.N),Math.round(100*ex.N/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); }
-  txt(X0,y-LH*0.9,'Budynek mieszkalny (PKOB 11): udział pow. mieszkalnej w pow. użytkowej ≥ 50 % – '+(bs.M/(bs.use||1)>=0.5?'SPEŁNIONE':'NIESPEŁNIONE'),{'font-size':FS*0.8,'font-weight':'700',fill:bs.M/(bs.use||1)>=0.5?CLS.M[1]:CLS.N[1]}); y-=LH;
-  // legenda oznaczeń
-  y-=LH*0.3; hr(y,16); y-=LH*0.3; txt(X0,y-LH*0.9,'OZNACZENIA',{'font-weight':'800'}); y-=LH;
-  const sym=(draw,label)=>{ draw(X0,y-LH*0.5); txt(X0+1500,y-LH*0.9,label,{'font-size':FS*0.85}); y-=LH*0.9; };
-  sym((x,yy)=>el('rect',{x,y:yy-60,width:1200,height:120,fill:'var(--ink)'},g),'ściany istniejące (inwentaryzacja)');
-  sym((x,yy)=>el('rect',{x,y:yy-60,width:1200,height:120,fill:'var(--new)'},g),'ściany projektowane (nowe)');
-  sym((x,yy)=>el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'var(--demo)','stroke-width':90,'stroke-dasharray':'180 120'},g),'ściany do wyburzenia / otwory zamurowane');
-  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'#d62828','stroke-width':70},g); const t=el('text',{x:0,y:0,'font-size':FS*0.8,fill:'#d62828','font-weight':'900',transform:`translate(${x+400} ${yy+90}) scale(1,-1)`},g); t.textContent='EI30'; },'drzwi przeciwpożarowe EI 30, światło 90 cm (wydzielenie klatki)');
-  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'#2a9d3a','stroke-width':60},g); el('circle',{cx:x,cy:yy,r:90,fill:'#2a9d3a'},g); },'dojście ewakuacyjne do klatki schodowej (długość ≤ 20 m)');
-  sym((x,yy)=>{ el('circle',{cx:x+600,cy:yy,r:110,fill:'#8d5524',stroke:'#fff','stroke-width':14},g); },'pion instalacyjny (K kanalizacja Ø110 / W / C / Wn / E)');
-  sym((x,yy)=>el('rect',{x,y:yy-100,width:1200,height:200,fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane – kolor lokalu, numer lokal.nr');
-  frame.setAttribute('y',y-300); frame.setAttribute('height',yTop-y+300);
+  txt(X0,y-LH*0.9,'Budynek mieszkalny (PKOB 11): udział pow. mieszkalnej ≥ 50 % – '+(bs.M/(bs.use||1)>=0.5?'SPEŁNIONE':'NIESPEŁNIONE'),{'font-size':FS*0.8,'font-weight':'700',fill:bs.M/(bs.use||1)>=0.5?CLS.M[1]:CLS.N[1]}); y-=LH;
+  y-=LH*0.3; hr(y,P(0.25)); y-=LH*0.3; txt(X0,y-LH*0.9,'OZNACZENIA',{'font-weight':'800'}); y-=LH;
+  const sym=(draw,label)=>{ draw(X0,y-LH*0.5); txt(X0+P(14),y-LH*0.9,label,{'font-size':FS*0.85}); y-=LH*0.9; }; const SW=P(11);
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.6),width:SW,height:P(1.2),fill:'var(--ink)'},g),'ściany istniejące (inwentaryzacja)');
+  sym((x,yy)=>el('rect',{x,y:yy-P(0.6),width:SW,height:P(1.2),fill:'var(--new)'},g),'ściany projektowane (nowe)');
+  sym((x,yy)=>el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'var(--demo)','stroke-width':P(0.9),'stroke-dasharray':`${P(1.8)} ${P(1.2)}`},g),'ściany do wyburzenia / otwory zamurowane');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#d62828','stroke-width':P(0.7)},g); const t=el('text',{x:0,y:0,'font-size':FS*0.8,fill:'#d62828','font-weight':'900',transform:`translate(${x+SW*0.3} ${yy+P(0.9)}) scale(1,-1)`},g); t.textContent='EI30'; },'drzwi przeciwpożarowe EI 30, światło 90 cm (wydzielenie klatki)');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+SW,y2:yy,stroke:'#2a9d3a','stroke-width':P(0.6)},g); el('circle',{cx:x,cy:yy,r:P(0.9),fill:'#2a9d3a'},g); },'dojście ewakuacyjne do klatki schodowej (długość ≤ 20 m)');
+  sym((x,yy)=>{ el('circle',{cx:x+SW/2,cy:yy,r:P(1.1),fill:'#8d5524',stroke:'#fff','stroke-width':P(0.14)},g); },'pion instalacyjny (K kanalizacja Ø110 / W / C / Wn / E)');
+  sym((x,yy)=>{ el('circle',{cx:x+SW/2,cy:yy,r:P(1.3),fill:'var(--note)'},g); const t=el('text',{x:0,y:0,'font-size':FS*0.75,fill:'#fff','font-weight':'800','text-anchor':'middle',transform:`translate(${x+SW/2} ${yy+P(0.7)}) scale(1,-1)`},g); t.textContent='1'; },'uwaga – treść w ramce UWAGI pod rzutem');
+  sym((x,yy)=>el('rect',{x,y:yy-P(1),width:SW,height:P(2),fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane – kolor lokalu, numer lokal.nr');
+  frame.setAttribute('y',y-P(3)); frame.setAttribute('height',yTop-y+P(3));
+  // UWAGI pod rzutem
+  let yN=b[1]-P(8); const NW=(b[2]-b[0]); const cpl=Math.max(40,Math.floor(NW/(FS*0.5)));
+  const wrap=(t)=>{ const out=[]; let line=''; for (const w of String(t).split(/\s+/)){ if((line+' '+w).trim().length>cpl){ out.push(line.trim()); line=w; } else line+=' '+w; } if(line.trim()) out.push(line.trim()); return out; };
+  if (notes.length){ const yNTop=yN; txt(b[0],yN-LH*0.9,'UWAGI',{'font-weight':'800'}); yN-=LH*1.1;
+    for (const it of notes){ const lines=wrap(it.label); el('circle',{cx:b[0]+P(1.6),cy:yN-LH*0.62,r:P(1.4),fill:'var(--note)'},g); const tn=el('text',{x:0,y:0,'text-anchor':'middle','font-size':FS*0.8,fill:'#fff','font-weight':'800',transform:`translate(${b[0]+P(1.6)} ${yN-LH*0.62+FS*0.3}) scale(1,-1)`},g); tn.textContent=noteNoCache[it.id]; lines.forEach((ln)=>{ txt(b[0]+P(4.5),yN-LH*0.9,ln,{'font-size':FS*0.85}); yN-=LH*0.8; }); yN-=LH*0.25; }
+    el('rect',{x:b[0]-P(2.5),y:yN-P(2),width:NW+P(5),height:yNTop-yN+P(2),fill:'none',stroke:'var(--ink)','stroke-width':P(0.2),rx:P(0.5)},g); }
+  // TABELKA RYSUNKOWA – prawy dolny róg
+  const tx=sx1-P(10)-TBW, ty=sy0+P(10); el('rect',{x:tx,y:ty,width:TBW,height:TBH,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':P(0.5)},g);
+  const rowsTB=[['Inwestor',META.investor||''],['Obiekt',META.object||''],['Stadium / branża',(META.stage||'').split(':')[0]+' · architektoniczna'],['Tytuł rysunku','Rzut – '+F.name+' – stan projektowany'],['Projektant',(META.designer||'')+(META.designerNo?' · upr. nr '+META.designerNo:'')],['Opracowanie',META.author||''],['Skala · format · nr rys. · data','1:'+S+' · '+fmtName+' · '+((META.drawings||{})[floor]||'')+' · '+new Date().toLocaleDateString('pl-PL',{month:'2-digit',year:'numeric'})]];
+  let yy=ty+TBH-P(1); for (const [k,val] of rowsTB){ txt(tx+P(3),yy-LH*0.85,k,{'font-size':FS*0.7,fill:'var(--muted)'}); txt(tx+P(48),yy-LH*0.85,String(val).slice(0,84),{'font-size':FS*0.85,'font-weight':k==='Tytuł rysunku'||k==='Projektant'?'700':'500'}); yy-=LH*1.15; el('line',{x1:tx,y1:yy+LH*0.12,x2:tx+TBW,y2:yy+LH*0.12,stroke:'var(--ink)','stroke-width':P(0.12)},g); }
+  el('line',{x1:tx+P(45),y1:ty,x2:tx+P(45),y2:ty+TBH,stroke:'var(--ink)','stroke-width':P(0.12)},g);
+  sheetBox={x0:sx0,y0:sy0,x1:sx1,y1:sy1}; sheetInfo={S,fmt:fmtName};
 }
+let lastZoneKey=null;
 function drawProject(){
+  try{ const zk=floor+'|'+visibleItems(floor).filter(i=>i.type==='zone').map(i=>i.nr+':'+i.pts[0].join(',')).join(';'); if(zk!==lastZoneKey){ lastZoneKey=zk; drawRooms(); } }catch(err){ diag('zones',err); } // przypisania obszarów (zone) zmieniają podział stref
   try{ recomputeRooms(); }catch(err){ diag('rooms',err); }
-  gl.project.innerHTML=''; gl.rfill.innerHTML=''; gl.rline.innerHTML=''; gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); }catch(err){ diag('numery',err); projNoCache={}; }
+  gl.project.innerHTML=''; gl.rfill.innerHTML=''; gl.rline.innerHTML=''; gl.rlbl.innerHTML=''; gl.rhit.innerHTML=''; gl.furn.innerHTML=''; gl.sketch.innerHTML=''; let markN=0; roomIdx=0; try{ projNoCache=projectNumbers(floor); noteNoCache=noteNumbers(floor); }catch(err){ diag('numery',err); projNoCache={}; }
   for (const it of visibleItems(floor)){
     try { drawOneItem(it, markN); if(it.type==='mark') markN++; } catch(err){ diag('render '+it.type, err); }
   }
   try { drawAutoDims(); } catch(err){ diag('autodim', err); }
   try { drawEvac(); } catch(err){ diag('evac', err); }
   try { drawRisers(); drawUnder(); } catch(err){ diag('under', err); }
+  try { drawUnassigned(); } catch(err){ diag('unassigned', err); }
   try { drawLegendOnPlan(); } catch(err){ diag('legenda', err); }
 }
 // ---------- wymiary automatyczne: światło pomieszczeń przez środek + przejścia wokół zaznaczonego mebla ----------
@@ -470,7 +546,7 @@ function drawOneItem(it, markN){
     else if (it.type==='arrow'){ const [a,b]=it.pts; e=el('g',{},gl.sketch); const L=Math.hypot(b[0]-a[0],b[1]-a[1])||1; const ux=(b[0]-a[0])/L, uy=(b[1]-a[1])/L; const hx=b[0]-ux*350, hy=b[1]-uy*350; el('line',{x1:a[0],y1:a[1],x2:hx,y2:hy,stroke:'var(--mark)','stroke-width':60,'stroke-linecap':'round'},e); el('polygon',{points:`${b[0]},${b[1]} ${hx-uy*180},${hy+ux*180} ${hx+uy*180},${hy-ux*180}`,fill:'var(--mark)'},e); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'transparent','stroke-width':Math.max(200,12*mmPerPx()),'pointer-events':'stroke',class:'hit'},e); if(it.label){ const g=el('g',{transform:`translate(${a[0]-ux*150} ${a[1]-uy*150}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:60,'text-anchor':ux>0?'end':'start','font-size':220,fill:'var(--mark)','font-weight':'600'},g); t.textContent=it.label; } }
     else if (it.type==='mark'){ const [a]=it.pts; const n=it.n||(markN+1); e=el('g',{},gl.sketch); el('circle',{cx:a[0],cy:a[1],r:280,fill:'var(--mark)',opacity:0.95},e); const g=el('g',{transform:`translate(${a[0]} ${a[1]}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:95,'text-anchor':'middle','font-size':300,fill:'#fff','font-weight':'700'},g); t.textContent=n; if(it.label){ const g2=el('g',{transform:`translate(${a[0]+360} ${a[1]-80}) scale(1,-1)`,'pointer-events':'none'},e); const bg=el('text',{x:0,y:0,'font-size':220,fill:'var(--mark)','font-weight':'600',stroke:'var(--canvas)','stroke-width':60,'paint-order':'stroke'},g2); bg.textContent=it.label; } }
     else if (it.type==='dim'){ const [a,b]=it.pts; e=el('g',{},gl.project); el('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:'var(--accent)','stroke-width':20},e); [a,b].forEach(p=>el('circle',{cx:p[0],cy:p[1],r:60,fill:'var(--accent)'},e)); const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const g=el('g',{transform:`translate(${(a[0]+b[0])/2} ${(a[1]+b[1])/2+150}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:0,'text-anchor':'middle','font-size':180,fill:'var(--accent)',class:'lbl-ar','font-weight':'500'},g); t.textContent=(L/1000).toFixed(2).replace('.',',')+' m'; }
-    else if (it.type==='note'){ const [a]=it.pts; e=el('g',{},gl.project); el('circle',{cx:a[0],cy:a[1],r:160,fill:'var(--note)'},e); const g=el('g',{transform:`translate(${a[0]+220} ${a[1]-60}) scale(1,-1)`},e); const t=el('text',{x:0,y:0,'font-size':200,fill:'var(--note)','font-weight':'500'},g); t.textContent=it.label||''; }
+    else if (it.type==='note'){ const [a]=it.pts; const n=noteNoCache[it.id]||''; e=el('g',{},gl.project); el('circle',{cx:a[0],cy:a[1],r:210,fill:'var(--note)',stroke:'#fff','stroke-width':16},e); if(isSel) el('circle',{cx:a[0],cy:a[1],r:300,fill:'none',stroke:'var(--sel)','stroke-width':24},e); const g=el('g',{transform:`translate(${a[0]} ${a[1]}) scale(1,-1)`,'pointer-events':'none'},e); const t=el('text',{x:0,y:75,'text-anchor':'middle','font-size':230,fill:'#fff','font-weight':'800'},g); t.textContent=n; }  // treść uwagi jest w ramce „UWAGI” pod rzutem (arkusz)
     if (!e) return;
     e.dataset.id=it.id; e.style.cursor='pointer';
     if (isSel && (it.type==='wall'||it.type==='demo') && it.pts.length===2){ const [pa,pb]=it.pts; const Lw=Math.hypot(pb[0]-pa[0],pb[1]-pa[1])||1; const ux=(pb[0]-pa[0])/Lw, uy=(pb[1]-pa[1])/Lw; const s3=6*mmPerPx(); const tipx=pb[0]-ux*s3*1.8, tipy=pb[1]-uy*s3*1.8; el('path',{d:`M${tipx+ux*s3} ${tipy+uy*s3}L${tipx-uy*s3*0.8} ${tipy+ux*s3*0.8}L${tipx+uy*s3*0.8} ${tipy-ux*s3*0.8}Z`,fill:'var(--sel)',opacity:0.9},e); const gL=el('g',{transform:`translate(${(pa[0]+pb[0])/2-uy*(it.w||120)*0.5-uy*s3*2.2} ${(pa[1]+pb[1])/2+ux*(it.w||120)*0.5+ux*s3*2.2}) scale(1,-1)`,'pointer-events':'none'},e); const tL=el('text',{x:0,y:0,'text-anchor':'middle','font-size':2.2*mmPerPx(),fill:'var(--sel)',class:'lbl-ar'},gL); tL.textContent='L'; const gR=el('g',{transform:`translate(${(pa[0]+pb[0])/2+uy*(it.w||120)*0.5+uy*s3*2.2} ${(pa[1]+pb[1])/2-ux*(it.w||120)*0.5-ux*s3*2.2}) scale(1,-1)`,'pointer-events':'none'},e); const tR=el('text',{x:0,y:0,'text-anchor':'middle','font-size':2.2*mmPerPx(),fill:'var(--sel)',class:'lbl-ar'},gR); tR.textContent='P'; for (const pp of it.pts) el('circle',{cx:pp[0],cy:pp[1],r:7*mmPerPx(),fill:'var(--canvas)',stroke:'var(--sel)','stroke-width':2.5*mmPerPx(),style:'cursor:ew-resize'},e); }
@@ -971,7 +1047,7 @@ document.getElementById('loadBtn').addEventListener('click',()=>{ try{ const arr
 const lw=document.getElementById('layers');
 lw.innerHTML=layerDefs.map(l=>`<label><input type="checkbox" id="ly_${l[0]}" ${layerOn[l[0]]?'checked':''}><span class="sw" style="background:${l[2]}"></span>${l[1]}</label>`).join('');
 lw.querySelectorAll('input').forEach(i=>i.addEventListener('change',()=>{ layerOn[i.id.slice(3)]=i.checked; try{localStorage.setItem(KEYP+'.layers',JSON.stringify(layerOn));}catch(e){} updateLayerVisibility(); if(i.id==='ly_autodim') drawProject(); }));
-function updateLayerVisibility(){ for (const k of ['walls','windows','doors','stairs','sills','fixtures','dims','skosy','dwgtext','project','evac','rfill','rline','rlbl','furn','sketch','autodim','piony','under','legenda']) gl[k].style.display=layerOn[k]?'':'none'; gl.zones.style.display=gl.roomlbl.style.display=layerOn.rooms?'':'none'; gl.rhit.style.display=layerOn.rlbl?'':'none'; }
+function updateLayerVisibility(){ for (const k of ['walls','windows','doors','stairs','sills','fixtures','dims','skosy','dwgtext','project','evac','rfill','rline','rlbl','furn','sketch','autodim','piony','under','legenda']) gl[k].style.display=layerOn[k]?'':'none'; gl.sheet.style.display=layerOn.legenda?'':'none'; gl.zones.style.display=gl.roomlbl.style.display=layerOn.rooms?'':'none'; gl.rhit.style.display=layerOn.rlbl?'':'none'; }
 
 // ---------- podrys UI ----------
 const us=document.getElementById('underSel'), uo=document.getElementById('underOp');
@@ -1154,7 +1230,7 @@ function toggle3D(on){ try{ document.getElementById('hRead').hidden=true; }catch
   if (on){ if(!window.THREE){ diag('3d','biblioteka 3D nie wczytała się (brak połączenia z CDN)'); toggle3D(false); return; } init3D(); focus3D(); build3D(); }
 }
 document.getElementById('btn3d').addEventListener('click',()=>toggle3D(!is3D));
-window.__p11dbg={ get R3(){ return R3; }, get items(){ return project[floor].items; }, get sel(){ return selectedId; }, addWall(pts,w,side){ draft={type:'wall',pts:pts.map(q=>q.slice())}; if(w==='custom'){ document.getElementById('wallW').value='custom'; } else document.getElementById('wallW').value=String(w||120); document.getElementById('wallSide').value=String(side||0); finishDraft(); return project[floor].items[project[floor].items.length-1]; }, layer(k,on){ layerOn[k]=on; updateLayerVisibility(); drawProject(); }, raster(){ return getRaster(); }, snapEnds(it,tol){ return snapWallEnds(it,tol); }, hits(it){ return rectCollisions(rectOf(it),wallSegsAll()); }, low(it){ return tooLowFor(it); }, blocks(it){ return blocksDoor(it); }, zones(){ return doorZones(); }, get wallDrag(){ return wallDrag; } };
+window.__p11dbg={ get R3(){ return R3; }, get un(){ return unassigned; }, get MODEL(){ return MODEL; }, cover:roomCoverArea, get items(){ return project[floor].items; }, get sel(){ return selectedId; }, addWall(pts,w,side){ draft={type:'wall',pts:pts.map(q=>q.slice())}; if(w==='custom'){ document.getElementById('wallW').value='custom'; } else document.getElementById('wallW').value=String(w||120); document.getElementById('wallSide').value=String(side||0); finishDraft(); return project[floor].items[project[floor].items.length-1]; }, layer(k,on){ layerOn[k]=on; updateLayerVisibility(); drawProject(); }, raster(){ return getRaster(); }, snapEnds(it,tol){ return snapWallEnds(it,tol); }, hits(it){ return rectCollisions(rectOf(it),wallSegsAll()); }, low(it){ return tooLowFor(it); }, blocks(it){ return blocksDoor(it); }, zones(){ return doorZones(); }, get wallDrag(){ return wallDrag; } };
 window.addEventListener('resize',()=>{ if(is3D&&R3){ size3D(); render3D(); } });
 // ---------- boot ----------
 setFloor(floor);
