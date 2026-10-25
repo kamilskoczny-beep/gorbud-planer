@@ -1738,10 +1738,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 73 cm. Proponuję 73 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 730,
     "pts": [
      [
       440,
@@ -1751,8 +1748,11 @@
       440,
       23830
      ]
-    ]
-   }
+    ],
+    "w": 730
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-parter-104",
@@ -1785,10 +1785,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 59 cm. Proponuję 59 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 590,
     "pts": [
      [
       380,
@@ -1798,8 +1795,11 @@
       380,
       0
      ]
-    ]
-   }
+    ],
+    "w": 590
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-parter-107",
@@ -1815,10 +1815,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 58 cm. Proponuję 58 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 580,
     "pts": [
      [
       11440,
@@ -1828,8 +1825,11 @@
       13540,
       840
      ]
-    ]
-   }
+    ],
+    "w": 580
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-parter-108",
@@ -1845,10 +1845,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 43 cm. Proponuję 43 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 430,
     "pts": [
      [
       24390,
@@ -1858,8 +1855,11 @@
       25450,
       830
      ]
-    ]
-   }
+    ],
+    "w": 430
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-parter-109",
@@ -2851,22 +2851,6 @@
    ],
    "type": "idoor",
    "w": 280
-  },
-  {
-   "id": "inw-k-parter-0",
-   "label": "komin",
-   "pts": [
-    [
-     7090,
-     15125
-    ],
-    [
-     9060,
-     15350
-    ]
-   ],
-   "q": "w DWG parteru tylko lica ściany 22 cm – komin wpisany w ścianę? potwierdzić wymiar",
-   "type": "chimney"
   },
   {
    "id": "inw-st-parter-000",

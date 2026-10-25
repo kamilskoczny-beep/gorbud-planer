@@ -2833,7 +2833,11 @@
      24130
     ]
    ],
-   "q": "lico skośne – grubość 560–490 mm, przyjęto średnią",
+   "qOk": {
+    "c": "",
+    "q": "lico skośne – grubość 560–490 mm, przyjęto średnią",
+    "t": "2026-10-25"
+   },
    "type": "iwall",
    "w": 520
   },
@@ -3211,29 +3215,20 @@
    "pts": [
     [
      9610,
-     24000
+     23930
     ],
     [
      6430,
-     23890
+     23820
     ]
    ],
-   "q": "ściana zewnętrzna o grubości tylko 28 cm – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 42 cm. Proponuję 42 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna o grubości tylko 28 cm – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 42 cm. Proponuję 42 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
+    "t": "2026-10-25"
+   },
    "type": "iwall",
-   "w": 280,
-   "qFix": {
-    "w": 420,
-    "pts": [
-     [
-      9610,
-      23930
-     ],
-     [
-      6430,
-      23820
-     ]
-    ]
-   }
+   "w": 420
   },
   {
    "id": "inw-s-poddasze-026",
@@ -3955,10 +3950,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 55 cm. Proponuję 55 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 550,
     "pts": [
      [
       240,
@@ -3968,8 +3960,11 @@
       240,
       9700
      ]
-    ]
-   }
+    ],
+    "w": 550
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-o-poddasze-000",
@@ -4506,6 +4501,11 @@
    "w": 470
   },
   {
+   "hideOn": [
+    "pietro1",
+    "parter",
+    "piwnica"
+   ],
    "id": "inw-k-poddasze-0",
    "label": "komin (217) – do dachu",
    "pts": [
@@ -9154,7 +9154,11 @@
      17300
     ]
    ],
-   "q": "okno połaciowe 116×73 cm (symbol z inwentaryzacji) – potwierdzić",
+   "qOk": {
+    "c": "",
+    "q": "okno połaciowe 116×73 cm (symbol z inwentaryzacji) – potwierdzić",
+    "t": "2026-10-25"
+   },
    "type": "iroof"
   },
   {
@@ -9169,7 +9173,11 @@
      21230
     ]
    ],
-   "q": "okno połaciowe 116×73 cm (symbol z inwentaryzacji) – potwierdzić",
+   "qOk": {
+    "c": "",
+    "q": "okno połaciowe 116×73 cm (symbol z inwentaryzacji) – potwierdzić",
+    "t": "2026-10-25"
+   },
    "type": "iroof"
   },
   {

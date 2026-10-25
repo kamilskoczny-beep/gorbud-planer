@@ -604,12 +604,12 @@
    "kind": "bed",
    "pts": [
     [
-     1400,
-     13120
+     1530,
+     13000
     ],
     [
-     3000,
-     15120
+     3130,
+     15000
     ]
    ],
    "type": "furn",
@@ -955,11 +955,11 @@
    "open": false,
    "pts": [
     [
-     4430,
+     4440,
      11800
     ],
     [
-     5230,
+     5240,
      11800
     ]
    ],
@@ -3157,10 +3157,7 @@
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji poddasze w tym miejscu 45 cm. Proponuję 45 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "type": "iwall",
-   "w": 80,
    "qFix": {
-    "w": 450,
     "pts": [
      [
       300,
@@ -3170,8 +3167,11 @@
       300,
       0
      ]
-    ]
-   }
+    ],
+    "w": 450
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-o-pietro1-000",

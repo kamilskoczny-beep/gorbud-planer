@@ -12,21 +12,6 @@
    "type": "zone"
   },
   {
-   "id": "inw-k-piwnica-0",
-   "label": "komin – podstawa (015)",
-   "pts": [
-    [
-     7270,
-     14921
-    ],
-    [
-     9150,
-     15331
-    ]
-   ],
-   "type": "chimney"
-  },
-  {
    "id": "inw-st-piwnica-000",
    "lines": [
     [
@@ -480,7 +465,6 @@
   },
   {
    "id": "inw-s-piwnica-000",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -492,15 +476,15 @@
      1110
     ]
    ],
-   "w": 580,
    "q": "ta sama ściana ma obok grubość 64 cm, tu 58 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 64 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 640
-   }
+   },
+   "type": "iwall",
+   "w": 580
   },
   {
    "id": "inw-s-piwnica-001",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -512,11 +496,11 @@
      23570
     ]
    ],
+   "type": "iwall",
    "w": 550
   },
   {
    "id": "inw-s-piwnica-002",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -528,11 +512,11 @@
      12050
     ]
    ],
+   "type": "iwall",
    "w": 180
   },
   {
    "id": "inw-s-piwnica-003",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -544,11 +528,11 @@
      9020
     ]
    ],
+   "type": "iwall",
    "w": 390
   },
   {
    "id": "inw-s-piwnica-004",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -560,11 +544,11 @@
      15280
     ]
    ],
+   "type": "iwall",
    "w": 160
   },
   {
    "id": "inw-s-piwnica-005",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -576,11 +560,11 @@
      2950
     ]
    ],
+   "type": "iwall",
    "w": 550
   },
   {
    "id": "inw-s-piwnica-006",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -592,11 +576,11 @@
      540
     ]
    ],
+   "type": "iwall",
    "w": 440
   },
   {
    "id": "inw-s-piwnica-007",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -608,11 +592,11 @@
      9380
     ]
    ],
+   "type": "iwall",
    "w": 570
   },
   {
    "id": "inw-s-piwnica-008",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -624,12 +608,12 @@
      23940
     ]
    ],
-   "w": 570,
-   "q": "ściana płn. 015: w DWG lico zewnętrzne skośne, wewnętrzne proste – grubość zmienna ok. 57–70 cm; przyjęto 57 cm na całej długości (wcześniej odcinek przy 001 był narysowany jedną kreską) – potwierdzić"
+   "q": "ściana płn. 015: w DWG lico zewnętrzne skośne, wewnętrzne proste – grubość zmienna ok. 57–70 cm; przyjęto 57 cm na całej długości (wcześniej odcinek przy 001 był narysowany jedną kreską) – potwierdzić",
+   "type": "iwall",
+   "w": 570
   },
   {
    "id": "inw-s-piwnica-009",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -641,11 +625,11 @@
      9120
     ]
    ],
+   "type": "iwall",
    "w": 530
   },
   {
    "id": "inw-s-piwnica-010",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -657,11 +641,11 @@
      17430
     ]
    ],
+   "type": "iwall",
    "w": 310
   },
   {
    "id": "inw-s-piwnica-011",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -673,11 +657,11 @@
      2760
     ]
    ],
+   "type": "iwall",
    "w": 550
   },
   {
    "id": "inw-s-piwnica-012",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -689,11 +673,11 @@
      9050
     ]
    ],
+   "type": "iwall",
    "w": 410
   },
   {
    "id": "inw-s-piwnica-013",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -705,11 +689,11 @@
      6690
     ]
    ],
+   "type": "iwall",
    "w": 650
   },
   {
    "id": "inw-s-piwnica-014",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -721,11 +705,11 @@
      1270
     ]
    ],
+   "type": "iwall",
    "w": 640
   },
   {
    "id": "inw-s-piwnica-015",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -737,11 +721,11 @@
      790
     ]
    ],
+   "type": "iwall",
    "w": 580
   },
   {
    "id": "inw-s-piwnica-016",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -753,15 +737,15 @@
      23710
     ]
    ],
-   "w": 180,
    "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
    "qFix": {
     "w": 570
-   }
+   },
+   "type": "iwall",
+   "w": 180
   },
   {
    "id": "inw-s-piwnica-017",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -773,11 +757,11 @@
      9120
     ]
    ],
+   "type": "iwall",
    "w": 530
   },
   {
    "id": "inw-s-piwnica-018",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -789,11 +773,11 @@
      670
     ]
    ],
+   "type": "iwall",
    "w": 420
   },
   {
    "id": "inw-s-piwnica-019",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -805,11 +789,11 @@
      5140
     ]
    ],
+   "type": "iwall",
    "w": 280
   },
   {
    "id": "inw-s-piwnica-020",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -821,15 +805,15 @@
      20530
     ]
    ],
-   "w": 180,
    "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
    "qFix": {
     "w": 570
-   }
+   },
+   "type": "iwall",
+   "w": 180
   },
   {
    "id": "inw-s-piwnica-021",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -841,11 +825,11 @@
      20
     ]
    ],
+   "type": "iwall",
    "w": 590
   },
   {
    "id": "inw-s-piwnica-022",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -857,11 +841,11 @@
      2820
     ]
    ],
+   "type": "iwall",
    "w": 530
   },
   {
    "id": "inw-s-piwnica-023",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -873,11 +857,11 @@
      17610
     ]
    ],
+   "type": "iwall",
    "w": 360
   },
   {
    "id": "inw-s-piwnica-024",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -889,11 +873,11 @@
      14760
     ]
    ],
+   "type": "iwall",
    "w": 300
   },
   {
    "id": "inw-s-piwnica-025",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -905,15 +889,15 @@
      4090
     ]
    ],
-   "w": 500,
    "q": "ta sama ściana ma obok grubość 56 cm, tu 50 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 56 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 560
-   }
+   },
+   "type": "iwall",
+   "w": 500
   },
   {
    "id": "inw-s-piwnica-026",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -925,15 +909,15 @@
      15130
     ]
    ],
-   "w": 410,
    "q": "ta sama ściana ma obok grubość 55 cm, tu 41 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 55 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 550
-   }
+   },
+   "type": "iwall",
+   "w": 410
   },
   {
    "id": "inw-s-piwnica-027",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -945,15 +929,15 @@
      6730
     ]
    ],
-   "w": 570,
    "q": "ta sama ściana ma obok grubość 65 cm, tu 57 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 65 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 650
-   }
+   },
+   "type": "iwall",
+   "w": 570
   },
   {
    "id": "inw-s-piwnica-028",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -965,15 +949,15 @@
      20620
     ]
    ],
-   "w": 570,
    "q": "ta sama ściana ma obok grubość 67 cm, tu 57 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 67 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 670
-   }
+   },
+   "type": "iwall",
+   "w": 570
   },
   {
    "id": "inw-s-piwnica-029",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -985,11 +969,11 @@
      2680
     ]
    ],
+   "type": "iwall",
    "w": 880
   },
   {
    "id": "inw-s-piwnica-030",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1001,11 +985,11 @@
      8860
     ]
    ],
+   "type": "iwall",
    "w": 540
   },
   {
    "id": "inw-s-piwnica-031",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1017,11 +1001,11 @@
      4810
     ]
    ],
+   "type": "iwall",
    "w": 420
   },
   {
    "id": "inw-s-piwnica-032",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1033,11 +1017,11 @@
      15070
     ]
    ],
+   "type": "iwall",
    "w": 290
   },
   {
    "id": "inw-s-piwnica-033",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1049,11 +1033,11 @@
      8830
     ]
    ],
+   "type": "iwall",
    "w": 670
   },
   {
    "id": "inw-s-piwnica-034",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1065,11 +1049,11 @@
      4890
     ]
    ],
+   "type": "iwall",
    "w": 160
   },
   {
    "id": "inw-s-piwnica-035",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1081,11 +1065,11 @@
      4350
     ]
    ],
+   "type": "iwall",
    "w": 520
   },
   {
    "id": "inw-s-piwnica-036",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1097,11 +1081,11 @@
      15020
     ]
    ],
+   "type": "iwall",
    "w": 520
   },
   {
    "id": "inw-s-piwnica-037",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1113,11 +1097,11 @@
      16950
     ]
    ],
+   "type": "iwall",
    "w": 380
   },
   {
    "id": "inw-s-piwnica-038",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1129,11 +1113,11 @@
      16090
     ]
    ],
+   "type": "iwall",
    "w": 950
   },
   {
    "id": "inw-s-piwnica-039",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1145,11 +1129,11 @@
      15430
     ]
    ],
+   "type": "iwall",
    "w": 380
   },
   {
    "id": "inw-s-piwnica-040",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1161,11 +1145,11 @@
      16760
     ]
    ],
+   "type": "iwall",
    "w": 380
   },
   {
    "id": "inw-s-piwnica-041",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1177,11 +1161,11 @@
      11960
     ]
    ],
+   "type": "iwall",
    "w": 530
   },
   {
    "id": "inw-s-piwnica-042",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1193,11 +1177,11 @@
      20160
     ]
    ],
+   "type": "iwall",
    "w": 930
   },
   {
    "id": "inw-s-piwnica-043",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1209,15 +1193,15 @@
      5810
     ]
    ],
-   "w": 430,
    "q": "ta sama ściana ma obok grubość 58 cm, tu 43 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 58 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 580
-   }
+   },
+   "type": "iwall",
+   "w": 430
   },
   {
    "id": "inw-s-piwnica-044",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1229,15 +1213,15 @@
      16100
     ]
    ],
-   "w": 780,
    "q": "ta sama ściana ma obok grubość 95 cm, tu 78 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 95 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 950
-   }
+   },
+   "type": "iwall",
+   "w": 780
   },
   {
    "id": "inw-s-piwnica-045",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1249,11 +1233,11 @@
      15250
     ]
    ],
+   "type": "iwall",
    "w": 920
   },
   {
    "id": "inw-s-piwnica-046",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1265,11 +1249,11 @@
      6470
     ]
    ],
+   "type": "iwall",
    "w": 560
   },
   {
    "id": "inw-s-piwnica-047",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1281,11 +1265,11 @@
      6470
     ]
    ],
+   "type": "iwall",
    "w": 940
   },
   {
    "id": "inw-s-piwnica-048",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1297,11 +1281,11 @@
      6470
     ]
    ],
+   "type": "iwall",
    "w": 870
   },
   {
    "id": "inw-s-piwnica-049",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1313,11 +1297,11 @@
      8990
     ]
    ],
+   "type": "iwall",
    "w": 790
   },
   {
    "id": "inw-s-piwnica-050",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1329,11 +1313,11 @@
      6860
     ]
    ],
+   "type": "iwall",
    "w": 840
   },
   {
    "id": "inw-s-piwnica-051",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1345,11 +1329,11 @@
      15150
     ]
    ],
+   "type": "iwall",
    "w": 800
   },
   {
    "id": "inw-s-piwnica-052",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1361,11 +1345,11 @@
      15360
     ]
    ],
+   "type": "iwall",
    "w": 610
   },
   {
    "id": "inw-s-piwnica-053",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1377,11 +1361,11 @@
      15550
     ]
    ],
+   "type": "iwall",
    "w": 800
   },
   {
    "id": "inw-s-piwnica-054",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1393,11 +1377,11 @@
      8930
     ]
    ],
+   "type": "iwall",
    "w": 690
   },
   {
    "id": "inw-s-piwnica-055",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1409,11 +1393,11 @@
      6590
     ]
    ],
+   "type": "iwall",
    "w": 850
   },
   {
    "id": "inw-s-piwnica-056",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1425,11 +1409,11 @@
      11960
     ]
    ],
+   "type": "iwall",
    "w": 670
   },
   {
    "id": "inw-s-piwnica-057",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1441,11 +1425,11 @@
      15060
     ]
    ],
+   "type": "iwall",
    "w": 550
   },
   {
    "id": "inw-s-piwnica-058",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1457,11 +1441,11 @@
      16570
     ]
    ],
+   "type": "iwall",
    "w": 550
   },
   {
    "id": "inw-s-piwnica-059",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1473,15 +1457,15 @@
      6740
     ]
    ],
-   "w": 540,
    "q": "ta sama ściana ma obok grubość 65 cm, tu 54 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 65 cm (potwierdzam = przyjmij).",
    "qFix": {
     "w": 650
-   }
+   },
+   "type": "iwall",
+   "w": 540
   },
   {
    "id": "inw-s-piwnica-060",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1493,11 +1477,11 @@
      15060
     ]
    ],
+   "type": "iwall",
    "w": 530
   },
   {
    "id": "inw-s-piwnica-061",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1509,11 +1493,11 @@
      6740
     ]
    ],
+   "type": "iwall",
    "w": 540
   },
   {
    "id": "inw-s-piwnica-062",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1525,12 +1509,12 @@
      15340
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-063",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -1542,10 +1526,8 @@
      9220
     ]
    ],
-   "w": 80,
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji parter w tym miejscu 70 cm. Proponuję 70 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
    "qFix": {
-    "w": 700,
     "pts": [
      [
       310,
@@ -1555,12 +1537,14 @@
       310,
       9220
      ]
-    ]
-   }
+    ],
+    "w": 700
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-064",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1572,12 +1556,12 @@
      2860
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-065",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1589,12 +1573,12 @@
      2860
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-066",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1606,12 +1590,12 @@
      15340
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-067",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1623,12 +1607,12 @@
      15320
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-068",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1640,12 +1624,12 @@
      10630
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-069",
-   "type": "iwall",
    "inv": "D",
    "pts": [
     [
@@ -1657,12 +1641,12 @@
      10590
     ]
    ],
-   "w": 80,
-   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość"
+   "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-o-piwnica-000",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1674,11 +1658,11 @@
      500
     ]
    ],
+   "type": "iwin",
    "w": 580
   },
   {
    "id": "inw-o-piwnica-001",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1690,11 +1674,11 @@
      16900
     ]
    ],
+   "type": "iwin",
    "w": 570
   },
   {
    "id": "inw-o-piwnica-002",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1706,11 +1690,11 @@
      19690
     ]
    ],
+   "type": "iwin",
    "w": 570
   },
   {
    "id": "inw-o-piwnica-003",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1722,11 +1706,11 @@
      6790
     ]
    ],
+   "type": "iwin",
    "w": 880
   },
   {
    "id": "inw-o-piwnica-004",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1738,11 +1722,11 @@
      4090
     ]
    ],
+   "type": "iwin",
    "w": 880
   },
   {
    "id": "inw-o-piwnica-005",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1754,11 +1738,11 @@
      12880
     ]
    ],
+   "type": "iwin",
    "w": 540
   },
   {
    "id": "inw-o-piwnica-006",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1770,11 +1754,11 @@
      10200
     ]
    ],
+   "type": "iwin",
    "w": 540
   },
   {
    "id": "inw-o-piwnica-007",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1786,11 +1770,11 @@
      12560
     ]
    ],
+   "type": "iwin",
    "w": 670
   },
   {
    "id": "inw-o-piwnica-008",
-   "type": "iwin",
    "inv": true,
    "pts": [
     [
@@ -1802,11 +1786,12 @@
      9960
     ]
    ],
+   "type": "iwin",
    "w": 670
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-000",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1818,13 +1803,13 @@
      5140
     ]
    ],
-   "w": 140,
-   "flip": false,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
+   "flip": true,
    "id": "inw-d-piwnica-001",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1836,30 +1821,30 @@
      8990
     ]
    ],
-   "w": 830,
-   "flip": true
+   "type": "idoor",
+   "w": 830
   },
   {
-   "id": "inw-d-piwnica-002",
-   "type": "idoor",
-   "inv": true,
-   "pts": [
-    [
-     22830,
-     7330
-    ],
-    [
-     23430,
-     7330
-    ]
-   ],
-   "w": 140,
    "flip": false,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "id": "inw-d-piwnica-002",
+   "inv": true,
+   "pts": [
+    [
+     22830,
+     7330
+    ],
+    [
+     23430,
+     7330
+    ]
+   ],
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-003",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1871,12 +1856,12 @@
      7910
     ]
    ],
-   "w": 980,
-   "flip": false
+   "type": "idoor",
+   "w": 980
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-004",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1888,12 +1873,12 @@
      6740
     ]
    ],
-   "w": 580,
-   "flip": false
+   "type": "idoor",
+   "w": 580
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-005",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1905,13 +1890,13 @@
      4660
     ]
    ],
-   "w": 140,
-   "flip": false,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-006",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1923,12 +1908,12 @@
      4890
     ]
    ],
-   "w": 200,
-   "flip": false
+   "type": "idoor",
+   "w": 200
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-007",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1940,12 +1925,12 @@
      6730
     ]
    ],
-   "w": 610,
-   "flip": false
+   "type": "idoor",
+   "w": 610
   },
   {
+   "flip": true,
    "id": "inw-d-piwnica-008",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1957,12 +1942,12 @@
      6730
     ]
    ],
-   "w": 610,
-   "flip": true
+   "type": "idoor",
+   "w": 610
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-009",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1974,12 +1959,12 @@
      10240
     ]
    ],
-   "w": 590,
-   "flip": false
+   "type": "idoor",
+   "w": 590
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-010",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -1991,12 +1976,12 @@
      12770
     ]
    ],
-   "w": 590,
-   "flip": false
+   "type": "idoor",
+   "w": 590
   },
   {
+   "flip": true,
    "id": "inw-d-piwnica-011",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2008,13 +1993,13 @@
      8850
     ]
    ],
-   "w": 140,
-   "flip": true,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-012",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2026,12 +2011,12 @@
      16200
     ]
    ],
-   "w": 590,
-   "flip": false
+   "type": "idoor",
+   "w": 590
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-013",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2043,13 +2028,13 @@
      15600
     ]
    ],
-   "w": 140,
-   "flip": false,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-014",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2061,12 +2046,12 @@
      6860
     ]
    ],
-   "w": 880,
-   "flip": false
+   "type": "idoor",
+   "w": 880
   },
   {
+   "flip": true,
    "id": "inw-d-piwnica-015",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2078,12 +2063,12 @@
      13980
     ]
    ],
-   "w": 650,
-   "flip": true
+   "type": "idoor",
+   "w": 650
   },
   {
+   "flip": false,
    "id": "inw-d-piwnica-016",
-   "type": "idoor",
    "inv": true,
    "pts": [
     [
@@ -2095,13 +2080,12 @@
      14790
     ]
    ],
-   "w": 140,
-   "flip": false,
-   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić"
+   "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
+   "type": "idoor",
+   "w": 140
   },
   {
    "id": "inw-s-piwnica-f01",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -2113,12 +2097,12 @@
      18590
     ]
    ],
-   "w": 520,
-   "q": "filar 52×160 cm w 015 (w DWG dwie równoległe kreski – wcześniej błędnie jako dwie ścianki 8 cm) – potwierdzić"
+   "q": "filar 52×160 cm w 015 (w DWG dwie równoległe kreski – wcześniej błędnie jako dwie ścianki 8 cm) – potwierdzić",
+   "type": "iwall",
+   "w": 520
   },
   {
    "id": "inw-s-piwnica-f02",
-   "type": "iwall",
    "inv": "N",
    "pts": [
     [
@@ -2130,8 +2114,9 @@
      22040
     ]
    ],
-   "w": 520,
-   "q": "filar 52×167 cm w 015 (w DWG dwie równoległe kreski – wcześniej błędnie jako dwie ścianki 8 cm) – potwierdzić"
+   "q": "filar 52×167 cm w 015 (w DWG dwie równoległe kreski – wcześniej błędnie jako dwie ścianki 8 cm) – potwierdzić",
+   "type": "iwall",
+   "w": 520
   }
  ]
 }
