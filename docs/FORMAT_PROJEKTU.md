@@ -68,3 +68,4 @@ Rzut dachu w układzie lokalnym parteru (`variants.align.dach` = align parteru);
 
 - `unkans` {pts:[[x,y]], bb, segs, ans:'N'|'D'|'X'|'', c, t} – odpowiedź użytkownika na „Q” (kreski podkładu bez odpowiednika w modelu).
 - `chimney.hideOn` [kondygnacje] – na tych kondygnacjach komina z innych kondygnacji nie pokazujemy (użytkownik: tu go nie ma).
+- `beam` {pts:[a,b], w, src:'gap'|'support', above?, q} – podciąg istniejący (przerwa w ścianie nośnej / podparcie ściany z kondygnacji wyżej); warstwa `podciagi`.

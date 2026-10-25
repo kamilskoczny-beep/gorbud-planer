@@ -2448,7 +2448,7 @@
      15350
     ],
     [
-     860,
+     820,
      15350
     ]
    ],
@@ -2462,11 +2462,11 @@
    "pts": [
     [
      7020,
-     15530
+     15180
     ],
     [
      7040,
-     960
+     940
     ]
    ],
    "type": "iwall",
@@ -2481,8 +2481,8 @@
      24130
     ],
     [
-     860,
-     23590
+     810,
+     23580
     ]
    ],
    "type": "iwall",
@@ -2573,11 +2573,11 @@
    "inv": "N",
    "pts": [
     [
-     7110,
+     7030,
      15650
     ],
     [
-     7110,
+     7030,
      18160
     ]
    ],
@@ -2589,11 +2589,11 @@
    "inv": "N",
    "pts": [
     [
-     500,
+     450,
      15180
     ],
     [
-     500,
+     450,
      23780
     ]
    ],
@@ -2605,7 +2605,7 @@
    "inv": "N",
    "pts": [
     [
-     22330,
+     22300,
      6980
     ],
     [
@@ -2637,11 +2637,11 @@
    "inv": "D",
    "pts": [
     [
-     22330,
+     22300,
      5560
     ],
     [
-     19460,
+     20360,
      5560
     ]
    ],
@@ -2654,11 +2654,11 @@
    "pts": [
     [
      8180,
-     710
+     690
     ],
     [
-     80,
-     310
+     160,
+     290
     ]
    ],
    "type": "iwall",
@@ -2669,8 +2669,8 @@
    "inv": "N",
    "pts": [
     [
-     22210,
-     1380
+     22640,
+     1400
     ],
     [
      10900,
@@ -2689,7 +2689,7 @@
      4290
     ],
     [
-     19020,
+     19460,
      4290
     ]
    ],
@@ -2717,11 +2717,11 @@
    "inv": "N",
    "pts": [
     [
-     400,
+     450,
      15520
     ],
     [
-     400,
+     450,
      9840
     ]
    ],
@@ -2742,19 +2742,20 @@
     ]
    ],
    "type": "iwall",
-   "w": 550
+   "w": 550,
+   "q": "koniec ściany (0.28; 3.62 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
   },
   {
    "id": "inw-s-pietro1-019",
    "inv": "N",
    "pts": [
     [
-     22410,
+     22440,
      3050
     ],
     [
-     22410,
-     1210
+     22440,
+     1680
     ]
    ],
    "type": "iwall",
@@ -2765,11 +2766,11 @@
    "inv": "N",
    "pts": [
     [
-     22380,
+     22440,
      4380
     ],
     [
-     22380,
+     22440,
      2870
     ]
    ],
@@ -2781,11 +2782,11 @@
    "inv": "N",
    "pts": [
     [
-     22470,
+     22440,
      9140
     ],
     [
-     22470,
+     22440,
      4200
     ]
    ],
@@ -2830,11 +2831,11 @@
    "pts": [
     [
      20160,
-     1260
+     1290
     ],
     [
      19030,
-     1200
+     1230
     ]
    ],
    "type": "iwall",
@@ -2845,11 +2846,11 @@
    "inv": "N",
    "pts": [
     [
-     15820,
+     15860,
      6770
     ],
     [
-     15820,
+     15860,
      5980
     ]
    ],
@@ -2909,11 +2910,11 @@
    "inv": "N",
    "pts": [
     [
-     340,
+     450,
      9840
     ],
     [
-     340,
+     450,
      9120
     ]
    ],
@@ -2926,11 +2927,11 @@
    "pts": [
     [
      6810,
-     9330
+     9350
     ],
     [
      6160,
-     9330
+     9350
     ]
    ],
    "type": "iwall",
@@ -2941,11 +2942,11 @@
    "inv": "N",
    "pts": [
     [
-     15880,
+     15860,
      6770
     ],
     [
-     15880,
+     15860,
      5350
     ]
    ],
@@ -2957,16 +2958,17 @@
    "inv": "N",
    "pts": [
     [
-     400,
+     450,
      3340
     ],
     [
-     400,
-     630
+     450,
+     610
     ]
    ],
    "type": "iwall",
-   "w": 550
+   "w": 550,
+   "q": "koniec ściany (0.45; 3.34 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
   },
   {
    "id": "inw-s-pietro1-033",
@@ -2974,11 +2976,11 @@
    "pts": [
     [
      22330,
-     9370
+     9350
     ],
     [
      23190,
-     9370
+     9350
     ]
    ],
    "type": "iwall",
@@ -2998,7 +3000,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 430
+   "w": 430,
+   "q": "koniec ściany (22.21; 0.99 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
   },
   {
    "id": "inw-s-pietro1-035",
@@ -3018,36 +3021,20 @@
    "w": 120
   },
   {
-   "id": "inw-s-pietro1-036",
-   "inv": "N",
-   "pts": [
-    [
-     19910,
-     7190
-    ],
-    [
-     19910,
-     6740
-    ]
-   ],
-   "type": "iwall",
-   "w": 800
-  },
-  {
    "id": "inw-s-pietro1-037",
    "inv": "N",
    "pts": [
     [
-     25180,
-     7210
+     22580,
+     6990
     ],
     [
-     25180,
-     6770
+     25120,
+     6990
     ]
    ],
    "type": "iwall",
-   "w": 710
+   "w": 440
   },
   {
    "id": "inw-s-pietro1-038",
@@ -3066,36 +3053,20 @@
    "w": 390
   },
   {
-   "id": "inw-s-pietro1-039",
-   "inv": "N",
-   "pts": [
-    [
-     25070,
-     2380
-    ],
-    [
-     25500,
-     2370
-    ]
-   ],
-   "type": "iwall",
-   "w": 550
-  },
-  {
    "id": "inw-s-pietro1-040",
    "inv": "N",
    "pts": [
     [
-     15480,
-     9230
+     15690,
+     7190
     ],
     [
-     15900,
-     9230
+     15690,
+     9140
     ]
    ],
    "type": "iwall",
-   "w": 670
+   "w": 420
   },
   {
    "id": "inw-s-pietro1-041",
@@ -3103,11 +3074,11 @@
    "pts": [
     [
      7360,
-     23920
+     23980
     ],
     [
      6490,
-     23870
+     23930
     ]
    ],
    "type": "iwall",
@@ -3118,27 +3089,27 @@
    "inv": "N",
    "pts": [
     [
-     9370,
-     15200
+     9280,
+     15360
     ],
     [
-     9370,
-     15530
+     9060,
+     15360
     ]
    ],
    "type": "iwall",
-   "w": 620
+   "w": 330
   },
   {
    "id": "inw-s-pietro1-043",
    "inv": "N",
    "pts": [
     [
-     22480,
+     22440,
      7510
     ],
     [
-     22480,
+     22440,
      6770
     ]
    ],
@@ -3155,7 +3126,7 @@
     ],
     [
      120,
-     0
+     590
     ]
    ],
    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji poddasze w tym miejscu 45 cm. Proponuję 45 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
@@ -3519,11 +3490,11 @@
    "inv": true,
    "pts": [
     [
-     7110,
+     7030,
      18230
     ],
     [
-     7110,
+     7030,
      19130
     ]
    ],
@@ -3545,7 +3516,8 @@
     ]
    ],
    "type": "idoor",
-   "w": 140
+   "w": 140,
+   "q": "drzwi nie stoją w żadnej ścianie – gdzie mają być? (popraw albo usuń)"
   },
   {
    "flip": false,
@@ -3589,11 +3561,11 @@
    "inv": true,
    "pts": [
     [
-     22470,
+     22440,
      8760
     ],
     [
-     22470,
+     22440,
      7960
     ]
    ],
@@ -3666,7 +3638,8 @@
     ]
    ],
    "type": "idoor",
-   "w": 460
+   "w": 460,
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
   },
   {
    "flip": false,
@@ -3700,7 +3673,8 @@
     ]
    ],
    "type": "idoor",
-   "w": 460
+   "w": 460,
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ? / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
   },
   {
    "flip": true,
@@ -3760,11 +3734,11 @@
    "inv": true,
    "pts": [
     [
-     20360,
+     20430,
      4620
     ],
     [
-     20360,
+     20430,
      5420
     ]
    ],
@@ -6388,6 +6362,219 @@
    "q": "okno uzupełnione z podkładu, szer. 99 cm – witryna / przeszklenie w ściance działowej – potwierdzić",
    "type": "iwin",
    "w": 120
+  },
+  {
+   "id": "bm-pietro1-g00",
+   "type": "beam",
+   "src": "gap",
+   "w": 420,
+   "pts": [
+    [
+     7250,
+     9350
+    ],
+    [
+     7540,
+     9350
+    ]
+   ],
+   "q": "przerwa 29 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-pietro1-g01",
+   "type": "beam",
+   "src": "gap",
+   "w": 420,
+   "pts": [
+    [
+     8340,
+     9350
+    ],
+    [
+     9280,
+     9350
+    ]
+   ],
+   "q": "przerwa 94 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-pietro1-g02",
+   "type": "beam",
+   "src": "gap",
+   "w": 680,
+   "pts": [
+    [
+     450,
+     3340
+    ],
+    [
+     450,
+     3620
+    ]
+   ],
+   "q": "przerwa 28 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-pietro1-s00",
+   "type": "beam",
+   "src": "support",
+   "w": 280,
+   "above": "inw-s-poddasze-007",
+   "pts": [
+    [
+     760,
+     4220
+    ],
+    [
+     6900,
+     4220
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (28 cm), a tu nie ma pod nią ściany na długości 614 cm), a tu nie ma pod nią ściany na długości 614 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s01",
+   "type": "beam",
+   "src": "support",
+   "w": 360,
+   "above": "inw-s-poddasze-019",
+   "pts": [
+    [
+     4190,
+     8440
+    ],
+    [
+     440,
+     8440
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (36 cm), a tu nie ma pod nią ściany na długości 375 cm), a tu nie ma pod nią ściany na długości 375 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s02",
+   "type": "beam",
+   "src": "support",
+   "w": 490,
+   "above": "inw-s-poddasze-020",
+   "pts": [
+    [
+     8910,
+     15480
+    ],
+    [
+     7470,
+     15480
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (49 cm), a tu nie ma pod nią ściany na długości 144 cm), a tu nie ma pod nią ściany na długości 144 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s03",
+   "type": "beam",
+   "src": "support",
+   "w": 440,
+   "above": "inw-s-poddasze-021",
+   "pts": [
+    [
+     8910,
+     15010
+    ],
+    [
+     7470,
+     15010
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (44 cm), a tu nie ma pod nią ściany na długości 144 cm), a tu nie ma pod nią ściany na długości 144 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s05",
+   "type": "beam",
+   "src": "support",
+   "w": 720,
+   "above": "inw-s-poddasze-041",
+   "pts": [
+    [
+     19450,
+     4890
+    ],
+    [
+     22340,
+     4890
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (72 cm), a tu nie ma pod nią ściany na długości 289 cm), a tu nie ma pod nią ściany na długości 289 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s06",
+   "type": "beam",
+   "src": "support",
+   "w": 760,
+   "above": "inw-s-poddasze-045",
+   "pts": [
+    [
+     20980,
+     4530
+    ],
+    [
+     20980,
+     2940
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (76 cm), a tu nie ma pod nią ściany na długości 159 cm), a tu nie ma pod nią ściany na długości 159 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s07",
+   "type": "beam",
+   "src": "support",
+   "w": 350,
+   "above": "inw-s-poddasze-055",
+   "pts": [
+    [
+     4370,
+     9330
+    ],
+    [
+     4370,
+     8260
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (35 cm), a tu nie ma pod nią ściany na długości 107 cm), a tu nie ma pod nią ściany na długości 107 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s08",
+   "type": "beam",
+   "src": "support",
+   "w": 830,
+   "above": "inw-s-poddasze-056",
+   "pts": [
+    [
+     21920,
+     4390
+    ],
+    [
+     21920,
+     2940
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (83 cm), a tu nie ma pod nią ściany na długości 145 cm), a tu nie ma pod nią ściany na długości 145 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-pietro1-s09",
+   "type": "beam",
+   "src": "support",
+   "w": 730,
+   "above": "inw-s-poddasze-064",
+   "pts": [
+    [
+     6020,
+     9670
+    ],
+    [
+     4370,
+     9700
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (73 cm), a tu nie ma pod nią ściany na długości 165 cm), a tu nie ma pod nią ściany na długości 165 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   }
  ]
 }

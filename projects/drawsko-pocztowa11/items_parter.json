@@ -82,8 +82,8 @@
      6510
     ],
     [
-     12560,
-     580
+     12570,
+     1110
     ]
    ],
    "type": "iwall",
@@ -127,11 +127,11 @@
    "pts": [
     [
      18460,
-     24410
+     24460
     ],
     [
      11940,
-     24060
+     24110
     ]
    ],
    "type": "iwall",
@@ -158,11 +158,11 @@
    "inv": "N",
    "pts": [
     [
-     15780,
+     15740,
      5120
     ],
     [
-     15780,
+     15740,
      1230
     ]
    ],
@@ -174,12 +174,12 @@
    "inv": "N",
    "pts": [
     [
-     80,
-     23590
+     160,
+     23540
     ],
     [
      6330,
-     23800
+     23750
     ]
    ],
    "type": "iwall",
@@ -207,11 +207,11 @@
    "pts": [
     [
      9280,
-     12540
+     12740
     ],
     [
      9280,
-     24140
+     23430
     ]
    ],
    "type": "iwall",
@@ -222,12 +222,12 @@
    "inv": "N",
    "pts": [
     [
-     6920,
+     6880,
      6540
     ],
     [
-     6900,
-     870
+     6860,
+     840
     ]
    ],
    "type": "iwall",
@@ -271,11 +271,11 @@
    "pts": [
     [
      11850,
-     20800
+     21120
     ],
     [
      11850,
-     24260
+     23890
     ]
    ],
    "type": "iwall",
@@ -302,11 +302,11 @@
    "inv": "N",
    "pts": [
     [
-     25250,
+     25230,
      8830
     ],
     [
-     25250,
+     25230,
      1180
     ]
    ],
@@ -323,7 +323,7 @@
     ],
     [
      22380,
-     1050
+     1490
     ]
    ],
    "type": "iwall",
@@ -335,7 +335,7 @@
    "pts": [
     [
      11920,
-     9390
+     9370
     ],
     [
      11920,
@@ -351,7 +351,7 @@
    "pts": [
     [
      13400,
-     9390
+     9370
     ],
     [
      13400,
@@ -366,12 +366,12 @@
    "inv": "N",
    "pts": [
     [
-     6860,
+     6900,
      11000
     ],
     [
-     6860,
-     15350
+     6900,
+     15130
     ]
    ],
    "type": "iwall",
@@ -398,7 +398,7 @@
    "inv": "N",
    "pts": [
     [
-     25460,
+     25580,
      5770
     ],
     [
@@ -608,7 +608,7 @@
    "pts": [
     [
      400,
-     8940
+     9480
     ],
     [
      400,
@@ -624,7 +624,7 @@
    "pts": [
     [
      27750,
-     1110
+     1290
     ],
     [
      27750,
@@ -655,7 +655,7 @@
    "inv": "N",
    "pts": [
     [
-     23080,
+     22120,
      2860
     ],
     [
@@ -671,11 +671,11 @@
    "inv": "N",
    "pts": [
     [
-     6850,
-     9430
+     6890,
+     9540
     ],
     [
-     6850,
+     6890,
      10800
     ]
    ],
@@ -688,11 +688,11 @@
    "pts": [
     [
      11850,
-     9160
+     9140
     ],
     [
      13460,
-     9160
+     9140
     ]
    ],
    "type": "iwall",
@@ -736,7 +736,7 @@
    "inv": "N",
    "pts": [
     [
-     12670,
+     12680,
      840
     ],
     [
@@ -768,11 +768,11 @@
    "inv": "N",
    "pts": [
     [
-     22290,
+     22370,
      3960
     ],
     [
-     22290,
+     22370,
      2730
     ]
    ],
@@ -785,11 +785,11 @@
    "pts": [
     [
      12450,
-     830
+     810
     ],
     [
      11440,
-     780
+     760
     ]
    ],
    "type": "iwall",
@@ -804,7 +804,7 @@
      10900
     ],
     [
-     7100,
+     7140,
      10900
     ]
    ],
@@ -816,7 +816,7 @@
    "inv": "D",
    "pts": [
     [
-     9500,
+     9060,
      12640
     ],
     [
@@ -849,11 +849,11 @@
    "inv": "N",
    "pts": [
     [
-     470,
+     400,
      14870
     ],
     [
-     470,
+     400,
      15700
     ]
    ],
@@ -881,11 +881,11 @@
    "inv": "N",
    "pts": [
     [
-     15650,
+     15740,
      6510
     ],
     [
-     15650,
+     15740,
      5760
     ]
    ],
@@ -898,11 +898,11 @@
    "pts": [
     [
      6330,
-     23740
+     23820
     ],
     [
      7090,
-     23760
+     23840
     ]
    ],
    "type": "iwall",
@@ -913,11 +913,11 @@
    "inv": "N",
    "pts": [
     [
-     19120,
+     19020,
      5780
     ],
     [
-     19120,
+     19020,
      6510
     ]
    ],
@@ -962,11 +962,11 @@
    "pts": [
     [
      7080,
-     9180
+     9140
     ],
     [
      5450,
-     9180
+     9140
     ]
    ],
    "type": "iwall",
@@ -993,11 +993,11 @@
    "inv": "N",
    "pts": [
     [
-     15710,
+     15740,
      6510
     ],
     [
-     15710,
+     15740,
      5120
     ]
    ],
@@ -1010,11 +1010,11 @@
    "pts": [
     [
      25040,
-     1320
+     1400
     ],
     [
      27100,
-     1320
+     1400
     ]
    ],
    "type": "iwall",
@@ -1073,16 +1073,16 @@
    "inv": "N",
    "pts": [
     [
-     15020,
-     9070
+     15040,
+     6970
     ],
     [
-     15150,
-     9070
+     15040,
+     8940
     ]
    ],
    "type": "iwall",
-   "w": 550
+   "w": 130
   },
   {
    "id": "inw-s-parter-063",
@@ -1090,11 +1090,11 @@
    "pts": [
     [
      7080,
-     9030
+     9140
     ],
     [
      6150,
-     9030
+     9140
     ]
    ],
    "type": "iwall",
@@ -1110,7 +1110,7 @@
     ],
     [
      4600,
-     23510
+     23460
     ]
    ],
    "type": "iwall",
@@ -1121,32 +1121,32 @@
    "inv": "N",
    "pts": [
     [
-     260,
-     8940
+     680,
+     9140
     ],
     [
-     260,
-     9610
+     540,
+     9140
     ]
    ],
    "type": "iwall",
-   "w": 850
+   "w": 670
   },
   {
    "id": "inw-s-parter-066",
    "inv": "N",
    "pts": [
     [
-     17270,
-     9400
+     17500,
+     9340
     ],
     [
-     17730,
-     9400
+     17500,
+     9860
     ]
    ],
    "type": "iwall",
-   "w": 920
+   "w": 460
   },
   {
    "id": "inw-s-parter-067",
@@ -1157,7 +1157,7 @@
      20930
     ],
     [
-     9280,
+     9060,
      20930
     ]
    ],
@@ -1185,16 +1185,16 @@
    "inv": "N",
    "pts": [
     [
-     15490,
-     8900
+     15740,
+     8450
     ],
     [
-     15930,
-     8900
+     15740,
+     8940
     ]
    ],
    "type": "iwall",
-   "w": 900
+   "w": 440
   },
   {
    "id": "inw-s-parter-070",
@@ -1213,47 +1213,31 @@
    "w": 100
   },
   {
-   "id": "inw-s-parter-071",
-   "inv": "N",
-   "pts": [
-    [
-     13040,
-     14980
-    ],
-    [
-     13040,
-     15420
-    ]
-   ],
-   "type": "iwall",
-   "w": 900
-  },
-  {
    "id": "inw-s-parter-072",
    "inv": "N",
    "pts": [
     [
-     12220,
-     14980
+     12590,
+     15200
     ],
     [
-     12220,
-     15420
+     11990,
+     15200
     ]
    ],
    "type": "iwall",
-   "w": 740
+   "w": 440
   },
   {
    "id": "inw-s-parter-073",
    "inv": "N",
    "pts": [
     [
-     25110,
+     25230,
      6960
     ],
     [
-     25110,
+     25230,
      5630
     ]
    ],
@@ -1261,44 +1245,12 @@
    "w": 690
   },
   {
-   "id": "inw-s-parter-074",
-   "inv": "N",
-   "pts": [
-    [
-     27100,
-     2860
-    ],
-    [
-     27540,
-     2860
-    ]
-   ],
-   "type": "iwall",
-   "w": 880
-  },
-  {
-   "id": "inw-s-parter-075",
-   "inv": "N",
-   "pts": [
-    [
-     27540,
-     5060
-    ],
-    [
-     27970,
-     5060
-    ]
-   ],
-   "type": "iwall",
-   "w": 630
-  },
-  {
    "id": "inw-s-parter-076",
    "inv": "N",
    "pts": [
     [
      390,
-     2780
+     3100
     ],
     [
      390,
@@ -1309,32 +1261,16 @@
    "w": 550
   },
   {
-   "id": "inw-s-parter-077",
-   "inv": "N",
-   "pts": [
-    [
-     27550,
-     6260
-    ],
-    [
-     27970,
-     6260
-    ]
-   ],
-   "type": "iwall",
-   "w": 690
-  },
-  {
    "id": "inw-s-parter-078",
    "inv": "N",
    "pts": [
     [
      27550,
-     6780
+     6740
     ],
     [
      27970,
-     6780
+     6740
     ]
    ],
    "type": "iwall",
@@ -1345,96 +1281,64 @@
    "inv": "N",
    "pts": [
     [
-     27550,
-     5640
+     27760,
+     5380
     ],
     [
-     27970,
-     5640
+     27760,
+     5900
     ]
    ],
    "type": "iwall",
-   "w": 530
-  },
-  {
-   "id": "inw-s-parter-080",
-   "inv": "N",
-   "pts": [
-    [
-     27550,
-     7290
-    ],
-    [
-     27970,
-     7290
-    ]
-   ],
-   "type": "iwall",
-   "w": 640
+   "w": 420
   },
   {
    "id": "inw-s-parter-081",
    "inv": "N",
    "pts": [
     [
-     27660,
-     8920
+     27970,
+     9130
     ],
     [
-     27660,
-     9340
+     27350,
+     9130
     ]
    ],
    "type": "iwall",
-   "w": 620
-  },
-  {
-   "id": "inw-s-parter-082",
-   "inv": "N",
-   "pts": [
-    [
-     27030,
-     8830
-    ],
-    [
-     27030,
-     9340
-    ]
-   ],
-   "type": "iwall",
-   "w": 640
+   "w": 420
   },
   {
    "id": "inw-s-parter-083",
    "inv": "N",
    "pts": [
     [
-     26520,
-     8830
+     26700,
+     8880
     ],
     [
-     26520,
-     8940
+     26340,
+     8880
     ]
    ],
    "type": "iwall",
-   "w": 370
+   "w": 110
   },
   {
    "id": "inw-s-parter-084",
    "inv": "N",
    "pts": [
     [
-     26020,
-     8830
+     26340,
+     8880
     ],
     [
-     26020,
-     8940
+     25700,
+     8880
     ]
    ],
    "type": "iwall",
-   "w": 640
+   "w": 110
   },
   {
    "id": "inw-s-parter-085",
@@ -1442,7 +1346,7 @@
    "pts": [
     [
      27530,
-     1110
+     1280
     ],
     [
      27530,
@@ -1458,11 +1362,11 @@
    "pts": [
     [
      20640,
-     2900
+     2870
     ],
     [
      20230,
-     2900
+     2870
     ]
    ],
    "type": "iwall",
@@ -1474,11 +1378,11 @@
    "pts": [
     [
      25040,
-     9080
+     9140
     ],
     [
      26700,
-     9080
+     9140
     ]
    ],
    "type": "iwall",
@@ -1521,27 +1425,27 @@
    "inv": "N",
    "pts": [
     [
-     11440,
-     6760
+     11270,
+     6970
     ],
     [
-     11100,
-     6760
+     11270,
+     6550
     ]
    ],
    "type": "iwall",
-   "w": 420
+   "w": 340
   },
   {
    "id": "inw-s-parter-091",
    "inv": "N",
    "pts": [
     [
-     15720,
+     15740,
      8940
     ],
     [
-     15720,
+     15740,
      8460
     ]
    ],
@@ -1554,11 +1458,11 @@
    "pts": [
     [
      7460,
-     600
+     580
     ],
     [
      6680,
-     580
+     560
     ]
    ],
    "type": "iwall",
@@ -1585,80 +1489,80 @@
    "inv": "N",
    "pts": [
     [
-     530,
-     3100
+     120,
+     2920
     ],
     [
-     540,
-     2770
+     950,
+     2950
     ]
    ],
    "type": "iwall",
-   "w": 830
+   "w": 330
   },
   {
    "id": "inw-s-parter-095",
    "inv": "N",
    "pts": [
     [
-     15150,
-     6750
+     15040,
+     6960
     ],
     [
-     14830,
-     6750
+     15040,
+     6540
     ]
    ],
    "type": "iwall",
-   "w": 430
+   "w": 320
   },
   {
    "id": "inw-s-parter-096",
    "inv": "N",
    "pts": [
     [
-     12200,
-     21120
+     11760,
+     20960
     ],
     [
-     12200,
-     20800
+     12640,
+     20960
     ]
    ],
    "type": "iwall",
-   "w": 890
+   "w": 320
   },
   {
    "id": "inw-s-parter-097",
    "inv": "N",
    "pts": [
     [
-     13000,
-     930
+     12820,
+     1290
     ],
     [
-     12670,
-     920
+     12860,
+     580
     ]
    ],
    "type": "iwall",
-   "w": 740
+   "w": 330
   },
   {
    "id": "inw-s-parter-098",
    "inv": "N",
    "pts": [
     [
-     9080,
-     23430
+     9500,
+     23780
     ],
     [
-     9080,
-     24130
+     8660,
+     23780
     ]
    ],
    "type": "iwall",
-   "w": 850
+   "w": 700
   },
   {
    "id": "inw-s-parter-099",
@@ -1728,11 +1632,11 @@
    "inv": "N",
    "pts": [
     [
-     120,
+     180,
      980
     ],
     [
-     120,
+     180,
      540
     ]
    ],
@@ -2486,11 +2390,11 @@
    "pts": [
     [
      12140,
-     11920
+     11980
     ],
     [
      12940,
-     11920
+     11980
     ]
    ],
    "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
@@ -2521,11 +2425,11 @@
    "inv": true,
    "pts": [
     [
-     6900,
+     6860,
      1240
     ],
     [
-     6900,
+     6860,
      2040
     ]
    ],
@@ -2556,11 +2460,11 @@
    "pts": [
     [
      25050,
-     9080
+     9140
     ],
     [
      24150,
-     9080
+     9140
     ]
    ],
    "type": "idoor",
@@ -2623,11 +2527,11 @@
    "inv": true,
    "pts": [
     [
-     6920,
+     6880,
      5350
     ],
     [
-     6910,
+     6870,
      4550
     ]
    ],
@@ -2755,7 +2659,8 @@
     ]
    ],
    "type": "idoor",
-   "w": 470
+   "w": 470,
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: zewnątrz / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
   },
   {
    "flip": true,
@@ -2772,7 +2677,8 @@
     ]
    ],
    "type": "idoor",
-   "w": 490
+   "w": 490,
+   "q": "po obu stronach drzwi to samo pomieszczenie (zewnątrz) – drzwi do nikąd? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
   },
   {
    "flip": false,
@@ -4935,6 +4841,181 @@
     ]
    ],
    "type": "chimney"
+  },
+  {
+   "id": "bm-parter-g00",
+   "type": "beam",
+   "src": "gap",
+   "w": 450,
+   "pts": [
+    [
+     6880,
+     7400
+    ],
+    [
+     6890,
+     8740
+    ]
+   ],
+   "q": "przerwa 135 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-g01",
+   "type": "beam",
+   "src": "gap",
+   "w": 460,
+   "pts": [
+    [
+     22540,
+     6740
+    ],
+    [
+     24880,
+     6740
+    ]
+   ],
+   "q": "przerwa 234 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-g02",
+   "type": "beam",
+   "src": "gap",
+   "w": 460,
+   "pts": [
+    [
+     25580,
+     6740
+    ],
+    [
+     27550,
+     6740
+    ]
+   ],
+   "q": "przerwa 198 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-g03",
+   "type": "beam",
+   "src": "gap",
+   "w": 560,
+   "pts": [
+    [
+     400,
+     3100
+    ],
+    [
+     400,
+     3540
+    ]
+   ],
+   "q": "przerwa 44 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-g04",
+   "type": "beam",
+   "src": "gap",
+   "w": 700,
+   "pts": [
+    [
+     190,
+     3090
+    ],
+    [
+     190,
+     3540
+    ]
+   ],
+   "q": "przerwa 45 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-s00",
+   "type": "beam",
+   "src": "support",
+   "w": 330,
+   "above": "inw-s-pietro1-000",
+   "pts": [
+    [
+     7140,
+     15130
+    ],
+    [
+     640,
+     15130
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (33 cm), a tu nie ma pod nią ściany na długości 650 cm), a tu nie ma pod nią ściany na długości 650 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-parter-s01",
+   "type": "beam",
+   "src": "support",
+   "w": 420,
+   "above": "inw-s-pietro1-006",
+   "pts": [
+    [
+     9100,
+     9130
+    ],
+    [
+     11700,
+     9130
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 260 cm), a tu nie ma pod nią ściany na długości 260 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-parter-s02",
+   "type": "beam",
+   "src": "support",
+   "w": 420,
+   "above": "inw-s-pietro1-008",
+   "pts": [
+    [
+     6850,
+     15430
+    ],
+    [
+     6850,
+     17940
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 251 cm), a tu nie ma pod nią ściany na długości 251 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-parter-s03",
+   "type": "beam",
+   "src": "support",
+   "w": 420,
+   "above": "inw-s-pietro1-011",
+   "pts": [
+    [
+     9310,
+     8920
+    ],
+    [
+     9310,
+     12590
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 367 cm), a tu nie ma pod nią ściany na długości 367 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+  },
+  {
+   "id": "bm-parter-s04",
+   "type": "beam",
+   "src": "support",
+   "w": 900,
+   "above": "inw-s-pietro1-026",
+   "pts": [
+    [
+     19730,
+     6550
+    ],
+    [
+     19730,
+     5420
+    ]
+   ],
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (90 cm), a tu nie ma pod nią ściany na długości 113 cm), a tu nie ma pod nią ściany na długości 113 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   }
  ]
 }
