@@ -541,7 +541,7 @@
     ],
     [
      13620,
-     14690
+     15090
     ]
    ],
    "type": "iwall",
@@ -608,7 +608,11 @@
      23940
     ]
    ],
-   "q": "ściana płn. 015: w DWG lico zewnętrzne skośne, wewnętrzne proste – grubość zmienna ok. 57–70 cm; przyjęto 57 cm na całej długości (wcześniej odcinek przy 001 był narysowany jedną kreską) – potwierdzić",
+   "qOk": {
+    "c": "",
+    "q": "ściana płn. 015: w DWG lico zewnętrzne skośne, wewnętrzne proste – grubość zmienna ok. 57–70 cm; przyjęto 57 cm na całej długości (wcześniej odcinek przy 001 był narysowany jedną kreską) – potwierdzić",
+    "t": "2026-10-25"
+   },
    "type": "iwall",
    "w": 570
   },
@@ -737,12 +741,13 @@
      23140
     ]
    ],
-   "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
-   "qFix": {
-    "w": 570
+   "qOk": {
+    "c": "",
+    "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
+    "t": "2026-10-25"
    },
    "type": "iwall",
-   "w": 180
+   "w": 570
   },
   {
    "id": "inw-s-piwnica-017",
@@ -805,12 +810,13 @@
      20530
     ]
    ],
-   "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
-   "qFix": {
-    "w": 570
+   "qOk": {
+    "c": "",
+    "q": "w DWG tylko 18 cm – to granica piwnicy z niepodpiwniczoną częścią budynku (narożnik płn.-zach. pod skrzydłem zach.); ściana fundamentowa 18 cm jest mało prawdopodobna. Proponuję 57 cm jak sąsiednie ściany zewnętrzne piwnicy (potwierdzam = przyjmij) albo wpisz grubość z pomiaru.",
+    "t": "2026-10-25"
    },
    "type": "iwall",
-   "w": 180
+   "w": 570
   },
   {
    "id": "inw-s-piwnica-021",
@@ -850,7 +856,7 @@
    "pts": [
     [
      16000,
-     15550
+     15090
     ],
     [
      16000,
@@ -901,7 +907,7 @@
    "inv": "N",
    "pts": [
     [
-     9110,
+     9190,
      15090
     ],
     [
@@ -1073,7 +1079,7 @@
    "inv": "N",
    "pts": [
     [
-     14890,
+     16180,
      15090
     ],
     [
@@ -1201,26 +1207,6 @@
    "w": 430
   },
   {
-   "id": "inw-s-piwnica-044",
-   "inv": "N",
-   "pts": [
-    [
-     16180,
-     16100
-    ],
-    [
-     18710,
-     16100
-    ]
-   ],
-   "q": "ta sama ściana ma obok grubość 95 cm, tu 78 cm – błąd rysunku czy faktyczne przewężenie (np. wnęka)? Proponuję 95 cm (potwierdzam = przyjmij).",
-   "qFix": {
-    "w": 950
-   },
-   "type": "iwall",
-   "w": 780
-  },
-  {
    "id": "inw-s-piwnica-045",
    "inv": "N",
    "pts": [
@@ -1317,22 +1303,6 @@
    "w": 530
   },
   {
-   "id": "inw-s-piwnica-051",
-   "inv": "N",
-   "pts": [
-    [
-     13540,
-     15090
-    ],
-    [
-     15690,
-     15090
-    ]
-   ],
-   "type": "iwall",
-   "w": 800
-  },
-  {
    "id": "inw-s-piwnica-052",
    "inv": "N",
    "pts": [
@@ -1342,27 +1312,11 @@
     ],
     [
      16000,
-     15360
+     15350
     ]
    ],
    "type": "iwall",
    "w": 610
-  },
-  {
-   "id": "inw-s-piwnica-053",
-   "inv": "N",
-   "pts": [
-    [
-     15290,
-     14780
-    ],
-    [
-     15290,
-     15550
-    ]
-   ],
-   "type": "iwall",
-   "w": 800
   },
   {
    "id": "inw-s-piwnica-054",
@@ -1393,9 +1347,9 @@
      6420
     ]
    ],
+   "q": "koniec ściany (10.03; 6.16 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?",
    "type": "iwall",
-   "w": 420,
-   "q": "koniec ściany (10.03; 6.16 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
+   "w": 420
   },
   {
    "id": "inw-s-piwnica-056",
@@ -1412,22 +1366,6 @@
    ],
    "type": "iwall",
    "w": 600
-  },
-  {
-   "id": "inw-s-piwnica-057",
-   "inv": "N",
-   "pts": [
-    [
-     9190,
-     15090
-    ],
-    [
-     12350,
-     15090
-    ]
-   ],
-   "type": "iwall",
-   "w": 550
   },
   {
    "id": "inw-s-piwnica-058",
@@ -1507,7 +1445,7 @@
     ],
     [
      9150,
-     14820
+     15300
     ]
    ],
    "q": "ściana narysowana jedną linią – przyjęto 80 mm, potwierdzić grubość",
@@ -1591,12 +1529,12 @@
      14820
     ]
    ],
-   "type": "iwall",
-   "w": 80,
    "q": "wg Twojego komentarza to ściana nośna między starą i nową częścią budynku – w podkładzie jest jedną kreską; jaka grubość? Proponuję 45 cm jak ściana nad nią na parterze.",
    "qFix": {
     "w": 450
-   }
+   },
+   "type": "iwall",
+   "w": 80
   },
   {
    "id": "inw-s-piwnica-067",
@@ -2019,9 +1957,9 @@
      16200
     ]
    ],
+   "q": "drzwi nie stoją w żadnej ścianie – gdzie mają być? (popraw albo usuń)",
    "type": "idoor",
-   "w": 590,
-   "q": "drzwi nie stoją w żadnej ścianie – gdzie mają być? (popraw albo usuń)"
+   "w": 590
   },
   {
    "flip": false,
@@ -2125,7 +2063,8 @@
      6710
     ]
    ],
-   "q": "przerwa 92 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 92 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
    "id": "bm-piwnica-g01",
@@ -2142,7 +2081,8 @@
      6710
     ]
    ],
-   "q": "przerwa 184 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 183 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
    "id": "bm-piwnica-g02",
@@ -2159,7 +2099,8 @@
      5810
     ]
    ],
-   "q": "przerwa 120 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 120 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
    "id": "bm-piwnica-s03",
@@ -2170,14 +2111,14 @@
    "pts": [
     [
      9440,
-     12660
+     14970
     ],
     [
      9440,
      16050
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (45 cm), a tu nie ma pod nią ściany na długości 339 cm), a tu nie ma pod nią ściany na długości 339 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (45 cm), a tu nie ma pod nią ściany na długości 108 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-piwnica-s04",
@@ -2195,7 +2136,7 @@
      760
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (44 cm), a tu nie ma pod nią ściany na długości 185 cm), a tu nie ma pod nią ściany na długości 185 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (44 cm), a tu nie ma pod nią ściany na długości 185 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-piwnica-s05",
@@ -2213,7 +2154,7 @@
      1410
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 134 cm), a tu nie ma pod nią ściany na długości 165 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 134 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-piwnica-s10",
@@ -2231,7 +2172,7 @@
      16420
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (45 cm), a tu nie ma pod nią ściany na długości 138 cm), a tu nie ma pod nią ściany na długości 152 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (45 cm), a tu nie ma pod nią ściany na długości 138 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-piwnica-s13",
@@ -2241,7 +2182,7 @@
    "above": "inw-s-parter-036",
    "pts": [
     [
-     22320,
+     22280,
      2780
     ],
     [
@@ -2249,7 +2190,7 @@
      2780
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (26 cm), a tu nie ma pod nią ściany na długości 152 cm), a tu nie ma pod nią ściany na długości 152 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (26 cm), a tu nie ma pod nią ściany na długości 148 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-piwnica-s17",
@@ -2260,32 +2201,14 @@
    "pts": [
     [
      4760,
-     20740
+     20820
     ],
     [
      4760,
      23380
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (24 cm), a tu nie ma pod nią ściany na długości 264 cm), a tu nie ma pod nią ściany na długości 264 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
-  },
-  {
-   "id": "bm-piwnica-s21",
-   "type": "beam",
-   "src": "support",
-   "w": 460,
-   "above": "inw-s-parter-089",
-   "pts": [
-    [
-     9450,
-     14900
-    ],
-    [
-     9450,
-     15700
-    ]
-   ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (46 cm), a tu nie ma pod nią ściany na długości 80 cm), a tu nie ma pod nią ściany na długości 80 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (24 cm), a tu nie ma pod nią ściany na długości 256 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   }
  ]
 }

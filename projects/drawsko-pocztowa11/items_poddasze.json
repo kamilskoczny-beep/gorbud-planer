@@ -3486,7 +3486,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 720
+   "w": 720,
+   "q": "blok 72 cm×289 cm – to raczej trzon komina niż ściana; na kondygnacji niżej nie ma pod nim ani ściany, ani komina. Komin czy ściana? Jak schodzi niżej?"
   },
   {
    "id": "inw-s-poddasze-042",
@@ -3550,7 +3551,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 760
+   "w": 760,
+   "q": "blok 76 cm×159 cm – to raczej trzon komina niż ściana; na kondygnacji niżej nie ma pod nim ani ściany, ani komina. Komin czy ściana? Jak schodzi niżej?"
   },
   {
    "id": "inw-s-poddasze-046",
@@ -3726,7 +3728,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 830
+   "w": 830,
+   "q": "blok 83 cm×145 cm – to raczej trzon komina niż ściana; na kondygnacji niżej nie ma pod nim ani ściany, ani komina. Komin czy ściana? Jak schodzi niżej?"
   },
   {
    "id": "inw-s-poddasze-057",
@@ -3790,7 +3793,8 @@
     ]
    ],
    "type": "iwall",
-   "w": 730
+   "w": 730,
+   "q": "blok 73 cm×284 cm – to raczej trzon komina niż ściana; na kondygnacji niżej nie ma pod nim ani ściany, ani komina. Komin czy ściana? Jak schodzi niżej?"
   },
   {
    "id": "inw-s-poddasze-065",
@@ -4078,9 +4082,9 @@
      5950
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 270,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 270
   },
   {
    "flip": false,
@@ -4096,9 +4100,9 @@
      4230
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 180,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 180
   },
   {
    "flip": true,
@@ -4114,9 +4118,9 @@
      4320
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 300,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 300
   },
   {
    "flip": true,
@@ -4319,9 +4323,9 @@
      9040
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 210,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 210
   },
   {
    "flip": true,
@@ -9152,7 +9156,8 @@
      6800
     ]
    ],
-   "q": "przerwa 180 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 180 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   }
  ]
 }

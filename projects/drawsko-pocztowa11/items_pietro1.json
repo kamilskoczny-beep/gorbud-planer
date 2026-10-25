@@ -2444,7 +2444,7 @@
    "inv": "N",
    "pts": [
     [
-     7320,
+     9030,
      15350
     ],
     [
@@ -2562,7 +2562,7 @@
     ],
     [
      19110,
-     6770
+     5950
     ]
    ],
    "type": "iwall",
@@ -2741,9 +2741,9 @@
      3620
     ]
    ],
+   "q": "koniec ściany (0.28; 3.62 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?",
    "type": "iwall",
-   "w": 550,
-   "q": "koniec ściany (0.28; 3.62 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
+   "w": 550
   },
   {
    "id": "inw-s-pietro1-019",
@@ -2799,7 +2799,7 @@
    "pts": [
     [
      20430,
-     5640
+     2980
     ],
     [
      20430,
@@ -2856,38 +2856,6 @@
    ],
    "type": "iwall",
    "w": 490
-  },
-  {
-   "id": "inw-s-pietro1-026",
-   "inv": "N",
-   "pts": [
-    [
-     19910,
-     6770
-    ],
-    [
-     19910,
-     5640
-    ]
-   ],
-   "type": "iwall",
-   "w": 900
-  },
-  {
-   "id": "inw-s-pietro1-027",
-   "inv": "N",
-   "pts": [
-    [
-     19240,
-     4200
-    ],
-    [
-     19240,
-     6770
-    ]
-   ],
-   "type": "iwall",
-   "w": 430
   },
   {
    "id": "inw-s-pietro1-028",
@@ -2947,7 +2915,7 @@
     ],
     [
      15860,
-     5350
+     6780
     ]
    ],
    "type": "iwall",
@@ -2959,16 +2927,16 @@
    "pts": [
     [
      450,
-     3340
+     3630
     ],
     [
      450,
      610
     ]
    ],
+   "q": "koniec ściany (0.45; 3.34 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?",
    "type": "iwall",
-   "w": 550,
-   "q": "koniec ściany (0.45; 3.34 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
+   "w": 550
   },
   {
    "id": "inw-s-pietro1-033",
@@ -2999,9 +2967,9 @@
      1070
     ]
    ],
+   "q": "koniec ściany (22.21; 0.99 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?",
    "type": "iwall",
-   "w": 430,
-   "q": "koniec ściany (22.21; 0.99 m) nie styka się z żadną ścianą ani otworem – z czym się łączy?"
+   "w": 430
   },
   {
    "id": "inw-s-pietro1-035",
@@ -3343,12 +3311,12 @@
    "inv": true,
    "pts": [
     [
-     15110,
-     1030
+     -4840,
+     9000
     ],
     [
-     13750,
-     960
+     -6200,
+     8930
     ]
    ],
    "type": "iwin",
@@ -3515,9 +3483,9 @@
      14630
     ]
    ],
+   "q": "drzwi nie stoją w żadnej ścianie – gdzie mają być? (popraw albo usuń)",
    "type": "idoor",
-   "w": 140,
-   "q": "drzwi nie stoją w żadnej ścianie – gdzie mają być? (popraw albo usuń)"
+   "w": 140
   },
   {
    "flip": false,
@@ -3637,9 +3605,9 @@
      6980
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 460,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ściana / ? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 460
   },
   {
    "flip": false,
@@ -3672,9 +3640,9 @@
      6980
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ? / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 460,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: ? / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 460
   },
   {
    "flip": true,
@@ -6364,9 +6332,9 @@
    "w": 120
   },
   {
-   "id": "bm-pietro1-g00",
-   "type": "beam",
-   "src": "gap",
+   "id": "inw-s-pietro1-z03",
+   "type": "iwall",
+   "inv": "N",
    "w": 420,
    "pts": [
     [
@@ -6378,7 +6346,7 @@
      9350
     ]
    ],
-   "q": "przerwa 29 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "przerwa 29 cm w ścianie nośnej bez drzwi – to wnęka/bruzda albo błąd pomiaru; ściana nośna jest ciągła, więc ją domknąłem. Potwierdź albo napisz, co tu jest."
   },
   {
    "id": "bm-pietro1-g01",
@@ -6395,24 +6363,8 @@
      9350
     ]
    ],
-   "q": "przerwa 94 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
-  },
-  {
-   "id": "bm-pietro1-g02",
-   "type": "beam",
-   "src": "gap",
-   "w": 680,
-   "pts": [
-    [
-     450,
-     3340
-    ],
-    [
-     450,
-     3620
-    ]
-   ],
-   "q": "przerwa 28 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 94 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
    "id": "bm-pietro1-s00",
@@ -6430,7 +6382,7 @@
      4220
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (28 cm), a tu nie ma pod nią ściany na długości 614 cm), a tu nie ma pod nią ściany na długości 614 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (28 cm), a tu nie ma pod nią ściany na długości 614 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-pietro1-s01",
@@ -6448,7 +6400,7 @@
      8440
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (36 cm), a tu nie ma pod nią ściany na długości 375 cm), a tu nie ma pod nią ściany na długości 375 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (36 cm), a tu nie ma pod nią ściany na długości 375 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-pietro1-s02",
@@ -6466,7 +6418,7 @@
      15480
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (49 cm), a tu nie ma pod nią ściany na długości 144 cm), a tu nie ma pod nią ściany na długości 144 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem na kondygnacji wyżej stoi komin (komin (217) – do dachu) z obudową 49 cm, a tu nie ma pod nim ściany ani komina – komin stoi na stropie, więc musi być podparty (belki stalowe / wymian, podciąg). Potwierdź albo napisz, jak jest."
   },
   {
    "id": "bm-pietro1-s03",
@@ -6484,43 +6436,7 @@
      15010
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (44 cm), a tu nie ma pod nią ściany na długości 144 cm), a tu nie ma pod nią ściany na długości 144 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
-  },
-  {
-   "id": "bm-pietro1-s05",
-   "type": "beam",
-   "src": "support",
-   "w": 720,
-   "above": "inw-s-poddasze-041",
-   "pts": [
-    [
-     19450,
-     4890
-    ],
-    [
-     22340,
-     4890
-    ]
-   ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (72 cm), a tu nie ma pod nią ściany na długości 289 cm), a tu nie ma pod nią ściany na długości 289 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
-  },
-  {
-   "id": "bm-pietro1-s06",
-   "type": "beam",
-   "src": "support",
-   "w": 760,
-   "above": "inw-s-poddasze-045",
-   "pts": [
-    [
-     20980,
-     4530
-    ],
-    [
-     20980,
-     2940
-    ]
-   ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (76 cm), a tu nie ma pod nią ściany na długości 159 cm), a tu nie ma pod nią ściany na długości 159 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem na kondygnacji wyżej stoi komin (komin (217) – do dachu) z obudową 44 cm, a tu nie ma pod nim ściany ani komina – komin stoi na stropie, więc musi być podparty (belki stalowe / wymian, podciąg). Potwierdź albo napisz, jak jest."
   },
   {
    "id": "bm-pietro1-s07",
@@ -6538,43 +6454,7 @@
      8260
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (35 cm), a tu nie ma pod nią ściany na długości 107 cm), a tu nie ma pod nią ściany na długości 107 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
-  },
-  {
-   "id": "bm-pietro1-s08",
-   "type": "beam",
-   "src": "support",
-   "w": 830,
-   "above": "inw-s-poddasze-056",
-   "pts": [
-    [
-     21920,
-     4390
-    ],
-    [
-     21920,
-     2940
-    ]
-   ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (83 cm), a tu nie ma pod nią ściany na długości 145 cm), a tu nie ma pod nią ściany na długości 145 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
-  },
-  {
-   "id": "bm-pietro1-s09",
-   "type": "beam",
-   "src": "support",
-   "w": 730,
-   "above": "inw-s-poddasze-064",
-   "pts": [
-    [
-     6020,
-     9670
-    ],
-    [
-     4370,
-     9700
-    ]
-   ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (73 cm), a tu nie ma pod nią ściany na długości 165 cm), a tu nie ma pod nią ściany na długości 165 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (35 cm), a tu nie ma pod nią ściany na długości 107 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   }
  ]
 }

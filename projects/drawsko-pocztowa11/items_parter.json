@@ -159,7 +159,7 @@
    "pts": [
     [
      15740,
-     5120
+     5740
     ],
     [
      15740,
@@ -243,7 +243,7 @@
     ],
     [
      19010,
-     6510
+     5770
     ]
    ],
    "type": "iwall",
@@ -271,7 +271,7 @@
    "pts": [
     [
      11850,
-     21120
+     20280
     ],
     [
      11850,
@@ -323,7 +323,7 @@
     ],
     [
      22380,
-     1490
+     960
     ]
    ],
    "type": "iwall",
@@ -719,7 +719,7 @@
    "inv": "D",
    "pts": [
     [
-     10700,
+     11940,
      20340
     ],
     [
@@ -877,22 +877,6 @@
    "w": 140
   },
   {
-   "id": "inw-s-parter-050",
-   "inv": "N",
-   "pts": [
-    [
-     15740,
-     6510
-    ],
-    [
-     15740,
-     5760
-    ]
-   ],
-   "type": "iwall",
-   "w": 540
-  },
-  {
    "id": "inw-s-parter-051",
    "inv": "N",
    "pts": [
@@ -907,22 +891,6 @@
    ],
    "type": "iwall",
    "w": 640
-  },
-  {
-   "id": "inw-s-parter-052",
-   "inv": "N",
-   "pts": [
-    [
-     19020,
-     5780
-    ],
-    [
-     19020,
-     6510
-    ]
-   ],
-   "type": "iwall",
-   "w": 480
   },
   {
    "id": "inw-s-parter-053",
@@ -946,7 +914,7 @@
    "pts": [
     [
      7010,
-     20820
+     21040
     ],
     [
      7010,
@@ -987,22 +955,6 @@
    ],
    "type": "iwall",
    "w": 400
-  },
-  {
-   "id": "inw-s-parter-057",
-   "inv": "N",
-   "pts": [
-    [
-     15740,
-     6510
-    ],
-    [
-     15740,
-     5120
-    ]
-   ],
-   "type": "iwall",
-   "w": 410
   },
   {
    "id": "inw-s-parter-058",
@@ -1069,22 +1021,6 @@
    "w": 550
   },
   {
-   "id": "inw-s-parter-062",
-   "inv": "N",
-   "pts": [
-    [
-     15040,
-     6970
-    ],
-    [
-     15040,
-     8940
-    ]
-   ],
-   "type": "iwall",
-   "w": 130
-  },
-  {
    "id": "inw-s-parter-063",
    "inv": "N",
    "pts": [
@@ -1106,7 +1042,7 @@
    "pts": [
     [
      4600,
-     20820
+     20900
     ],
     [
      4600,
@@ -1153,32 +1089,16 @@
    "inv": "D",
    "pts": [
     [
-     4720,
+     7090,
      20930
     ],
     [
-     9060,
+     4560,
      20930
     ]
    ],
    "type": "iwall",
    "w": 220
-  },
-  {
-   "id": "inw-s-parter-068",
-   "inv": "N",
-   "pts": [
-    [
-     22610,
-     2990
-    ],
-    [
-     22700,
-     1070
-    ]
-   ],
-   "type": "iwall",
-   "w": 920
   },
   {
    "id": "inw-s-parter-069",
@@ -1414,7 +1334,7 @@
     ],
     [
      9290,
-     15780
+     17230
     ]
    ],
    "type": "iwall",
@@ -1565,50 +1485,25 @@
    "w": 700
   },
   {
-   "id": "inw-s-parter-099",
-   "inv": "N",
-   "pts": [
-    [
-     15540,
-     6970
-    ],
-    [
-     15540,
-     8450
-    ]
-   ],
-   "type": "iwall",
-   "w": 780
-  },
-  {
    "id": "inw-s-parter-103",
    "inv": "N",
    "pts": [
     [
-     120,
-     20820
+     440,
+     23000
     ],
     [
-     120,
-     23820
+     440,
+     23830
     ]
    ],
-   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 73 cm. Proponuję 73 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "qFix": {
-    "pts": [
-     [
-      440,
-      23000
-     ],
-     [
-      440,
-      23830
-     ]
-    ],
-    "w": 730
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji I piętro w tym miejscu 73 cm. Proponuję 73 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
+    "t": "2026-10-25"
    },
    "type": "iwall",
-   "w": 80
+   "w": 730
   },
   {
    "id": "inw-s-parter-104",
@@ -1623,7 +1518,11 @@
      24590
     ]
    ],
-   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; jaka jest jej grubość? (wpisz w komentarzu)",
+    "t": "2026-10-25"
+   },
    "type": "iwall",
    "w": 80
   },
@@ -1632,60 +1531,42 @@
    "inv": "N",
    "pts": [
     [
-     180,
+     380,
      980
     ],
     [
-     180,
-     540
+     380,
+     0
     ]
    ],
-   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 59 cm. Proponuję 59 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "qFix": {
-    "pts": [
-     [
-      380,
-      980
-     ],
-     [
-      380,
-      0
-     ]
-    ],
-    "w": 590
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 59 cm. Proponuję 59 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
+    "t": "2026-10-25"
    },
    "type": "iwall",
-   "w": 80
+   "w": 590
   },
   {
    "id": "inw-s-parter-107",
    "inv": "N",
    "pts": [
     [
-     11450,
-     490
+     11440,
+     740
     ],
     [
-     13550,
-     590
+     13540,
+     840
     ]
    ],
-   "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 58 cm. Proponuję 58 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
-   "qFix": {
-    "pts": [
-     [
-      11440,
-      740
-     ],
-     [
-      13540,
-      840
-     ]
-    ],
-    "w": 580
+   "qOk": {
+    "c": "",
+    "q": "ściana zewnętrzna narysowana w podkładzie jedną linią – ściana na obrysie budynku jest nośna; na kondygnacji piwnica w tym miejscu 58 cm. Proponuję 58 cm (potwierdzam = przyjmij propozycję; lico zewnętrzne zostaje na linii z podkładu, ściana pogrubia się do środka).",
+    "t": "2026-10-25"
    },
    "type": "iwall",
-   "w": 80
+   "w": 580
   },
   {
    "id": "inw-s-parter-108",
@@ -2235,12 +2116,12 @@
    "inv": true,
    "pts": [
     [
-     9280,
-     16680
+     9610,
+     16600
     ],
     [
-     9280,
-     15780
+     9610,
+     15700
     ]
    ],
    "type": "idoor",
@@ -2269,12 +2150,12 @@
    "inv": true,
    "pts": [
     [
-     11600,
-     20280
+     10840,
+     18730
     ],
     [
-     11600,
-     19390
+     10840,
+     17840
     ]
    ],
    "q": "drzwi bez rozpoznanych lic ściany (ściana jednoliniowa?) – przyjęto 100 mm, potwierdzić",
@@ -2658,9 +2539,9 @@
      2460
     ]
    ],
+   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: zewnątrz / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 470,
-   "q": "drzwi prowadzą w ścianę (po jednej stronie mur) – strony: zewnątrz / ściana – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 470
   },
   {
    "flip": true,
@@ -2676,9 +2557,9 @@
      12240
     ]
    ],
+   "q": "po obu stronach drzwi to samo pomieszczenie (zewnątrz) – drzwi do nikąd? – popraw położenie albo usuń; potwierdź, jeśli tak ma być.",
    "type": "idoor",
-   "w": 490,
-   "q": "po obu stronach drzwi to samo pomieszczenie (zewnątrz) – drzwi do nikąd? – popraw położenie albo usuń; potwierdź, jeśli tak ma być."
+   "w": 490
   },
   {
    "flip": false,
@@ -3296,73 +3177,73 @@
    "lines": [
     [
      [
-      22880,
-      11240
+      18070,
+      15670
      ],
      [
-      25110,
-      11240
+      20300,
+      15670
      ]
     ],
     [
      [
-      22880,
-      10880
+      18070,
+      15310
      ],
      [
-      25110,
-      10880
+      20300,
+      15310
      ]
     ],
     [
      [
-      22880,
-      10520
+      18070,
+      14950
      ],
      [
-      25110,
-      10520
+      20300,
+      14950
      ]
     ],
     [
      [
-      22880,
-      10160
+      18070,
+      14590
      ],
      [
-      25110,
-      10160
+      20300,
+      14590
      ]
     ],
     [
      [
-      22880,
-      9800
+      18070,
+      14230
      ],
      [
-      25110,
-      9800
+      20300,
+      14230
      ]
     ],
     [
      [
-      25110,
-      11240
+      20300,
+      15670
      ],
      [
-      25110,
-      9340
+      20300,
+      13770
      ]
     ]
    ],
    "pts": [
     [
-     22880,
-     9340
+     18070,
+     13770
     ],
     [
-     25110,
-     11240
+     20300,
+     15670
     ]
    ],
    "type": "istair"
@@ -4812,17 +4693,18 @@
    "id": "inw-o2-parter-06",
    "pts": [
     [
-     8030,
+     8020,
      19050
     ],
     [
-     7430,
+     7420,
      19580
     ]
    ],
-   "q": "okno uzupełnione z podkładu, szer. 80 cm – potwierdzić",
-   "type": "iwin",
-   "w": 160
+   "q": "wg Twojej odpowiedzi „to nie okno” – zamieniłem na ścianę (skośny odcinek ściany działowej); potwierdź albo popraw grubość",
+   "type": "iwall",
+   "w": 160,
+   "inv": "D"
   },
   {
    "id": "inw-k-parter-zew",
@@ -4843,7 +4725,41 @@
    "type": "chimney"
   },
   {
-   "id": "bm-parter-g00",
+   "id": "inw-s-parter-z01",
+   "type": "iwall",
+   "inv": "N",
+   "w": 590,
+   "pts": [
+    [
+     400,
+     3100
+    ],
+    [
+     400,
+     3540
+    ]
+   ],
+   "q": "przerwa 44 cm w ścianie nośnej bez drzwi – to wnęka/bruzda albo błąd pomiaru; ściana nośna jest ciągła, więc ją domknąłem. Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "inw-s-parter-z02",
+   "type": "iwall",
+   "inv": "N",
+   "w": 590,
+   "pts": [
+    [
+     400,
+     21040
+    ],
+    [
+     400,
+     21390
+    ]
+   ],
+   "q": "przerwa 35 cm w ścianie nośnej bez drzwi – to wnęka/bruzda albo błąd pomiaru; ściana nośna jest ciągła, więc ją domknąłem. Potwierdź albo napisz, co tu jest."
+  },
+  {
+   "id": "bm-parter-g01",
    "type": "beam",
    "src": "gap",
    "w": 450,
@@ -4857,10 +4773,11 @@
      8740
     ]
    ],
-   "q": "przerwa 135 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 134 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
-   "id": "bm-parter-g01",
+   "id": "bm-parter-g02",
    "type": "beam",
    "src": "gap",
    "w": 460,
@@ -4877,7 +4794,7 @@
    "q": "przerwa 234 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
   },
   {
-   "id": "bm-parter-g02",
+   "id": "bm-parter-g03",
    "type": "beam",
    "src": "gap",
    "w": 460,
@@ -4891,41 +4808,26 @@
      6740
     ]
    ],
-   "q": "przerwa 198 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 197 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
-   "id": "bm-parter-g03",
+   "id": "bm-parter-g06",
    "type": "beam",
    "src": "gap",
-   "w": 560,
+   "w": 590,
    "pts": [
     [
      400,
-     3100
+     22290
     ],
     [
      400,
-     3540
+     23000
     ]
    ],
-   "q": "przerwa 44 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
-  },
-  {
-   "id": "bm-parter-g04",
-   "type": "beam",
-   "src": "gap",
-   "w": 700,
-   "pts": [
-    [
-     190,
-     3090
-    ],
-    [
-     190,
-     3540
-    ]
-   ],
-   "q": "przerwa 45 cm w linii ściany nośnej (bez drzwi/okna) – strop musi być tu podparty: podciąg (wg mnie istniejący). Potwierdź albo napisz, co tu jest."
+   "q": "otwór 71 cm w ścianie nośnej bez drzwi (przejście) – nad nim musi być nadproże. Potwierdź albo napisz, co tu jest (np. drzwi, ściana).",
+   "kind": "nadproze"
   },
   {
    "id": "bm-parter-s00",
@@ -4943,7 +4845,7 @@
      15130
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (33 cm), a tu nie ma pod nią ściany na długości 650 cm), a tu nie ma pod nią ściany na długości 650 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (33 cm), a tu nie ma pod nią ściany na długości 650 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-parter-s01",
@@ -4961,7 +4863,7 @@
      9130
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 260 cm), a tu nie ma pod nią ściany na długości 260 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 260 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-parter-s02",
@@ -4979,7 +4881,7 @@
      17940
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 251 cm), a tu nie ma pod nią ściany na długości 251 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 251 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
    "id": "bm-parter-s03",
@@ -4997,25 +4899,82 @@
      12590
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 367 cm), a tu nie ma pod nią ściany na długości 367 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (42 cm), a tu nie ma pod nią ściany na długości 367 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
   },
   {
-   "id": "bm-parter-s04",
-   "type": "beam",
-   "src": "support",
-   "w": 900,
-   "above": "inw-s-pietro1-026",
+   "id": "910yruo",
+   "label": "komin",
    "pts": [
     [
-     19730,
-     6550
+     18660,
+     6350
     ],
     [
-     19730,
-     5420
+     19200,
+     6630
     ]
    ],
-   "q": "nad tym miejscem stoi ściana nośna kondygnacji wyżej (90 cm), a tu nie ma pod nią ściany na długości 113 cm), a tu nie ma pod nią ściany na długości 113 cm – musi być podciąg (albo ściana, której brak w inwentaryzacji). Potwierdź albo napisz, co jest."
+   "type": "chimney"
+  },
+  {
+   "id": "6q1j4u2",
+   "label": "komin",
+   "pts": [
+    [
+     19070,
+     6340
+    ],
+    [
+     19610,
+     6620
+    ]
+   ],
+   "type": "chimney"
+  },
+  {
+   "id": "l5ioo44",
+   "label": "komin",
+   "pts": [
+    [
+     18560,
+     5650
+    ],
+    [
+     19100,
+     5930
+    ]
+   ],
+   "type": "chimney"
+  },
+  {
+   "id": "bcf32ji",
+   "label": "komin",
+   "pts": [
+    [
+     19040,
+     6460
+    ],
+    [
+     19580,
+     6740
+    ]
+   ],
+   "type": "chimney"
+  },
+  {
+   "id": "f7tc9m8",
+   "label": "komin",
+   "pts": [
+    [
+     18870,
+     5790
+    ],
+    [
+     19410,
+     6070
+    ]
+   ],
+   "type": "chimney"
   }
  ]
 }
