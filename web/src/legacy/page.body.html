@@ -32,17 +32,28 @@
       <p class="hint">Podrys pokazuje ściany, schody, przybory, pomieszczenia i meble sanitarne wybranej kondygnacji (fiolet) – do prowadzenia pionów. Kondygnacje dopasowane po ścianach; strzałki poprawiają dopasowanie dla tej pary. Piony (narzędzie „Pion”) widać na wszystkich kondygnacjach.</p>
     </section>
     <section>
-      <h2>Arkusz rysunku (ta kondygnacja)</h2>
-      <div class="row">
-        <label for="shFmt" class="hint">Format</label><select id="shFmt"><option value="">auto</option><option>A3</option><option>A2</option><option>A1</option><option>A0</option></select>
-        <label for="shScale" class="hint">Skala</label><select id="shScale"><option value="">auto</option><option value="50">1:50</option><option value="100">1:100</option><option value="200">1:200</option></select>
-        <label for="shLegS" class="hint">Skala legendy</label><select id="shLegS"><option value="">jak rysunek</option><option value="50">1:50</option><option value="100">1:100</option><option value="200">1:200</option></select>
+      <h2>Pytania do inwentaryzacji <span id="qCount" class="hint"></span></h2>
+      <div id="qList" style="max-height:220px;overflow:auto;font-size:12px"></div>
+      <p class="hint">Q1, Q2… – kreski podkładu DWG, których model nie odwzorowuje (różowe na rzucie). Pozostałe – elementy modelu z „?”. Kliknij wiersz, żeby przejść do miejsca; element potwierdzasz w jego edycji.</p>
+    </section>
+    <section>
+      <h2>Arkusze (ta kondygnacja)</h2>
+      <div class="row"><b class="hint" style="width:62px">Rysunek</b>
+        <select id="shFmt" title="Format arkusza rysunku"><option>A4</option><option>A3</option><option>A2</option><option>A1</option><option>A0</option></select>
+        <select id="shOri" title="Orientacja"><option value="L">poziomo</option><option value="P">pionowo</option></select>
+        <span class="hint">1:</span><input id="shScale" type="number" min="1" max="5000" step="1" list="scaleList" title="Skala rysunku – wybierz lub wpisz" style="width:66px">
       </div>
+      <div class="row" style="margin-top:4px"><b class="hint" style="width:62px">Legenda</b>
+        <select id="lgFmt" title="Format arkusza legendy"><option>A4</option><option>A3</option><option>A2</option><option>A1</option><option>A0</option></select>
+        <select id="lgOri" title="Orientacja"><option value="P">pionowo</option><option value="L">poziomo</option></select>
+        <span class="hint">1:</span><input id="lgScale" type="number" min="1" max="5000" step="1" list="scaleList" title="Skala legendy – wybierz lub wpisz" style="width:66px">
+      </div>
+      <datalist id="scaleList"><option value="20"><option value="25"><option value="50"><option value="75"><option value="100"><option value="150"><option value="200"><option value="250"><option value="500"></datalist>
       <div class="row" style="margin-top:4px">
-        <button id="shMove" class="btn" aria-pressed="false" title="Włącz, a potem przeciągnij rzut myszą po arkuszu">⤧ Przesuń rysunek na arkuszu</button>
-        <button id="shReset" class="hint" title="Wyzeruj przesunięcia rysunku, legendy i uwag na arkuszu">zeruj położenie</button>
+        <button id="shMove" class="btn" aria-pressed="false" title="Włącz, a potem przeciągnij rzut myszą – arkusz stoi, rzut się przesuwa">⤧ Przesuń rysunek w arkuszu</button>
+        <button id="shReset" class="hint" title="Wyzeruj położenie rysunku, arkusza legendy i uwag">zeruj położenie</button>
       </div>
-      <p class="hint">Na arkuszu przeciągasz: uchwyt „⤧ rysunek” (lewy górny róg ramki) – przesuwa rzut względem arkusza; ramkę legendy; ramkę „UWAGI”. Położenie zapamiętuje się dla kondygnacji.</p>
+      <p class="hint">Rysunek i legenda to osobne arkusze – każdy z własnym formatem, orientacją i skalą (skalę można wpisać ręcznie). Arkusz legendy przeciągasz za dowolne miejsce, ramkę „UWAGI” też; rzut w arkuszu rysunku – trybem „Przesuń rysunek”.</p>
     </section>
     <section>
       <h2>Narzędzia projektowe</h2>

@@ -224,6 +224,46 @@ def extract_openings(walls, winsegs, arcs, log):
         doors.append(dict(wall=wi, hinge=c, u=ue, r=r, flip=side < 0))
     return windows, doors
 
+
+def cluster_lines(geo, layers, maxlen=4000, tol=250):
+    """Grupuje polilinie z warstw (schody, wyposażenie) w obiekty: nakładające się prostokąty otaczające (+tol)."""
+    polys = []
+    for lay in layers:
+        for s in geo.get(lay, []):
+            if s.get('k') == 'l':
+                p = [[R10(q[0]), R10(q[1])] for q in s['p']]
+                L = sum(math.hypot(p[i][0]-p[i-1][0], p[i][1]-p[i-1][1]) for i in range(1, len(p)))
+                if 0 < L <= maxlen * 3 and max(math.hypot(p[i][0]-p[i-1][0], p[i][1]-p[i-1][1]) for i in range(1, len(p))) <= maxlen:
+                    polys.append(p)
+            elif s.get('k') == 'a':
+                c, r, a0, a1 = s['c'], s['r'], s['a0'], s['a1']
+                if a1 < a0: a1 += 2 * math.pi
+                n = max(4, int((a1 - a0) / 0.2))
+                polys.append([[R10(c[0] + r * math.cos(a0 + (a1 - a0) * k / n)), R10(c[1] + r * math.sin(a0 + (a1 - a0) * k / n))] for k in range(n + 1)])
+            elif s.get('k') == 'c':
+                c, r = s['c'], s['r']
+                polys.append([[R10(c[0] + r * math.cos(2 * math.pi * k / 16)), R10(c[1] + r * math.sin(2 * math.pi * k / 16))] for k in range(17)])
+    bb = [[min(q[0] for q in p), min(q[1] for q in p), max(q[0] for q in p), max(q[1] for q in p)] for p in polys]
+    parent = list(range(len(polys)))
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]; i = parent[i]
+        return i
+    for i in range(len(polys)):
+        for j in range(i + 1, len(polys)):
+            a, b = bb[i], bb[j]
+            if a[0] - tol <= b[2] and b[0] - tol <= a[2] and a[1] - tol <= b[3] and b[1] - tol <= a[3]:
+                parent[find(i)] = find(j)
+    groups = defaultdict(list)
+    for i in range(len(polys)):
+        groups[find(i)].append(i)
+    out = []
+    for g in groups.values():
+        lines = [polys[i] for i in g]
+        xs = [q[0] for l in lines for q in l]; ys = [q[1] for l in lines for q in l]
+        out.append({'lines': lines, 'pts': [[min(xs), min(ys)], [max(xs), max(ys)]]})
+    return out
+
 def build_floor(name, F, log):
     geo = F['geo']
     wsegs = segs_of(geo, 'walls')
@@ -268,6 +308,15 @@ def build_floor(name, F, log):
         sgn = 1 if (d['u'][0] * u[0] + d['u'][1] * u[1]) > 0 else -1
         b = (a[0] + u[0] * sgn * d['r'], a[1] + u[1] * sgn * d['r'])
         items.append({'id': f'inw-d-{name}-{i:03d}', 'type': 'door', 'inv': True, 'pts': [[R10(a[0]), R10(a[1])], [R10(b[0]), R10(b[1])]], 'w': R10(w.t) + 40, 'flip': bool(d['flip'])})
+    for i, c in enumerate(cluster_lines(geo, ['stairs'], 6000, 300)):
+        it = {'id': f'inw-st-{name}-{i:03d}', 'type': 'istair', 'pts': c['pts'], 'lines': c['lines']}
+        if len(c['lines']) <= 2: it['q'] = 'pojedyncza linia z warstwy „schody” – próg / stopień w drzwiach? potwierdzić'
+        items.append(it)
+    for i, c in enumerate(cluster_lines(geo, ['fixtures', 'beams'], 3000, 60)):
+        it = {'id': f'inw-fx-{name}-{i:03d}', 'type': 'ifix', 'pts': c['pts'], 'lines': c['lines']}
+        w_ = c['pts'][1][0] - c['pts'][0][0]; h_ = c['pts'][1][1] - c['pts'][0][1]
+        it['q'] = f'element wyposażenia z inwentaryzacji ({R10(w_)/10:.0f}×{R10(h_)/10:.0f} cm) – co to jest? (zostawić / usunąć / opisać)'
+        items.append(it)
     thick = defaultdict(float)
     for w in walls:
         thick[R10(w.t)] += math.hypot(w.b[0] - w.a[0], w.b[1] - w.a[1])
