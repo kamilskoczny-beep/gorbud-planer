@@ -22,8 +22,9 @@
   },
   "variants": {
     "units": { "M1": {"name":"M1 — 108 jako 1 mieszkanie","color":"#e0a04a"} },
-    "floors": { "pietro1": [ {"id":"P9","name":"…","desc":"…","assign":{"108":"M1"},"hide":["108"],"rename":{"203":"pom. sprzątaczki"}} ] },
+    "floors": { "pietro1": [ {"id":"P9","name":"…","desc":"…","assign":{"108":"M1"},"hide":["108"],"rename":{"203":"pom. sprzątaczki"},"cls":{"007":"T"}}   // cls: klasyfikacja powierzchni M mieszkalna / N niemieszkalna / K komunikacja / T techniczna (nadpisuje regułę z nazwy) ] },
     "attic":  { "floor":"poddasze","hmin":900,"planes":[ {"line":[[x,y],[x,y]],"dir":[-1,0],"h0":2775,"tan":1.04,"room":"213/216"} ] },
+    "meta":   { "investor":"…","object":"…","stage":"PAB – …","drawings":{"parter":"A-02"},"existing":{"M":486.05,"N":376.25,"K":244.43,"T":140.16} },   // tabelka rysunkowa + stan istniejący do bilansu
     "align":  { "piwnica":[20,300], "parter":[180,220], "pietro1":[0,0], "poddasze":[-20,140] },   // przesunięcie układu lokalnego kondygnacji do wspólnego (mm) – podrys, piony
     "evac":   { "pietro1": { "exit":[x,y], "limit":20000, "starts":[ {"u":"M1 (108)","p":[x,y],"dy":-450} ] } }   // dojścia ewakuacyjne: wyjście = drzwi klatki, starty = drzwi lokali
   },

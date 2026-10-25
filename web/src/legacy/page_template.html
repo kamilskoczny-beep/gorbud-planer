@@ -224,7 +224,7 @@ let selectedId=null, tool='select', draft=null, hoverPt=null, roomIdx=0;
 // ---------- view ----------
 let view = {x:0,y:0,w:30000,h:25000}; // in mm, y-up; svg viewBox uses flipped coords
 function fitFloor(){
-  const b0 = MODEL.floors[floor].bbox; const m=1500; const b=layerOn.legenda?[b0[0],b0[1],b0[2]+6200,b0[3]]:b0; // z legendą na rysunku
+  const b0 = MODEL.floors[floor].bbox; const m=1500; const b=layerOn.legenda?[b0[0],b0[1],b0[2]+8600,b0[3]]:b0; // z legendą na rysunku
   const W=svg.clientWidth||800, H=svg.clientHeight||600;
   let w=b[2]-b[0]+2*m, h=b[3]-b[1]+2*m;
   if (w/h < W/H) w = h*W/H; else h = w*H/W;
@@ -252,13 +252,13 @@ function segPath(s){
 const ATTIC=VARIANTS.attic||null;
 function parseH(t){ if(!t) return null; const m=/=\s*(\d+)\s*cm/.exec(t); return m?parseInt(m[1])*10:null; }
 function pointInPoly(p,poly){ let c=false; for(let i=0,j=poly.length-1;i<poly.length;j=i++){ const a=poly[i],b=poly[j]; if(((a[1]>p[1])!==(b[1]>p[1])) && (p[0] < (b[0]-a[0])*(p[1]-a[1])/((b[1]-a[1])||1e-9)+a[0])) c=!c; } return c; }
-function flatH(x,y){ const F=MODEL.floors[floor]; for (const r of (F.rooms||[])) if(r.poly && pointInPoly([x,y],r.poly)){ const h=parseH(r.h); if(h) return h; } return FLOOR_H[floor]||2780; }
-function heightAt(x,y){ if(!ATTIC||floor!==ATTIC.floor) return null; let h=flatH(x,y);
+function flatH(x,y,f){ f=f||floor; const F=MODEL.floors[f]; for (const r of (F.rooms||[])) if(r.poly && pointInPoly([x,y],r.poly)){ const h=parseH(r.h); if(h) return h; } return FLOOR_H[f]||2780; }
+function heightAt(x,y,f){ f=f||floor; if(!ATTIC||f!==ATTIC.floor) return null; let h=flatH(x,y,f);
   for (const pl of ATTIC.planes){ const [a,b]=pl.line; const vx=b[0]-a[0], vy=b[1]-a[1]; const L2=vx*vx+vy*vy||1; const u=((x-a[0])*vx+(y-a[1])*vy)/L2; if(u<0||u>1) continue; const d=(x-a[0])*pl.dir[0]+(y-a[1])*pl.dir[1]; if(d<=0 || d>(pl.h0-(ATTIC.hmin||900))/pl.tan+450) continue; const hh=pl.h0-pl.tan*d; if(hh<h) h=hh; }
   return Math.max(0,Math.round(h)); }
-function roomHeightStats(it){ // próbkowanie co 150 mm: h min/max, pow. użytkowa wg PN-ISO 9836 (100% h≥2,20; 50% 1,40–2,20; 0 poniżej)
-  if(!ATTIC||floor!==ATTIC.floor) return null; const xs=it.pts.map(q=>q[0]), ys=it.pts.map(q=>q[1]); const st=150; let n=0, use=0, hmin=1e9, hmax=0;
-  for (let x=Math.min(...xs)+st/2; x<Math.max(...xs); x+=st) for (let y=Math.min(...ys)+st/2; y<Math.max(...ys); y+=st){ if(!pointInPoly([x,y],it.pts)) continue; if((it.holes||[]).some(h=>pointInPoly([x,y],h))) continue; const h=heightAt(x,y); n++; if(h<hmin) hmin=h; if(h>hmax) hmax=h; use+=h>=2200?1:(h>=1400?0.5:0); }
+function roomHeightStats(it,f){ // próbkowanie co 150 mm: h min/max, pow. użytkowa wg PN-ISO 9836 (100% h≥2,20; 50% 1,40–2,20; 0 poniżej)
+  f=f||floor; if(!ATTIC||f!==ATTIC.floor) return null; const xs=it.pts.map(q=>q[0]), ys=it.pts.map(q=>q[1]); const st=150; let n=0, use=0, hmin=1e9, hmax=0;
+  for (let x=Math.min(...xs)+st/2; x<Math.max(...xs); x+=st) for (let y=Math.min(...ys)+st/2; y<Math.max(...ys); y+=st){ if(!pointInPoly([x,y],it.pts)) continue; if((it.holes||[]).some(h=>pointInPoly([x,y],h))) continue; const h=heightAt(x,y,f); n++; if(h<hmin) hmin=h; if(h>hmax) hmax=h; use+=h>=2200?1:(h>=1400?0.5:0); }
   if(!n) return null; return {hmin,hmax,area:n*st*st,use:use*st*st}; }
 function drawSlopes(){ gl.skosy.innerHTML=''; if(!ATTIC||floor!==ATTIC.floor) return;
   for (const pl of ATTIC.planes){ const [a,b]=pl.line; const L=Math.hypot(b[0]-a[0],b[1]-a[1]); const m=[(a[0]+b[0])/2,(a[1]+b[1])/2]; const horiz=Math.abs(b[1]-a[1])<Math.abs(b[0]-a[0]);
@@ -292,7 +292,7 @@ function roomName(r,f){ const v=curVariant(f||floor); const rn=v&&v.rename||{}; 
 function unitOf(nr){ const v=curVariant(floor); const m=v?(v.assign||{}):{}; return m[nr]||null; }
 function drawRooms(){
   const F = MODEL.floors[floor];
-  gl.zones.innerHTML=''; gl.roomlbl.innerHTML='';
+  gl.zones.innerHTML=''; gl.roomlbl.innerHTML=''; try{ projNoCache=projectNumbers(floor); }catch(e){}
   const hide=new Set((curVariant(floor)||{}).hide||[]);
   for (const r of F.rooms){
     if (!r.poly && !r._noPoly){ try{ const R=getRaster(); const res=floodRoom(R, (r.lx||0)+300, (r.ly||0)+60); if (res && res.area>1e6 && res.area<400e6){ r.poly=res.outer; r._auto=true; } else r._noPoly=true; }catch(e){ r._noPoly=true; } } // obrys z inwentaryzacji brakujący → flood fill w przeglądarce
@@ -309,7 +309,7 @@ function drawRooms(){
     const c = r.poly ? polyCentroid(r.poly) : [r.lx+400, r.ly];
     const g = el('g',{transform:`translate(${c[0]} ${c[1]}) scale(1,-1)`, 'pointer-events':'none'}, gl.roomlbl);
     const small = (r.area||r.parea||0) < 6;
-    const t1 = el('text',{x:0,y:small?-60:-120,'text-anchor':'middle','font-size':small?170:230,class:'lbl-nr'},g); t1.textContent=r.nr;
+    const pno=projNoCache['inv:'+r.nr]; const t1 = el('text',{x:0,y:small?-60:-120,'text-anchor':'middle','font-size':small?170:230,class:'lbl-nr',...(pno?{fill:'var(--new)','font-weight':'800'}:{})},g); t1.textContent=pno?pno+' ('+r.nr+')':r.nr;
     const nm=roomName(r); if(!small || nm!==(r.name||'')){ const t2=el('text',{x:0,y:small?60:110,'text-anchor':'middle','font-size':small?105:150,class:'lbl-nm'},g); t2.textContent=nm.slice(0,small?22:26); }
     const t3 = el('text',{x:0,y:small?130:320,'text-anchor':'middle','font-size':small?140:170,class:'lbl-ar'},g); t3.textContent = r.area? r.area.toFixed(2).replace('.',',')+' m²' : (r.parea? '~'+r.parea.toFixed(1).replace('.',',')+' m²':'');
   }
@@ -507,20 +507,65 @@ function roomRank(lbl){ for (const [re,n] of ROOM_ORDER) if(re.test(lbl||'')) re
 let projNoCache={};
 function projectNumbers(f){ // {id: 'M2.1'} – kolejność: wejście → salon → kuchnia → sypialnie → pokoje → łazienka → WC → garderoba → gospodarcze; ręczne it.no ma pierwszeństwo
   const out={}; const by={}; for (const it of visibleItems(f)) if(it.type==='room'&&it.unit) (by[it.unit]=by[it.unit]||[]).push(it);
-  for (const u in by){ const arr=by[u].slice().sort((a,b)=>{ const ra=roomRank(a.label), rb=roomRank(b.label); if(ra!==rb) return ra-rb; const na=/(\d+)/.exec((a.label||'').replace(/\(.*?\)/g,'')), nb=/(\d+)/.exec((b.label||'').replace(/\(.*?\)/g,'')); if(na&&nb&&+na[1]!==+nb[1]) return +na[1]-+nb[1]; const ca=roomAnchor(a), cb=roomAnchor(b); return (cb[1]-ca[1])||(ca[0]-cb[0]); }); let n=0; const used=new Set(arr.map(i=>i.no).filter(Boolean)); for (const it of arr){ if(it.no){ out[it.id]=it.no; continue; } do{ n++; }while(used.has(u+'.'+n)); out[it.id]=u+'.'+n; } }
+  const v=curVariant(f), m=v?(v.assign||{}):{}, hid=new Set(v&&v.hide||[]); for (const r of MODEL.floors[f].rooms){ const u=m[r.nr]; if(u&&/^M/.test(u)&&!hid.has(r.nr)) (by[u]=by[u]||[]).push({id:'inv:'+r.nr,label:roomName(r,f),no:r.no,_c:r.poly?polyCentroid(r.poly):[r.lx||0,r.ly||0]}); } // pomieszczenia istniejące włączone do mieszkania też dostają numer lokal.nr
+  for (const u in by){ const arr=by[u].slice().sort((a,b)=>{ const ra=roomRank(a.label), rb=roomRank(b.label); if(ra!==rb) return ra-rb; const na=/(\d+)/.exec((a.label||'').replace(/\(.*?\)/g,'')), nb=/(\d+)/.exec((b.label||'').replace(/\(.*?\)/g,'')); if(na&&nb&&+na[1]!==+nb[1]) return +na[1]-+nb[1]; const ca=a._c||roomAnchor(a), cb=b._c||roomAnchor(b); return (cb[1]-ca[1])||(ca[0]-cb[0]); }); let n=0; const used=new Set(arr.map(i=>i.no).filter(Boolean)); for (const it of arr){ if(it.no){ out[it.id]=it.no; continue; } do{ n++; }while(used.has(u+'.'+n)); out[it.id]=u+'.'+n; } }
   return out; }
-function drawLegendOnPlan(){ gl.legenda.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const m=v?(v.assign||{}):{}; const hide=new Set(v&&v.hide||[]); const nums=projNoCache;
-  const rows=[]; const units={}; const add=(u,txt,area)=>{ (units[u]=units[u]||{rows:[],a:0}); units[u].rows.push(txt); units[u].a+=area||0; };
-  for (const r of F.rooms.slice().sort((x,y)=>x.nr.localeCompare(y.nr,'pl',{numeric:true}))){ const u=m[r.nr]; if(!u||hide.has(r.nr)) continue; add(u, r.nr+'  '+roomName(r), r.area||r.parea||0); }
-  const pr=visibleItems(floor).filter(i=>i.type==='room'&&i.unit).sort((a,b)=>String(nums[a.id]).localeCompare(String(nums[b.id]),'pl',{numeric:true}));
-  for (const it of pr){ let a=roomArea(it)/1e6; const hs=roomHeightStats(it); if(hs) a=hs.use/1e6; add(it.unit, nums[it.id]+'  '+(it.label||'pomieszczenie'), a); }
-  const order=Object.keys(units).sort((a,b)=>(a==='W')-(b==='W')||a.localeCompare(b,'pl',{numeric:true}));
-  const FS=200, LH=290, X0=b[2]+900, W=5200; let y=b[3]; const g=el('g',{'pointer-events':'none'},gl.legenda);
+// klasyfikacja powierzchni jak w ekspertyzie PPSA (COM.xlsx): M mieszkalna (lokale + pomieszczenia pomocnicze i ogólnego użytku), N niemieszkalna (usługi/najem), K komunikacja, T techniczna
+const CLS={M:['mieszkalna','#2a9d8f'],N:['niemieszkalna (usługi)','#e76f51'],K:['komunikacja','#8d99ae'],T:['techniczna','#6c757d']};
+function roomClass(unit,name,over){ if(over&&CLS[over]) return over; const n=(name||'').toLowerCase(); if(unit&&/^M/.test(unit)) return 'M'; if(/kl\. schodowa|klatka|korytarz|komunikacja|przedsionek|wiatrołap|hol/.test(n)) return 'K'; if(unit==='T'||/kotłownia|schron|wentylatornia|węzeł|przyłącz|hydrofor/.test(n)) return 'T'; if(unit==='O'||unit==='P') return 'N'; return 'M'; }
+function roomSchedule(f){ // wiersze zestawienia pomieszczeń kondygnacji: {u, no, name, a, cls}
+  const F=MODEL.floors[f]; const v=curVariant(f); const m=v?(v.assign||{}):{}; const hide=new Set(v&&v.hide||[]); const over=(v&&v.cls)||{}; const nums=(f===floor)?projNoCache:projectNumbers(f); const rows=[];
+  for (const r of F.rooms.slice().sort((x,y)=>x.nr.localeCompare(y.nr,'pl',{numeric:true}))){ if(hide.has(r.nr)) continue; const u=m[r.nr]||'W'; const nm=roomName(r,f); rows.push({u, no:nums['inv:'+r.nr]||r.nr, name:nm, a:r.area||r.parea||0, cls:roomClass(u,nm,over[r.nr]), inv:true}); }
+  for (const it of visibleItems(f)){ if(it.type!=='room'||!it.unit) continue; let a=roomArea(it)/1e6; const hs=roomHeightStats(it,f); if(hs) a=hs.use/1e6; rows.push({u:it.unit, no:nums[it.id]||'', name:it.label||'pomieszczenie', a, cls:roomClass(it.unit,it.label,it.cls)}); }
+  rows.sort((a,b)=>{ const ua=a.u==='W'?1:(a.u==='T'?2:0), ub=b.u==='W'?1:(b.u==='T'?2:0); if(ua!==ub) return ua-ub; if(a.u!==b.u) return a.u.localeCompare(b.u,'pl',{numeric:true}); return String(a.no).localeCompare(String(b.no),'pl',{numeric:true}); });
+  return rows; }
+function clsSums(rows){ const s={M:0,N:0,K:0,T:0,all:0}; for (const r of rows){ s[r.cls]+=r.a; s.all+=r.a; } s.use=s.all-s.K-s.T; return s; }
+function fmt2(x){ return x.toFixed(2).replace('.',','); }
+function drawLegendOnPlan(){ gl.legenda.innerHTML=''; const F=MODEL.floors[floor]; const b=F.bbox; const v=curVariant(floor); const META=VARIANTS.meta||{}; const rows=roomSchedule(floor);
+  const FS=185, LH=265, X0=b[2]+900, W=7600, XR=X0+W-350; let y=b[3]; const g=el('g',{'pointer-events':'none'},gl.legenda);
   const txt=(x,yy,t,attrs)=>{ const tt=el('text',{x:0,y:0,'font-size':FS,fill:'var(--ink)',transform:`translate(${x} ${yy}) scale(1,-1)`,...(attrs||{})},g); tt.textContent=t; return tt; };
-  const total=order.reduce((n,u)=>n+units[u].rows.length+1,0)+3; el('rect',{x:X0-300,y:y-total*LH-500,width:W,height:total*LH+500,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':30,rx:80},g);
-  txt(X0,y-LH*0.9,'LEGENDA – '+F.name.toUpperCase(),{'font-size':FS*1.25,'font-weight':'700'}); y-=LH*1.3; txt(X0,y-LH*0.9,(v?v.name:'')+' · numeracja projektowa: lokal.nr',{'font-size':FS*0.8,fill:'var(--muted)'}); y-=LH*1.2;
-  for (const u of order){ const U=UNITS[u]||{name:u,color:'#999'}; y-=LH*0.3; el('rect',{x:X0,y:y-LH*0.85,width:FS*1.3,height:FS*1.1,fill:U.color,stroke:'var(--ink)','stroke-width':14},g); txt(X0+FS*1.8,y-LH*0.9,U.name+' — '+units[u].a.toFixed(1).replace('.',',')+' m²',{'font-weight':'700'}); y-=LH;
-    for (const r of units[u].rows){ txt(X0+FS*1.8,y-LH*0.9,r,{'font-size':FS*0.85}); y-=LH*0.9; } }
+  const hr=(yy,w)=>el('line',{x1:X0-150,y1:yy,x2:X0+W-150,y2:yy,stroke:'var(--ink)','stroke-width':w||10},g);
+  const items=[]; // [type, ...] – najpierw policzmy wysokość
+  // --- 1. tabelka rysunkowa (metryka)
+  const title=[['RZUT – '+F.name.toUpperCase()+' – STAN PROJEKTOWANY',FS*1.35,'800'],[(META.stage||''),FS*0.78,'400'],['Obiekt: '+(META.object||''),FS*0.85,'400'],['Inwestor: '+(META.investor||''),FS*0.85,'400'],['Rys. nr '+((META.drawings||{})[floor]||'')+' · '+(v?v.name:'')+' · '+new Date().toLocaleDateString('pl-PL')+' · wymiary w mm, powierzchnie w m² (PN-ISO 9836)',FS*0.78,'400']];
+  // --- 2. zestawienie pomieszczeń
+  const groups=[]; for (const r of rows){ let G=groups.find(x=>x.u===r.u); if(!G){ G={u:r.u,rows:[],a:0}; groups.push(G); } G.rows.push(r); G.a+=r.a; }
+  const fl=clsSums(rows);
+  // --- 3. bilans budynku (wszystkie kondygnacje)
+  const all=FLOORS.flatMap(f=>roomSchedule(f)); const bs=clsSums(all); const ex=META.existing||null;
+  const nRows=title.length+2+groups.reduce((n,G)=>n+G.rows.length+1.4,0)+2+6+(ex?4:0)+9+8;
+  const frame=el('rect',{x:X0-300,y:y-nRows*LH-800,width:W,height:nRows*LH+800,fill:'var(--canvas)',stroke:'var(--ink)','stroke-width':30,rx:60},g); const yTop=y;
+  for (const [t,fs,fw] of title){ txt(X0,y-LH*0.95,t,{'font-size':fs,'font-weight':fw,fill:fw==='800'?'var(--ink)':'var(--muted)'}); y-=fs<FS?LH*0.8:LH; }
+  // podziałka liniowa
+  y-=LH*0.3; const sx=X0; for (let i=0;i<5;i++) el('rect',{x:sx+i*1000,y:y-120,width:1000,height:120,fill:i%2?'var(--canvas)':'var(--ink)',stroke:'var(--ink)','stroke-width':8},g); for (let i=0;i<=5;i++) txt(sx+i*1000-60,y-LH*1.05,String(i),{'font-size':FS*0.7}); txt(sx+5300,y-LH*0.7,'m  (podziałka liniowa)',{'font-size':FS*0.7,fill:'var(--muted)'}); y-=LH*1.3; hr(y,16); y-=LH*0.4;
+  // nagłówek tabeli
+  txt(X0,y-LH*0.9,'ZESTAWIENIE POMIESZCZEŃ – '+F.name.toUpperCase(),{'font-weight':'800'}); y-=LH;
+  const cNo=X0, cName=X0+1500, cA=XR-1900, cCls=XR; txt(cNo,y-LH*0.9,'Nr',{'font-weight':'700','font-size':FS*0.8}); txt(cName,y-LH*0.9,'Pomieszczenie',{'font-weight':'700','font-size':FS*0.8}); txt(cA,y-LH*0.9,'pow. użytk. m²',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); txt(cCls,y-LH*0.9,'klasyfikacja',{'font-weight':'700','font-size':FS*0.8,'text-anchor':'end'}); y-=LH*0.9; hr(y,10);
+  for (const G of groups){ const U=UNITS[G.u]||{name:G.u,color:'#999'}; y-=LH*0.25; el('rect',{x:X0,y:y-LH*0.85,width:FS*1.2,height:FS*1.0,fill:U.color,stroke:'var(--ink)','stroke-width':12},g); txt(X0+FS*1.6,y-LH*0.9,U.name,{'font-weight':'700','font-size':FS*0.9}); txt(cA,y-LH*0.9,fmt2(G.a),{'font-weight':'700','text-anchor':'end'}); y-=LH;
+    for (const r of G.rows){ txt(cNo,y-LH*0.9,String(r.no),{'font-size':FS*0.85,'font-weight':/\./.test(r.no)?'700':'400',fill:/\./.test(r.no)?'var(--new)':'var(--ink)'}); txt(cName,y-LH*0.9,r.name.slice(0,34),{'font-size':FS*0.85}); txt(cA,y-LH*0.9,fmt2(r.a),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,CLS[r.cls][0],{'font-size':FS*0.7,'text-anchor':'end',fill:CLS[r.cls][1]}); y-=LH*0.85; } }
+  y-=LH*0.2; hr(y,16); y-=LH*0.2; txt(X0,y-LH*0.9,'RAZEM kondygnacja',{'font-weight':'800'}); txt(cA,y-LH*0.9,fmt2(fl.all),{'font-weight':'800','text-anchor':'end'}); y-=LH;
+  for (const k of ['M','N','K','T']){ txt(cName,y-LH*0.9,'w tym '+CLS[k][0],{'font-size':FS*0.85,fill:CLS[k][1]}); txt(cA,y-LH*0.9,fmt2(fl[k]),{'font-size':FS*0.85,'text-anchor':'end'}); txt(cCls,y-LH*0.9,fl.use>0&&(k==='M'||k==='N')?Math.round(100*fl[k]/fl.use)+' % pow. użytk.':'',{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; }
+  // bilans budynku
+  y-=LH*0.3; hr(y,16); y-=LH*0.3; txt(X0,y-LH*0.9,'BILANS BUDYNKU – STAN PROJEKTOWANY (wszystkie kondygnacje)',{'font-weight':'800'}); y-=LH;
+  const line=(l,a,r,attrs)=>{ txt(cName,y-LH*0.9,l,{'font-size':FS*0.85,...(attrs||{})}); txt(cA,y-LH*0.9,a,{'font-size':FS*0.85,'text-anchor':'end',...(attrs||{})}); if(r) txt(cCls,y-LH*0.9,r,{'font-size':FS*0.7,'text-anchor':'end',fill:'var(--muted)'}); y-=LH*0.85; };
+  line('powierzchnia pomieszczeń ogółem',fmt2(bs.all),'');
+  line('– komunikacja (klatki, korytarze)',fmt2(bs.K),''); line('– pomieszczenia techniczne',fmt2(bs.T),'');
+  line('= powierzchnia użytkowa',fmt2(bs.use),'100 %',{'font-weight':'700'});
+  line('   mieszkalna (lokale + pomocnicze + ogólnego użytku)',fmt2(bs.M),Math.round(100*bs.M/(bs.use||1))+' %',{fill:CLS.M[1],'font-weight':'700'});
+  line('   niemieszkalna (usługi: Poczta, Orange)',fmt2(bs.N),Math.round(100*bs.N/(bs.use||1))+' %',{fill:CLS.N[1]});
+  if(ex){ y-=LH*0.2; line('Stan istniejący wg ekspertyzy PPSA:','','',{fill:'var(--muted)'}); line('   mieszkalna',fmt2(ex.M),Math.round(100*ex.M/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); line('   niemieszkalna',fmt2(ex.N),Math.round(100*ex.N/(ex.M+ex.N))+' %',{fill:'var(--muted)'}); }
+  txt(X0,y-LH*0.9,'Budynek mieszkalny (PKOB 11): udział pow. mieszkalnej w pow. użytkowej ≥ 50 % – '+(bs.M/(bs.use||1)>=0.5?'SPEŁNIONE':'NIESPEŁNIONE'),{'font-size':FS*0.8,'font-weight':'700',fill:bs.M/(bs.use||1)>=0.5?CLS.M[1]:CLS.N[1]}); y-=LH;
+  // legenda oznaczeń
+  y-=LH*0.3; hr(y,16); y-=LH*0.3; txt(X0,y-LH*0.9,'OZNACZENIA',{'font-weight':'800'}); y-=LH;
+  const sym=(draw,label)=>{ draw(X0,y-LH*0.5); txt(X0+1500,y-LH*0.9,label,{'font-size':FS*0.85}); y-=LH*0.9; };
+  sym((x,yy)=>el('rect',{x,y:yy-60,width:1200,height:120,fill:'var(--ink)'},g),'ściany istniejące (inwentaryzacja)');
+  sym((x,yy)=>el('rect',{x,y:yy-60,width:1200,height:120,fill:'var(--new)'},g),'ściany projektowane (nowe)');
+  sym((x,yy)=>el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'var(--demo)','stroke-width':90,'stroke-dasharray':'180 120'},g),'ściany do wyburzenia / otwory zamurowane');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'#d62828','stroke-width':70},g); const t=el('text',{x:0,y:0,'font-size':FS*0.8,fill:'#d62828','font-weight':'900',transform:`translate(${x+400} ${yy+90}) scale(1,-1)`},g); t.textContent='EI30'; },'drzwi przeciwpożarowe EI 30, światło 90 cm (wydzielenie klatki)');
+  sym((x,yy)=>{ el('line',{x1:x,y1:yy,x2:x+1200,y2:yy,stroke:'#2a9d3a','stroke-width':60},g); el('circle',{cx:x,cy:yy,r:90,fill:'#2a9d3a'},g); },'dojście ewakuacyjne do klatki schodowej (długość ≤ 20 m)');
+  sym((x,yy)=>{ el('circle',{cx:x+600,cy:yy,r:110,fill:'#8d5524',stroke:'#fff','stroke-width':14},g); },'pion instalacyjny (K kanalizacja Ø110 / W / C / Wn / E)');
+  sym((x,yy)=>el('rect',{x,y:yy-100,width:1200,height:200,fill:'var(--new)','fill-opacity':0.3},g),'pomieszczenia projektowane – kolor lokalu, numer lokal.nr');
+  frame.setAttribute('y',y-300); frame.setAttribute('height',yTop-y+300);
 }
 function drawProject(){
   try{ recomputeRooms(); }catch(err){ diag('rooms',err); }
