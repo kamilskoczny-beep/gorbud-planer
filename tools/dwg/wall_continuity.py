@@ -33,6 +33,9 @@ def fix(items, max_ext=2500, tol=40):
             if o is w: continue
             if _seg_dist(E, o['pts'][0], o['pts'][1]) <= o.get('w', 100) / 2 + tol:
                 return True
+            for P in o['pts']:  # tamta ściana dochodzi do lica tej przy samym końcu (narożnik L po przycięciu)
+                if math.hypot(P[0] - E[0], P[1] - E[1]) <= max(w.get('w', 100), o.get('w', 100)) + tol and _seg_dist(P, w['pts'][0], w['pts'][1]) <= w.get('w', 100) / 2 + tol:
+                    return True
         for o in opens:
             ow = (o.get('w', 300) - 40) if o['type'] == 'idoor' else o.get('w', 300)
             if _seg_dist(E, o['pts'][0], o['pts'][1]) <= max(ow, w.get('w', 100)) / 2 + 120:
@@ -99,3 +102,39 @@ def fix(items, max_ext=2500, tol=40):
             if N != list(E):
                 w['pts'][end] = N; changed.append((w['id'], end, round(s2)))
     return changed, unresolved
+
+def trim_to_faces(items, tol=40):
+    """Ściana dochodzi do lica ściany, na którą trafia – nie wchodzi w nią (zasada 39).
+    Styk T (koniec w środku innej ściany) i ściana cieńsza dochodząca do grubszej → koniec na licu tej ściany.
+    Narożnik L dwóch ścian nośnych zostaje domknięty do zewnętrznego lica (join_corners)."""
+    walls = [i for i in items if i.get('type') == 'iwall' and len(i.get('pts', [])) == 2]
+    changed = []
+    for w in walls:
+        for end in (0, 1):
+            E = w['pts'][end]; O = w['pts'][1 - end]
+            L = math.hypot(E[0] - O[0], E[1] - O[1]) or 1
+            d = ((E[0] - O[0]) / L, (E[1] - O[1]) / L)
+            best = None
+            for o in walls:
+                if o is w: continue
+                oa, ob = o['pts']; oL = math.hypot(ob[0] - oa[0], ob[1] - oa[1]) or 1
+                u = ((ob[0] - oa[0]) / oL, (ob[1] - oa[1]) / oL)
+                if abs(d[0] * u[1] - d[1] * u[0]) < 0.5: continue  # tylko ściany poprzeczne
+                ow = o.get('w', 100)
+                if _seg_dist(E, oa, ob) > ow / 2 + tol: continue
+                h = _ray_hit(O, d, oa, ob)
+                if not h: continue
+                s, t = h
+                near_end = min(t * oL, (1 - t) * oL) < ow * 0.75
+                thinner = w.get('w', 100) < ow - 20 or (w.get('inv') == 'D' and o.get('inv') != 'D')
+                if near_end and not thinner:
+                    continue  # narożnik L równorzędnych ścian – zostaje domknięty
+                sin = abs(d[0] * u[1] - d[1] * u[0]) or 1
+                s_face = s - (ow / 2) / sin
+                if s_face <= 50: continue
+                if best is None or s_face < best: best = s_face
+            if best is not None and abs(best - L) > 15:
+                N = [int(round((O[0] + d[0] * best) / 10.0)) * 10, int(round((O[1] + d[1] * best) / 10.0)) * 10]
+                if N != list(E):
+                    w['pts'][end] = N; changed.append((w['id'], end, round(L - best)))
+    return changed

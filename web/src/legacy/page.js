@@ -45,7 +45,7 @@ function mmPerPx(){ return view.w/(svg.clientWidth||1); }
 const root = document.createElementNS(NS,'g'); root.setAttribute('transform','scale(1,-1)'); svg.appendChild(root);
 { const d=document.createElementNS(NS,'defs'); d.innerHTML='<pattern id="hatchUn" patternUnits="userSpaceOnUse" width="300" height="300" patternTransform="rotate(45)"><rect width="300" height="300" fill="#c2187a" fill-opacity="0.06"/><line x1="0" y1="0" x2="0" y2="300" stroke="#c2187a" stroke-width="40" stroke-opacity="0.5"/></pattern>'; svg.insertBefore(d,svg.firstChild); }
 const gl = {}; // layer groups
-['sheet','grid','zones','rfill','under','walls','demo','windows','doors','stairs','sills','fixtures','dims','inwN','inwD','inwO','inwDr','kominy','inwSt','inwFx','inwDach','unk','skosy','dwgtext','roomlbl','project','evac','rline','rlbl','furn','piony','rhit','sketch','autodim','legenda','draft','ui'].forEach(k=>{ const g=document.createElementNS(NS,'g'); g.dataset.layer=k; root.appendChild(g); gl[k]=g; });
+['sheet','grid','zones','rfill','under','walls','demo','windows','doors','stairs','sills','fixtures','dims','inwD','inwN','inwO','inwDr','kominy','inwSt','inwFx','inwDach','unk','skosy','dwgtext','roomlbl','project','evac','rline','rlbl','furn','piony','rhit','sketch','autodim','legenda','draft','ui'].forEach(k=>{ const g=document.createElementNS(NS,'g'); g.dataset.layer=k; root.appendChild(g); gl[k]=g; });
 
 function el(tag, attrs, parent){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k, attrs[k]); (parent||root).appendChild(e); return e; }
 function segPath(s){
